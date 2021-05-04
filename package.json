@@ -1,0 +1,42 @@
+{
+  "name": "bank_app",
+  "version": "1.0.0",
+  "description": "Articonf Bank App Demo",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bityoga/articonf-bank-app.git"
+  },
+  "keywords": [
+    "articonf",
+    "bank app"
+  ],
+  "author": "anandhakumar palanisamy",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/bityoga/articonf-bank-app/issues"
+  },
+  "homepage": "https://github.com/bityoga/articonf-bank-app#readme",
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "express": "^4.17.1",
+    "express-formidable": "^1.2.0",
+    "express-session": "^1.17.1",
+    "fabric-ca-client": "~1.4.3",
+    "fabric-network": "~1.4.3",
+    "fs": "0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "sqlite-async": "^1.1.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "eslint": "^5.9.0",
+    "mocha": "^5.2.0",
+    "nyc": "^15.0.0",
+    "sinon": "^7.1.1",
+    "sinon-chai": "^3.3.0"
+  }
+}

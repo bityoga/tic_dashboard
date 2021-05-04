@@ -1,0 +1,84 @@
+{
+  "name": "hlf-bityoga",
+  "version": "1.0.0",
+  "client": {
+    "organization": "hlf",
+    "connection": {
+      "timeout": {
+        "peer": {
+          "endorser": "300"
+        }
+      }
+    }
+  },
+  "channels": {
+    "appchannel": {
+      "orderers": ["orderer"],
+      "peers": {
+        "peer2": {
+          "endorsingPeer": "true",
+          "chaincodeQuery": "true",
+          "ledgerQuery": "true",
+          "eventSource": "true",
+          "discover": "true"
+        },
+        "peer1": {
+          "endorsingPeer": "false",
+          "chaincodeQuery": "false",
+          "ledgerQuery": "true",
+          "eventSource": "false",
+          "discover": "true"
+        }
+      }
+    }
+  },
+  "organizations": {
+    "hlf": {
+      "mspid": "hlfMSP",
+      "peers": ["peer2", "peer1"],
+      "certificateAuthorities": ["orgca", "tlsca"]
+    }
+  },
+
+  "orderers": {
+    "orderer": {
+      "url": "grpcs://104.248.203.116:8053",
+      "tlsCACerts": {
+        "path": "./hlft-store/orderer/tls-msp/tlscacerts/ca.crt"
+      },
+      "grpcOptions": {
+        "ssl-target-name-override": "orderer"
+      }
+    }
+  },
+
+  "peers": {
+    "peer2": {
+      "url": "grpcs://104.248.203.116:8055",
+
+      "tlsCACerts": {
+        "path": "./hlft-store/peer2/tls-msp/tlscacerts/ca.crt"
+      },
+      "grpcOptions": {
+        "ssl-target-name-override": "peer2"
+      }
+    }
+  },
+  "certificateAuthorities": {
+    "orgca": {
+      "caName": "orgca",
+      "url": "https://104.248.203.116:8052",
+      "httpOptions": {
+        "verify": false
+      }
+    },
+
+    "tlsca": {
+      "caName": "tlsca",
+      "url": "https://104.248.203.116:8081",
+      "httpOptions": {
+        "verify": false
+      }
+    }
+  }
+}

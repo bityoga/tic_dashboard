@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tic Dashboard</title>
+    <link rel="shortcut icon" type="image/png" href="images/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"
+      integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i"
+      crossorigin="anonymous"
+    ></script>
+
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+  <body>
+    <div class="w3-top">
+      <div
+        class="w3-bar w3-large w3-collapse"
+        style="background-color: #f8f8f8; color: #666;"
+      >
+        <button
+          onclick="check_session();"
+          class="w3-bar-item w3-left w3-hover-opacity"
+          style="
+            cursor: pointer;
+            color: #666;
+            background-color: #f8f8f8;
+          "
+          title="Home"
+        >
+        <i class="fa fa-cube"></i> Tic Dashboard
+        <!-- <img src="images/p2p-3.gif" alt="Avatar" class="w3-image" width="80" height="50" /> Articonf Bank -->
+        </button>
+        <!-- <button class="w3-bar-item w3-left  w3-hover-opacity" style="padding: 0px; cursor: pointer;color: #666; background-color: #f8f8f8;" title="Home"><img src="images/bityoga4.png" height="56" width="200" alt="Avatar" ></button> -->
+        <!-- <span id = "welcome_user_span"  style="width:auto;display: none;" class="w3-bar-item w3-right w3-hide-small" ><i class="fa fa-user-circle-o" aria-hidden="true"></i> Welcome, <strong><span id="session_user_name">Anand </span></strong></span> -->
+        <!-- <a
+          style="display: none;"
+          href="#"
+          onclick="notification_function()"
+          class="notification_button w3-bar-item w3-button tablink w3-hover-blue w3-right"
+          ><i class="fa fa-bell" aria-hidden="true"></i>
+          <span class="w3-hide-small w3-hide-medium">Notification(s)</span></a
+        > -->
+        <a
+          href="#"
+          onclick="logout()"
+          style="width: auto; display: none;"
+          class="logout_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a
+        >
+        <!-- <a
+          href="#"
+          onclick="openLink(event, 'my_profile')"
+          style="display: none;"
+          class="my_profile_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-sign-in" aria-hidden="true"></i> My Profile</a
+        > -->
+        <a
+          href="#"
+          onclick="openLink(event, 'login_check')"
+          style="display: none;"
+          class="login_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a
+        >
+        <a
+          href="#"
+          onclick="openLink(event, 'register_check')"
+          style="display: none;"
+          class="register_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a
+        >
+
+        <!-- <a
+          href="#"
+          onclick="openLink(event, 'buy')"
+          style="display: none;"
+          class="buy_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy</a
+        > -->
+        <a
+          href="#"
+          onclick="document.getElementById('sell').style.display='block'"
+          style="width: auto; display: none;"
+          class="query_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-pencil" aria-hidden="true"></i> Asset History</a
+        >
+        <a
+          href="#"
+          onclick="document.getElementById('query_chain_code_div').style.display='block'"
+          style="width: auto; display: none;"
+          class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-question-circle" aria-hidden="true"></i> Query All
+          Assets</a
+        >
+
+        <a
+          href="javascript:void(0)"
+          class="w3-bar-item w3-button w3-right w3-hide-large w3-right w3-hover-blue"
+          onclick="myFunction()"
+          >&#9776;</a
+        >
+      </div>
+    </div>
+    <div
+      id="demo"
+      class="w3-sidebar w3-bar-block w3-white w3-hide w3-hide-large w3-animate-right"
+      style="right: 0;"
+    >
+      <button onclick="myFunction()" class="w3-bar-item w3-button w3-large">
+        Close &times;
+      </button>
+      <a
+        href="#"
+        onclick="document.getElementById('sell').style.display='block'"
+        style="width: auto; display: none;"
+        class="query_button w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-pencil" aria-hidden="true"></i> Asset History</a
+      >
+      <a
+        href="#"
+        onclick="document.getElementById('query_chain_code_div').style.display='block'"
+        style="width: auto; display: none;"
+        class="invoke_button w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-question-circle" aria-hidden="true"></i> Query All
+        Assets</a
+      >
+      <a
+        href="#"
+        onclick="logout()"
+        style="display: none;"
+        class="logout_button w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a
+      >
+
+      <!-- <a
+        href="#"
+        onclick="openLink(event, 'my_profile')"
+        style="display: none;"
+        class="my_profile_button w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-shopping-cart" aria-hidden="true"></i> My Profile</a
+      > -->
+      <a
+        href="#"
+        onclick="openLink(event, 'login_check')"
+        style="display: none;"
+        class="login_button w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a
+      >
+      <a
+        href="#"
+        onclick="openLink(event, 'register_check')"
+        style="display: none;"
+        class="register_button w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a
+      >
+      <!-- <a
+        href="#"
+        onclick="openLink(event, 'buy')"
+        style="display: none;"
+        class="buy_button w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy</a
+      > -->
+      <!-- <a href="#" onclick="document.getElementById('sell').style.display='block'" style="width:auto;display: none;" class="invoke_button w3-bar-item w3-button w3-hover-blue tablink "><i class="fa fa-pencil" aria-hidden="true"></i> Invoke</a>
+    <a  href="#" onclick="document.getElementById('query_chain_code_div').style.display='block'" style="width:auto; display: none;" class="query_button w3-bar-item w3-button w3-hover-blue tablink "><i class="fa fa-question-circle" aria-hidden="true"></i> Query</a> -->
+    </div>
+
+    <div
+      id="my_profile"
+      class="iframe_holder"
+      style="background-color: white; display: none;"
+    >
+      <iframe
+        id="my_profile_iframe"
+        src="my_profile.html"
+        width="100%"
+        height="100%"
+        marginwidth="0"
+        marginheight="0"
+        frameborder="0"
+      ></iframe>
+    </div>
+
+    <div id="sell" class="modal" style="overflow: visible;">
+      <form
+        id="sell_form"
+        action="/sell"
+        enctype="multipart/form-data"
+        method="POST"
+        class="modal-content animate"
+      >
+        <div class="imgcontainer">
+          <span
+            onclick="document.getElementById('sell').style.display='none'"
+            class="close"
+            title="Close Modal"
+            style="top: -17px;"
+            >&times;</span
+          >
+          <strong><span>Asset History</span></strong>
+          <!-- <img src="images/avatar2.png" alt="Avatar" class="avatar"> -->
+        </div>
+        <hr />
+        <div class="container">
+          <label for="Chain_Code_Name"><b>Chaincode Name</b></label>
+          <input
+            type="text"
+            placeholder="Enter Chaincode Name"
+            name="Chain_Code_Name"
+            id="Chain_Code_Name"
+            value="bank"
+            required
+          />
+
+          <label for="Chain_Code_Function_Name"
+            ><b>Chain Code Function Name</b></label
+          >
+          <input
+            type="text"
+            placeholder="Enter Chain_Code_Function_Name"
+            name="Chain_Code_Function_Name"
+            id="Chain_Code_Function_Name"
+            value="GetAssetHistory"
+            required
+          />
+
+          <label for="car_license_plate"><b>User Name</b></label>
+          <!-- <input
+            type="text"
+            placeholder="Enter Car_License_Plate"
+            name="User_Name"
+            id="User_Name"
+            required
+          /> -->
+
+          <select
+            class="w3-select w3-border w3-center"
+            name="History_User_Name"
+            id="History_User_Name"
+            name="option"
+            style="font-weight: bold; color: black; background-color: white;"
+          >
+          </select>
+
+          <div
+            id="sell_loader"
+            class="loader w3-center"
+            style="
+              display: none;
+              width: 50px;
+              height: 50px;
+              margin-left: 45%;
+              margin-right: 45%;
+            "
+          ></div>
+          <button type="submit">Get Assset History</button>
+        </div>
+
+        <div class="container" style="background-color: #f1f1f1;">
+          <button
+            type="button"
+            onclick="document.getElementById('sell').style.display='none'"
+            class="cancelbtn"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div id="buy" class="iframe_holder" style="display: none;">
+      <iframe
+        src="buy_page.html"
+        width="100%"
+        height="100%"
+        marginwidth="0"
+        marginheight="0"
+        frameborder="0"
+      ></iframe>
+    </div>
+
+    <div id="login_check" class="iframe_holder" style="display: none;">
+      <iframe
+        src="login_check.html"
+        width="100%"
+        height="100%"
+        marginwidth="0"
+        marginheight="0"
+        frameborder="0"
+      ></iframe>
+    </div>
+    <div id="register_check" class="iframe_holder" style="display: none;">
+      <iframe
+        src="register_check.html"
+        width="100%"
+        height="100%"
+        marginwidth="0"
+        marginheight="0"
+        frameborder="0"
+      ></iframe>
+    </div>
+
+    <div id="login" class="modal" style="overflow: visible;">
+      <form
+        id="login_form"
+        action="/login"
+        enctype="multipart/form-data"
+        method="POST"
+        class="modal-content animate"
+      >
+        <div class="imgcontainer">
+          <span
+            onclick="document.getElementById('login').style.display='none'"
+            class="close"
+            title="Close Modal"
+            style="top: -17px;"
+            >&times;</span
+          >
+          <strong><span>Login</span></strong>
+        </div>
+        <hr />
+        <div class="container">
+          <label for="Login_User_Name"><b>Username</b></label>
+          <input
+            type="text"
+            placeholder="Enter Username"
+            name="Login_User_Name"
+            id="Login_User_Name"
+            required
+          />
+
+          <label for="Login_Password"><b>Password</b></label>
+          <input
+            type="password"
+            placeholder="Enter Password"
+            name="Login_Password"
+            id="Login_Password"
+            required
+          />
+
+          <button type="submit">Login</button>
+          <div
+            id="login_loader"
+            class="loader w3-center"
+            style="
+              display: none;
+              width: 50px;
+              height: 50px;
+              margin-left: 45%;
+              margin-right: 45%;
+            "
+          ></div>
+          <label>
+            <input type="checkbox" checked="checked" name="remember" /> Remember
+            me
+          </label>
+        </div>
+
+        <div class="container" style="background-color: #f1f1f1;">
+          <button
+            type="button"
+            onclick="document.getElementById('login').style.display='none'"
+            class="cancelbtn"
+          >
+            Cancel
+          </button>
+          <span class="psw">Forgot <a href="#">password?</a></span>
+        </div>
+      </form>
+    </div>
+
+    <div id="query_chain_code_div" class="modal" style="overflow: visible;">
+      <form
+        id="query_chain_code"
+        action="/query_chain_code"
+        enctype="multipart/form-data"
+        method="POST"
+        class="modal-content animate"
+      >
+        <div class="imgcontainer">
+          <span
+            onclick="document.getElementById('query_chain_code_div').style.display='none'"
+            class="close"
+            title="Close Modal"
+            style="top: -17px;"
+            >&times;</span
+          >
+          <strong><span>Get All Assets</span></strong>
+        </div>
+        <hr />
+        <div class="container">
+          <label for="Chain_Code_Name"><b>Chaincode Name</b></label>
+          <input
+            type="text"
+            placeholder="Enter Chaincode Name"
+            name="Chain_Code_Name"
+            id="Chain_Code_Name"
+            value="bank"
+            required
+          />
+
+          <label for="Chain_Code_Function_Name"
+            ><b>Chain Code Function Name</b></label
+          >
+          <input
+            type="text"
+            placeholder="Enter Password"
+            name="Chain_Code_Function_Name"
+            id="Chain_Code_Function_Name"
+            value="GetAllAssets"
+            required
+          />
+
+          <div
+            id="query_chain_code_loader"
+            class="loader w3-center"
+            style="
+              display: none;
+              width: 50px;
+              height: 50px;
+              margin-left: 45%;
+              margin-right: 45%;
+            "
+          ></div>
+          <button type="submit">Get All Assets</button>
+        </div>
+
+        <div class="container" style="background-color: #f1f1f1;">
+          <button
+            type="button"
+            onclick="document.getElementById('query_chain_code_div').style.display='none'"
+            class="cancelbtn"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div id="register" class="modal" style="overflow: visible;">
+      <form
+        id="register_form"
+        action="/register"
+        enctype="multipart/form-data"
+        method="POST"
+        class="modal-content animate"
+      >
+        <div class="imgcontainer">
+          <span
+            onclick="document.getElementById('register').style.display='none'"
+            class="close"
+            title="Close Modal"
+            >&times;</span
+          >
+          <img src="images/avatar2.png" alt="Avatar" class="avatar" />
+        </div>
+
+        <div class="container">
+          <label for="User_Name"><b>Username</b></label>
+          <input
+            type="text"
+            placeholder="Enter Username"
+            id="User_Name"
+            name="User_Name"
+            required
+          />
+
+          <label for="User_Password"><b>Password</b></label>
+          <input
+            type="password"
+            placeholder="Enter Password"
+            id="User_Password"
+            name="User_Password"
+            required
+          />
+
+          <label for="User_House_Number"><b>House_Numeber</b></label>
+          <input
+            type="text"
+            placeholder="Enter House Number"
+            id="User_House_Number"
+            name="User_House_Number"
+            required
+          />
+
+          <button type="submit">Register</button>
+          <div
+            id="register_loader"
+            class="loader w3-center"
+            style="
+              display: none;
+              width: 50px;
+              height: 50px;
+              margin-left: 45%;
+              margin-right: 45%;
+            "
+          ></div>
+          <label>
+            <input type="checkbox" checked="checked" name="remember" /> Remember
+            me
+          </label>
+        </div>
+
+        <div class="container" style="background-color: #f1f1f1;">
+          <button
+            type="button"
+            onclick="document.getElementById('register').style.display='none'"
+            class="cancelbtn"
+          >
+            Cancel
+          </button>
+          <span class="psw">Forgot <a href="#">password?</a></span>
+        </div>
+      </form>
+    </div>
+
+    <div class="footer" style="background-color: #f8f8f8; color: #666;">
+      <img
+        class="w3-left"
+        style="padding: 5px; margin-left: 5px;"
+        src="images/articonf4.png"
+        height="52"
+        alt="Avatar"
+      />
+      <img
+        class="w3-right"
+        style="padding: 5px;"
+        src="images/eu.png"
+        height="52"
+        alt="Avatar"
+      />
+      <img
+        class="w3-right"
+        style="padding: 5px;"
+        src="images/bityoga5.png"
+        height="52"
+        alt="Avatar"
+      />
+      <span class="w3-hide-small w3-right" style="margin-top: 16px;"
+        >Powered by :</span
+      >
+    </div>
+    <script type="text/javascript" src="js/send_ajax_request.js"></script>
+    <script type="text/javascript" src="js/double_menu.js"></script>
+    <script type="text/javascript">
+      //$("#home").load("home_page.html");
+      //$("#login").load("login.html");
+    </script>
+    <script type="text/javascript" src="js/modal.js"></script>
+
+    <script type="text/javascript">
+      check_session();
+    </script>
+  </body>
+</html>
