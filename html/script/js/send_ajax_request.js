@@ -379,7 +379,7 @@ $("#get_user_balance").submit(function (e) {
       var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
       //swal.fire(JSON.parse(json["data"]).Balance.toString());
       swal.fire({
-        title: "Bank Balance",
+        title: "tic_dashboard Balance",
         text: JSON.parse(json["data"]).Balance.toString(),
         icon: "success",
         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Great!',
@@ -421,8 +421,8 @@ $("#ad_submit").click(function () {
   var time = new Date();
   var user_json = {
     Posted_Timestamp: time.toString().slice(0, -41),
-    bank_To_Sell: document.getElementById("bank_selling").value,
-    Cost: document.getElementById("bank_cost").value,
+    tic_dashboard_To_Sell: document.getElementById("tic_dashboard_selling").value,
+    Cost: document.getElementById("tic_dashboard_cost").value,
     Advertisement_text: document.getElementById("advertisement_text").value,
     Advertisement_text: document.getElementById("advertisement_text").value,
   };
@@ -462,9 +462,9 @@ function template_ad_content(json_data) {
   var user_name = json_data["User_Name"];
   var user_id = json_data["User_Id"];
   var cost = json_data["Cost"];
-  var bank_To_Sell = json_data["bank_To_Sell"];
-  var bank_Sources = json_data["bank_Source_Type"];
-  bank_Sources =
+  var tic_dashboard_To_Sell = json_data["tic_dashboard_To_Sell"];
+  var tic_dashboard_Sources = json_data["tic_dashboard_Source_Type"];
+  tic_dashboard_Sources =
     '<span><label><i class="fas fa-sun"></i> Solar ,</label>&nbsp;&nbsp;<label><i class="fas fa-fan"></i> Wind</label></span>';
   var Capacity = json_data["User_Capacity"];
   var Likes_Count = json_data["Likes_Count"];
@@ -496,7 +496,7 @@ function template_ad_content(json_data) {
     '<div class="w3-row-padding " >' +
     '<div class="w3-quarter w3-center w3-right">' +
     "<p >" +
-    '<span class="w3-text-dark-gray"><i class="fas fa-coins" aria-hidden="true"></i> Price (bank Tokens)</span><br>' +
+    '<span class="w3-text-dark-gray"><i class="fas fa-coins" aria-hidden="true"></i> Price (tic_dashboard Tokens)</span><br>' +
     '<span class="ad_cost">' +
     cost +
     "</span> / kwh" +
@@ -505,16 +505,16 @@ function template_ad_content(json_data) {
     '<div class="w3-quarter w3-center w3-right ">' +
     "<p >" +
     '<span class="w3-text-dark-gray"><i class="fas fa-battery-half" aria-hidden="true"></i> Selling</span><br>' +
-    '<span class="ad_bank_to_sell">' +
-    bank_To_Sell +
+    '<span class="ad_tic_dashboard_to_sell">' +
+    tic_dashboard_To_Sell +
     " kwh</span>" +
     "</p>" +
     "</div>" +
     '<div class="w3-quarter w3-center w3-right ">' +
     "<p >" +
     '<span class="w3-text-dark-gray"><i class="fas fa-charging-station" aria-hidden="true"></i> Source(s)</span><br>' +
-    '<span class="ad_bank_sources">' +
-    bank_Sources +
+    '<span class="ad_tic_dashboard_sources">' +
+    tic_dashboard_Sources +
     " </span>" +
     "</p>" +
     "</div>" +
@@ -531,7 +531,7 @@ function template_ad_content(json_data) {
     Likes_Count +
     "</span></button> " +
     '<!-- <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>  Comment <span>16</span></button> -->' +
-    '<button  type="button" onclick="buy_button_clicked.call(this)" class="buy_bank_button w3-button w3-theme-d2 w3-margin-bottom w3-right w3-teal w3-hover-opacity"><i class="fa fa-shopping-cart"></i> Buy</button>' +
+    '<button  type="button" onclick="buy_button_clicked.call(this)" class="buy_tic_dashboard_button w3-button w3-theme-d2 w3-margin-bottom w3-right w3-teal w3-hover-opacity"><i class="fa fa-shopping-cart"></i> Buy</button>' +
     "</div>" +
     "</div>" +
     '<div class="w3-third w3-container w3-hide-small " style="margin-top: 25px;">' +
@@ -587,10 +587,15 @@ function get_advertisements() {
 
 $("#upload_next_button").click(function () {
   alert("hifi");
-  var smartContractChoosenFile = document.getElementById(
-    "smart-contract-file-chosen"
-  );
-  console.log(smartContractChoosenFile.val());
+  // var smartContractChoosenFile = document.getElementById(
+  //   "smart-contract-file-chosen"
+  // );
+
+  var file_data = $("#smart-contract-file-chosen").prop("files")[0]; // Getting the properties of file from file field
+  console.log(file_data);
+  var form_data = new FormData(); // Creating object of FormData class
+  form_data.append("file", file_data); // Appending parameter named file with properties of file_field to form_dat
+  console.log(form_data);
 
   // $.ajax({
   //   type: "POST",

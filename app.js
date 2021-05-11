@@ -218,7 +218,7 @@ app.post("/ad_submit", async (req, res) => {
     let html_json_data = req.body;
     //html_json_data["User_Capacity"] = app_session.capacity;
     // let post_timestamp = html_json_data["Posted_Timestamp"];
-    // let bank_to_sell = html_json_data["bank_To_Sell"];
+    // let tic_dashboard_to_sell = html_json_data["tic_dashboard_To_Sell"];
     // let cost = html_json_data["Cost"];
     let session_info = {
       User_Id: app_session.user_id,
@@ -286,7 +286,7 @@ app.post("/create_user_asset", async (req, res) => {
   let user_name = req.body.User_Name;
   let user_wallet = "100";
 
-  let CHAIN_CODE_NAME = "bank";
+  let CHAIN_CODE_NAME = "tic_dashboard";
   let CHAIN_CODE_FUNCTION_NAME = "CreateAsset";
   app_session = req.session;
 
@@ -318,7 +318,7 @@ app.post("/buy_confirm_invoke_chaincode", async (req, res) => {
   let to_user_name = req.body.seller_user_input;
   let amount = req.body.total_power_price_input;
 
-  let CHAIN_CODE_NAME = "bank";
+  let CHAIN_CODE_NAME = "tic_dashboard";
   let CHAIN_CODE_FUNCTION_NAME = "TransferBalance";
 
   if (app_session.user_name && app_session.password) {
@@ -399,7 +399,7 @@ app.post("/query_chain_code", async (req, res) => {
 
 app.post("/get_user_balance", async (req, res) => {
   let response;
-  let CHAIN_CODE_NAME = "bank";
+  let CHAIN_CODE_NAME = "tic_dashboard";
   let CHAIN_CODE_FUNCTION_NAME = "ReadAsset";
   let QUERY_USER_NAME = req.body.Query_User_Name;
   app_session = req.session;
@@ -434,7 +434,7 @@ app.post("/get_user_balance", async (req, res) => {
 
 app.post("/transfer_amount", async (req, res) => {
   let response;
-  let CHAIN_CODE_NAME = "bank";
+  let CHAIN_CODE_NAME = "tic_dashboard";
   let CHAIN_CODE_FUNCTION_NAME = "TransferBalance";
   let FROM_USER_NAME = req.body.From_User_Name;
   let TO_USER_NAME = req.body.To_User_Name;
@@ -475,7 +475,7 @@ app.post("/transfer_amount", async (req, res) => {
 
 async function get_user_assets_from_chaicode() {
   let response;
-  let CHAIN_CODE_NAME = "bank";
+  let CHAIN_CODE_NAME = "tic_dashboard";
   let CHAIN_CODE_FUNCTION_NAME = "ReadAsset";
   //app_session = req.session;
   if (app_session.user_name && app_session.password) {
@@ -510,7 +510,7 @@ async function get_user_assets_from_chaicode() {
 
 async function get_all_assets_from_chaicode() {
   let response;
-  let CHAIN_CODE_NAME = "bank";
+  let CHAIN_CODE_NAME = "tic_dashboard";
   let CHAIN_CODE_FUNCTION_NAME = "GetAllAssets";
   //app_session = req.session;
   if (app_session.user_name && app_session.password) {

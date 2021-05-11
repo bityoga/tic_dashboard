@@ -1,25 +1,25 @@
 {
-  "name": "bank_app",
+  "name": "tic_dashboard_app",
   "version": "1.0.0",
-  "description": "Articonf Bank App Demo",
+  "description": "Articonf tic_dashboard App Demo",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bityoga/articonf-bank-app.git"
+    "url": "git+https://github.com/bityoga/tic_dashboard.git"
   },
   "keywords": [
     "articonf",
-    "bank app"
+    "tic_dashboard app"
   ],
   "author": "anandhakumar palanisamy",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/bityoga/articonf-bank-app/issues"
+    "url": "https://github.com/bityoga/tic_dashboard/issues"
   },
-  "homepage": "https://github.com/bityoga/articonf-bank-app#readme",
+  "homepage": "https://github.com/bityoga/tic_dashboard#readme",
   "dependencies": {
     "crypto": "^1.0.1",
     "express": "^4.17.1",

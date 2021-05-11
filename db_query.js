@@ -1,7 +1,7 @@
 var express = require("express");
 //const sqlite3 = require('sqlite3').verbose();
 
-let db_name = "bank.sqlite";
+let db_name = "tic_dashboard.sqlite";
 const sqlite3_async = require("sqlite-async");
 
 var fs = require("fs").promises;
@@ -20,7 +20,7 @@ const { write_certificates_from_db_to_wallet } = require("./fileread");
 // 	"User_Address":	"1",
 // 	"User_Geo_Location":	"1",
 // 	"User_Asset_Balance":	0,
-// 	"Available_bank_Sources":	"1",
+// 	"Available_tic_dashboard_Sources":	"1",
 // 	"Accumulated_Generated_Power": 0,
 // 	"Accumulated_Consumed_Power":	0,
 // 	"Smart_Meter_Reading_Updated_Timestamp":	"1",
