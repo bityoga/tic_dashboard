@@ -37,7 +37,7 @@ function get_session_details() {
 
 function update_select_drop_downs(select_id, data_array) {
   var select = document
-    .getElementById("my_profile_iframe")
+    .getElementById("chaincode_management_iframe")
     .contentWindow.document.getElementById(select_id);
   console.log(select);
   // Optional: Clear all existing options first:
@@ -84,8 +84,8 @@ function check_session() {
 
         //$("#session_user_name").text(json['user_name']);
 
-        // console.log($('#my_profile').contents().find('div .session_user_name'));
-        // $('#my_profile').contents().find('.session_user_name').html(json['user_name']);
+        // console.log($('#chaincode_management').contents().find('div .session_user_name'));
+        // $('#chaincode_management').contents().find('.session_user_name').html(json['user_name']);
 
         //$(".session_user_name").text(json['user_name']);
 
@@ -98,12 +98,12 @@ function check_session() {
         $(".buy_button").show();
         $(".query_button").show();
         $(".invoke_button").show();
-        $(".my_profile_button").show();
+        $(".chaincode_management_button").show();
 
         $("#login_check").hide();
         $("#register_check").hide();
         $("#buy").hide();
-        $("#my_profile").show();
+        $("#chaincode_management").show();
         console.log('json["assets"]');
         console.log(json["assets"]);
         if (json["assets"].length > 0) {
@@ -125,9 +125,9 @@ function check_session() {
         $(".buy_button").hide();
         $(".query_button").hide();
         $(".invoke_button").hide();
-        $(".my_profile_button").hide();
+        $(".chaincode_management_button").hide();
 
-        $("#my_profile").hide();
+        $("#chaincode_management").hide();
         $("#register_check").hide();
         $("#buy").hide();
 
