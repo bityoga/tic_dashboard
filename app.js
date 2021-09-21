@@ -626,7 +626,7 @@ app.post("/install_smart_contract", async (req, res) => {
   app_session = req.session;
 
   var chaincodeName = req.body.chaincodeName;
-  var chaincodeVersion = $req.body.chaincodeVersion;
+  var chaincodeVersion = req.body.chaincodeVersion;
   var peer = req.body.peer;
   var channel = req.body.channel;
   var language = req.body.language;
