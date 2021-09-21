@@ -633,20 +633,20 @@ app.post("/install_smart_contract", async (req, res) => {
   var chaincodeSrcPath = req.body.chaincodeSrcPath;
 
   if (app_session.user_name && app_session.password) {
-    // var PEER_HOST = peer;
-    // var CORE_PEER_ADDRESS = peer + ":7051";
-    // var CORE_PEER_MSPCONFIGPATH = "/root/CLI/${ORGCA_HOST}/${ADMIN_USER}/msp";
-    // var CORE_PEER_TLS_ROOTCERT_FILE =
-    //   "/root/CLI/${ORGCA_HOST}/${PEER_HOST}/msp/tls/ca.crt";
-    var environmentalVariables = {
-      PEER_HOST: peer,
-      CORE_PEER_ADDRESS: peer + ":7051",
-      CORE_PEER_MSPCONFIGPATH: "/root/CLI/${ORGCA_HOST}/${ADMIN_USER}/msp",
-      CORE_PEER_TLS_ROOTCERT_FILE:
-        "/root/CLI/${ORGCA_HOST}/${PEER_HOST}/msp/tls/ca.crt",
-    };
-    console.log("environmentalVariables");
-    console.log(environmentalVariables);
+    var PEER_HOST = peer;
+    var CORE_PEER_ADDRESS = PEER_HOST + ":7051";
+    var CORE_PEER_MSPCONFIGPATH = "/root/CLI/${ORGCA_HOST}/${ADMIN_USER}/msp";
+    var CORE_PEER_TLS_ROOTCERT_FILE =
+      "/root/CLI/${ORGCA_HOST}/${PEER_HOST}/msp/tls/ca.crt";
+    // var environmentalVariables = {
+    //   PEER_HOST: peer,
+    //   CORE_PEER_ADDRESS: peer + ":7051",
+    //   CORE_PEER_MSPCONFIGPATH: "/root/CLI/${ORGCA_HOST}/${ADMIN_USER}/msp",
+    //   CORE_PEER_TLS_ROOTCERT_FILE:
+    //     "/root/CLI/${ORGCA_HOST}/${PEER_HOST}/msp/tls/ca.crt",
+    // };
+    //console.log("environmentalVariables");
+    //console.log(environmentalVariables);
     // shell.exec("export PEER_HOST=" + peer);
     // shell.exec("export CORE_PEER_ADDRESS=" + peer + ":7051");
     // shell.exec(
@@ -657,7 +657,13 @@ app.post("/install_smart_contract", async (req, res) => {
     // );
 
     var chaincode_install_command =
-      "CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS CORE_PEER_MSPCONFIGPATH=$CORE_PEER_MSPCONFIGPATH CORE_PEER_TLS_ROOTCERT_FILE=$CORE_PEER_TLS_ROOTCERT_FILE peer chaincode install -n " +
+      "CORE_PEER_ADDRESS=" +
+      CORE_PEER_ADDRESS +
+      " CORE_PEER_MSPCONFIGPATH=" +
+      $CORE_PEER_MSPCONFIGPATH +
+      " CORE_PEER_TLS_ROOTCERT_FILE=" +
+      CORE_PEER_TLS_ROOTCERT_FILE +
+      " peer chaincode install -n " +
       chaincodeName +
       " -v " +
       chaincodeVersion +
@@ -669,26 +675,22 @@ app.post("/install_smart_contract", async (req, res) => {
     console.log("chaincode_install_command");
     console.log(chaincode_install_command);
 
-    shell.exec(
-      chaincode_install_command,
-      { env: environmentalVariables },
-      function (code, stdout, stderr) {
-        console.log("Exit code:", code);
-        console.log("Program output:", stdout);
-        console.log("Program stderr:", stderr);
-        var exec_command_status = {
-          Exit_Code: code,
-          Output: stdout,
-          Error: stderr,
-        };
-        response = {
-          status: "success",
-          data: exec_command_status,
-        };
-        console.log(response);
-        res.json(response);
-      }
-    );
+    shell.exec(chaincode_install_command, function (code, stdout, stderr) {
+      console.log("Exit code:", code);
+      console.log("Program output:", stdout);
+      console.log("Program stderr:", stderr);
+      var exec_command_status = {
+        Exit_Code: code,
+        Output: stdout,
+        Error: stderr,
+      };
+      response = {
+        status: "success",
+        data: exec_command_status,
+      };
+      console.log(response);
+      res.json(response);
+    });
   } else {
     response = {
       status: "Failed",

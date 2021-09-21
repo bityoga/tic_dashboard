@@ -270,7 +270,7 @@ html {
       <!-- <video autoplay loop muted  style = "width: 90%;" src="images/by21.mp4"></video> -->
       <div>
         <!-- <img style="width: 50%; margin-left: 25%;" src="images/p2p-3.gif" alt="Avatar" class="w3-image"  /> -->
-        <img style="margin-left: 6vw;" src="images/bc_anim.gif" alt="Avatar" class="w3-image" />
+        <!-- <img style="margin-left: 6vw;" src="images/bc_anim.gif" alt="Avatar" class="w3-image" /> -->
       </div>
     </div>
   </div>
@@ -293,7 +293,7 @@ html {
 
     <div class="sticky w3-border" style="padding: 20px;">
       <header class="w3-container  w3-center " style="background-color:  #779687!important; color: white;">
-        <h1><i class="fa fa-file-text" aria-hidden="true"></i> Smart Contract Management</h1>
+        <h1><i class="fa fa-file-text" aria-hidden="true"></i> New Smart Contract Installaion</h1>
       </header>
      
 
@@ -757,9 +757,9 @@ $("#install_next_button").click(function () {
   var chaincodeName = $("#chaincodeName").val();
   var chaincodeVersion = $("#chaincodeVersion").val();
   var chaincodeSrcPath = $("#chaincodeSrcPath").val();
-  var peer = $('input[name="smart-contract-install-peer"]:selected').val()
-  var channel = $('input[name="smart-contract-install-channel"]:selected').val()
-  var language = $('input[name="smart-contract-language"]:selected').val()
+  var peer =  document.getElementById("smart-contract-install-peer").value;
+  var channel = document.getElementById("smart-contract-install-channel").value;
+  var language = document.getElementById("smart-contract-language").value;
   
   var ajaxData = {
     chaincodeName: chaincodeName,
@@ -770,6 +770,7 @@ $("#install_next_button").click(function () {
     language:language,
     };
     
+    console.log(ajaxData);
     $("#overlay").show();
     $.ajax({
         type: "POST",
