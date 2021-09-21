@@ -660,7 +660,7 @@ app.post("/install_smart_contract", async (req, res) => {
       "CORE_PEER_ADDRESS=" +
       CORE_PEER_ADDRESS +
       " CORE_PEER_MSPCONFIGPATH=" +
-      $CORE_PEER_MSPCONFIGPATH +
+      CORE_PEER_MSPCONFIGPATH +
       " CORE_PEER_TLS_ROOTCERT_FILE=" +
       CORE_PEER_TLS_ROOTCERT_FILE +
       " peer chaincode install -n " +
