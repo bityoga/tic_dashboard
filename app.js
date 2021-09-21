@@ -637,7 +637,7 @@ app.post("/install_smart_contract", async (req, res) => {
     var CORE_PEER_ADDRESS = PEER_HOST + ":7051";
     var CORE_PEER_MSPCONFIGPATH = "/root/CLI/${ORGCA_HOST}/${ADMIN_USER}/msp";
     var CORE_PEER_TLS_ROOTCERT_FILE =
-      "/root/CLI/${ORGCA_HOST}/${PEER_HOST}/msp/tls/ca.crt";
+      "/root/CLI/${ORGCA_HOST}/" + PEER_HOST + "/msp/tls/ca.crt";
     // var environmentalVariables = {
     //   PEER_HOST: peer,
     //   CORE_PEER_ADDRESS: peer + ":7051",
