@@ -652,6 +652,9 @@ app.post("/install_smart_contract", async (req, res) => {
       " -p " +
       chaincodeSrcPath;
 
+    console.log("chaincode_install_command");
+    console.log(chaincode_install_command);
+
     shell.exec(chaincode_install_command, function (code, stdout, stderr) {
       console.log("Exit code:", code);
       console.log("Program output:", stdout);
