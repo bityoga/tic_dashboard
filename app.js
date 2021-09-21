@@ -14,6 +14,10 @@ const { sqlite_json_insert } = require("./db_query");
 const { check_login_and_load_certificates } = require("./db_query");
 const { db_query } = require("./db_query");
 
+const shell = require("shelljs");
+const chaincode_path = "/root/CLI/chaincodes/";
+//const chaincode_path = "./chaincodes";
+
 // Create a express object
 const app = express();
 app.use(session({ secret: "ssshhhhh" }));
@@ -570,5 +574,108 @@ async function main() {
   //console.log(admin_enroll_status);
   await load_html_template_and_start_app(app_port_number);
 }
+function isEmpty(str) {
+  return !str || str.length === 0;
+}
+
+app.post("/upload_smart_contract_git_clone", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+  var githubUrl = req.body.githubUrlPath;
+  var githubUrlRename = req.body.githubUrlRenamePath;
+  console.log(githubUrl);
+  if (app_session.user_name && app_session.password) {
+    var git_clone_command = "git clone " + githubUrl;
+    if (githubUrlRename) {
+      console.log("new name");
+      console.log(githubUrlRename);
+      git_clone_command = git_clone_command + " " + githubUrlRename;
+    }
+    console.log(git_clone_command);
+    shell.cd(chaincode_path);
+    shell.exec(git_clone_command, function (code, stdout, stderr) {
+      console.log("Exit code:", code);
+      console.log("Program output:", stdout);
+      console.log("Program stderr:", stderr);
+      var exec_command_status = {
+        Exit_Code: code,
+        Output: stdout,
+        Error: stderr,
+      };
+      response = {
+        status: "success",
+        data: exec_command_status,
+      };
+      console.log(response);
+      res.json(response);
+    });
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/install_smart_contract", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  var chaincodeName = req.body.chaincodeName;
+  var chaincodeVersion = $req.body.chaincodeVersion;
+  var peer = req.body.peer;
+  var channel = req.body.channel;
+  var language = req.body.language;
+  var chaincodeSrcPath = req.body.chaincodeSrcPath;
+
+  if (app_session.user_name && app_session.password) {
+    shell.exec("export PEER_HOST=" + peer);
+    shell.exec("export CORE_PEER_ADDRESS=" + peer + ":7051");
+    shell.exec(
+      "export CORE_PEER_MSPCONFIGPATH=/root/CLI/${ORGCA_HOST}/${ADMIN_USER}/msp"
+    );
+    shell.exec(
+      "export CORE_PEER_TLS_ROOTCERT_FILE=/root/CLI/${ORGCA_HOST}/${PEER_HOST}/msp/tls/ca.crt"
+    );
+
+    var chaincode_install_command =
+      "CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS CORE_PEER_MSPCONFIGPATH=$CORE_PEER_MSPCONFIGPATH CORE_PEER_TLS_ROOTCERT_FILE=$CORE_PEER_TLS_ROOTCERT_FILE peer chaincode install -n " +
+      chaincodeName +
+      " -v " +
+      chaincodeVersion +
+      " -l " +
+      language +
+      " -p " +
+      chaincodeSrcPath;
+
+    shell.exec(chaincode_install_command, function (code, stdout, stderr) {
+      console.log("Exit code:", code);
+      console.log("Program output:", stdout);
+      console.log("Program stderr:", stderr);
+      var exec_command_status = {
+        Exit_Code: code,
+        Output: stdout,
+        Error: stderr,
+      };
+      response = {
+        status: "success",
+        data: exec_command_status,
+      };
+      console.log(response);
+      res.json(response);
+    });
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
 
 main();

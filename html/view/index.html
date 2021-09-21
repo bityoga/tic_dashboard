@@ -29,17 +29,12 @@
         <button
           onclick="check_session();"
           class="w3-bar-item w3-left w3-hover-opacity"
-          style="
-            cursor: pointer;
-            color: #666;
-            background-color: #f8f8f8;
-          "
+          style="cursor: pointer; color: #666; background-color: #f8f8f8;"
           title="Home"
         >
-        <i class="fa fa-cube"></i> Tic Dashboard
-       
+          <i class="fa fa-cube"></i> Tic Dashboard
         </button>
-       
+
         <a
           href="#"
           onclick="logout()"
@@ -47,7 +42,7 @@
           class="logout_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
           ><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a
         >
-      
+
         <a
           href="#"
           onclick="openLink(event, 'login_check')"
@@ -63,21 +58,58 @@
           ><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a
         >
 
-       
         <a
           href="#"
           onclick="document.getElementById('sell').style.display='block'"
           style="width: auto; display: none;"
           class="query_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
-          ><i class="fa fa-pencil" aria-hidden="true"></i> Asset History</a
+          ><i class="fa fa-pencil" aria-hidden="true"></i> Invoke</a
         >
         <a
           href="#"
           onclick="document.getElementById('query_chain_code_div').style.display='block'"
           style="width: auto; display: none;"
           class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
-          ><i class="fa fa-question-circle" aria-hidden="true"></i> Query All
-          Assets</a
+          ><i class="fa fa-question-circle" aria-hidden="true"></i>Query</a
+        >
+        <a
+          href="#"
+          onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
+          style="width: auto; display: none;"
+          class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-trash" aria-hidden="true"></i>Delete</a
+        >
+
+        <a
+          href="#"
+          onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
+          style="width: auto; display: none;"
+          class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-refresh" aria-hidden="true"></i>Update</a
+        >
+
+        <a
+          href="#"
+          onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
+          style="width: auto; display: none;"
+          class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-desktop" aria-hidden="true"></i> Install</a
+        >
+
+        <a
+          href="#"
+          onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
+          style="width: auto; display: none;"
+          class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-file" aria-hidden="true"></i> Manage Uploads</a
+        >
+
+        <a
+          href="#"
+          onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
+          style="width: auto; display: none;"
+          class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-plus" aria-hidden="true"></i> Create</a
         >
 
         <a
@@ -101,16 +133,51 @@
         onclick="document.getElementById('sell').style.display='block'"
         style="width: auto; display: none;"
         class="query_button w3-bar-item w3-button w3-hover-blue tablink"
-        ><i class="fa fa-pencil" aria-hidden="true"></i> Asset History</a
+        ><i class="fa fa-plus" aria-hidden="true"></i> Create</a
       >
       <a
         href="#"
-        onclick="document.getElementById('query_chain_code_div').style.display='block'"
+        onclick="document.getElementById('sell').style.display='block'"
         style="width: auto; display: none;"
-        class="invoke_button w3-bar-item w3-button w3-hover-blue tablink"
-        ><i class="fa fa-question-circle" aria-hidden="true"></i> Query All
-        Assets</a
+        class="query_button w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-file" aria-hidden="true"></i> Manage Uploads</a
       >
+      <a
+        href="#"
+        onclick="document.getElementById('sell').style.display='block'"
+        style="width: auto; display: none;"
+        class="query_button w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-desktop" aria-hidden="true"></i> Install</a
+      >
+      <a
+        href="#"
+        onclick="document.getElementById('sell').style.display='block'"
+        style="width: auto; display: none;"
+        class="query_button w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-refresh" aria-hidden="true"></i> Update</a
+      >
+      <a
+        href="#"
+        onclick="document.getElementById('sell').style.display='block'"
+        style="width: auto; display: none;"
+        class="query_button w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-trash" aria-hidden="true"></i> Delete</a
+      >
+      <a
+        href="#"
+        onclick="document.getElementById('sell').style.display='block'"
+        style="width: auto; display: none;"
+        class="query_button w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-question-circle" aria-hidden="true"></i> Query</a
+      >
+      <a
+        href="#"
+        onclick="document.getElementById('sell').style.display='block'"
+        style="width: auto; display: none;"
+        class="query_button w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-pencil" aria-hidden="true"></i> Invoke</a
+      >
+
       <a
         href="#"
         onclick="logout()"
@@ -119,7 +186,6 @@
         ><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a
       >
 
-   
       <a
         href="#"
         onclick="openLink(event, 'login_check')"
@@ -134,7 +200,6 @@
         class="register_button w3-bar-item w3-button w3-hover-blue tablink"
         ><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a
       >
-    
     </div>
 
     <div
@@ -153,96 +218,94 @@
       ></iframe>
     </div>
 
-    <div id="sell" class="modal" style="overflow: visible;">
-      <form
-        id="sell_form"
-        action="/sell"
-        enctype="multipart/form-data"
-        method="POST"
-        class="modal-content animate"
-      >
-        <div class="imgcontainer">
-          <span
-            onclick="document.getElementById('sell').style.display='none'"
-            class="close"
-            title="Close Modal"
-            style="top: -17px;"
-            >&times;</span
-          >
-          <strong><span>Asset History</span></strong>
-          <!-- <img src="images/avatar2.png" alt="Avatar" class="avatar"> -->
-        </div>
-        <hr />
-        <div class="container">
-          <label for="Chain_Code_Name"><b>Chaincode Name</b></label>
-          <input
-            type="text"
-            placeholder="Enter Chaincode Name"
-            name="Chain_Code_Name"
-            id="Chain_Code_Name"
-            value="tic_dashboard"
-            required
-          />
-
-          <label for="Chain_Code_Function_Name"
-            ><b>Chain Code Function Name</b></label
-          >
-          <input
-            type="text"
-            placeholder="Enter Chain_Code_Function_Name"
-            name="Chain_Code_Function_Name"
-            id="Chain_Code_Function_Name"
-            value="GetAssetHistory"
-            required
-          />
-
-          <label for="car_license_plate"><b>User Name</b></label>
-          <!-- <input
-            type="text"
-            placeholder="Enter Car_License_Plate"
-            name="User_Name"
-            id="User_Name"
-            required
-          /> -->
-
-          <select
-            class="w3-select w3-border w3-center"
-            name="History_User_Name"
-            id="History_User_Name"
-            name="option"
-            style="font-weight: bold; color: black; background-color: white;"
-          >
-          </select>
-
-          <div
-            id="sell_loader"
-            class="loader w3-center"
-            style="
-              display: none;
-              width: 50px;
-              height: 50px;
-              margin-left: 45%;
-              margin-right: 45%;
-            "
-          ></div>
-          <button type="submit">Get Assset History</button>
-        </div>
-
-        <div class="container" style="background-color: #f1f1f1;">
-          <button
-            type="button"
-            onclick="document.getElementById('sell').style.display='none'"
-            class="cancelbtn"
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
+    <div
+      id="chaincode_install"
+      class="iframe_holder"
+      style="background-color: white; display: none;"
+    >
+      <iframe
+        id="chaincode_install_iframe"
+        src="chaincode_install.html"
+        width="100%"
+        height="100%"
+        marginwidth="0"
+        marginheight="0"
+        frameborder="0"
+      ></iframe>
     </div>
 
-    <div id="buy" class="iframe_holder" style="display: none;">
+    <div
+      id="chaincode_delete"
+      class="iframe_holder"
+      style="background-color: white; display: none;"
+    >
       <iframe
-        src="buy_page.html"
+        id="chaincode_delete_iframe"
+        src="chaincode_delete.html"
+        width="100%"
+        height="100%"
+        marginwidth="0"
+        marginheight="0"
+        frameborder="0"
+      ></iframe>
+    </div>
+
+    <div
+      id="chaincode_delete"
+      class="iframe_holder"
+      style="background-color: white; display: none;"
+    >
+      <iframe
+        id="chaincode_delete_iframe"
+        src="chaincode_delete.html"
+        width="100%"
+        height="100%"
+        marginwidth="0"
+        marginheight="0"
+        frameborder="0"
+      ></iframe>
+    </div>
+
+    <div
+      id="chaincode_delete"
+      class="iframe_holder"
+      style="background-color: white; display: none;"
+    >
+      <iframe
+        id="chaincode_delete_iframe"
+        src="chaincode_delete.html"
+        width="100%"
+        height="100%"
+        marginwidth="0"
+        marginheight="0"
+        frameborder="0"
+      ></iframe>
+    </div>
+
+    <div
+      id="chaincode_delete"
+      class="iframe_holder"
+      style="background-color: white; display: none;"
+    >
+      <iframe
+        id="chaincode_delete_iframe"
+        src="chaincode_delete.html"
+        width="100%"
+        height="100%"
+        marginwidth="0"
+        marginheight="0"
+        frameborder="0"
+      ></iframe>
+    </div>
+
+    <div
+      id="chaincode_delete"
+      class="iframe_holder"
+      style="background-color: white; display: none;"
+    >
+      <iframe
+        id="chaincode_delete_iframe"
+        src="chaincode_delete.html"
         width="100%"
         height="100%"
         marginwidth="0"

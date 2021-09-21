@@ -29,6 +29,7 @@
     "fabric-network": "~1.4.3",
     "fs": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
+    "shelljs": "^0.8.4",
     "sqlite-async": "^1.1.0"
   },
   "devDependencies": {

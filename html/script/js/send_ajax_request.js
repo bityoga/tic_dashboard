@@ -421,7 +421,8 @@ $("#ad_submit").click(function () {
   var time = new Date();
   var user_json = {
     Posted_Timestamp: time.toString().slice(0, -41),
-    tic_dashboard_To_Sell: document.getElementById("tic_dashboard_selling").value,
+    tic_dashboard_To_Sell: document.getElementById("tic_dashboard_selling")
+      .value,
     Cost: document.getElementById("tic_dashboard_cost").value,
     Advertisement_text: document.getElementById("advertisement_text").value,
     Advertisement_text: document.getElementById("advertisement_text").value,
@@ -585,40 +586,96 @@ function get_advertisements() {
   });
 }
 
-$("#upload_next_button").click(function () {
-  alert("hifi");
-  // var smartContractChoosenFile = document.getElementById(
-  //   "smart-contract-file-chosen"
-  // );
+function validURL(str) {
+  var pattern = new RegExp(
+    "^(https?:\\/\\/)?" + // protocol
+    "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+    "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+    "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+    "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+      "(\\#[-a-z\\d_]*)?$",
+    "i"
+  ); // fragment locator
+  return !!pattern.test(str);
+}
 
-  var file_data = $("#smart-contract-file-chosen").prop("files")[0]; // Getting the properties of file from file field
-  console.log(file_data);
-  var form_data = new FormData(); // Creating object of FormData class
-  form_data.append("file", file_data); // Appending parameter named file with properties of file_field to form_dat
-  console.log(form_data);
+// $("#upload_next_button").click(function () {
+//   //alert("hifi");
+//   var fileUploadType = $('input[name="fileUploadTypeSelection"]:checked').val();
+//   alert(fileUploadType);
+//   if (fileUploadType === "github") {
+//     // send ajax request to git clone
+//     var githubUrl = $("#githubUrl").val();
+//     var githubUrlJsondata = {
+//       githubUrlPath: githubUrl,
+//     };
+//     alert(githubUrl);
+//     isvalidUrl = validURL(githubUrl);
+//     alert(isvalidUrl);
+//     if (isvalidUrl) {
+//       // send ajax request to git clone
+//       //document.getElementById("ad_loader").style.display = "block";
+//       $.ajax({
+//         type: "POST",
+//         url: "/upload_smart_contract_git_clone",
+//         async: true,
+//         dataType: "json",
+//         data: githubUrlJsondata,
+//         complete: function (data) {
+//           //document.getElementById("ad_loader").style.display = "none";
+//           var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+//           swal.fire(json["status"]);
+//           if (json["status"] === "success") {
+//             //console.log(document.getElementById('Login_User_Name').value);
+//             //$(parent.document).find("#session_user_name").text(document.getElementById("Login_User_Name").value);
+//             //$(parent.document).find("#welcome_user_span").show();
+//             //$(parent.document).find("#logout_button").show();
+//             console.log(json);
+//             alert(json["status"]);
+//             //get_advertisements();
+//             //document.getElementById('iframeID').contentWindow.location.reload();
+//             //parent.document.getElementById("buy").location.reload();
+//             //swal.fire(json["status"]);
+//             window.top.location.href = "/";
+//           }
+//         },
+//       });
+//     }
+//   } else {
+//     // send ajax request to file upload
+//   }
+//   // var smartContractChoosenFile = document.getElementById(
+//   //   "smart-contract-file-chosen"
+//   // );
 
-  // $.ajax({
-  //   type: "POST",
-  //   url: "/upload_smart_contract",
-  //   async: true,
-  //   dataType: "json",
-  //   data: user_json,
-  //   complete: function (data) {
-  //     document.getElementById("ad_loader").style.display = "none";
-  //     var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
-  //     swal.fire(json["status"]);
-  //     if (json["status"] === "success") {
-  //       //console.log(document.getElementById('Login_User_Name').value);
-  //       //$(parent.document).find("#session_user_name").text(document.getElementById("Login_User_Name").value);
-  //       //$(parent.document).find("#welcome_user_span").show();
-  //       //$(parent.document).find("#logout_button").show();
-  //       console.log(json["status"]);
-  //       //get_advertisements();
-  //       //document.getElementById('iframeID').contentWindow.location.reload();
-  //       //parent.document.getElementById("buy").location.reload();
-  //       //swal.fire(json["status"]);
-  //       window.top.location.href = "/";
-  //     }
-  //   },
-  // });
-});
+//   var file_data = $("#smart-contract-file-chosen").prop("files")[0]; // Getting the properties of file from file field
+//   console.log(file_data);
+//   var form_data = new FormData(); // Creating object of FormData class
+//   form_data.append("file", file_data); // Appending parameter named file with properties of file_field to form_dat
+//   console.log(form_data);
+
+//   // $.ajax({
+//   //   type: "POST",
+//   //   url: "/upload_smart_contract",
+//   //   async: true,
+//   //   dataType: "json",
+//   //   data: user_json,
+//   //   complete: function (data) {
+//   //     document.getElementById("ad_loader").style.display = "none";
+//   //     var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+//   //     swal.fire(json["status"]);
+//   //     if (json["status"] === "success") {
+//   //       //console.log(document.getElementById('Login_User_Name').value);
+//   //       //$(parent.document).find("#session_user_name").text(document.getElementById("Login_User_Name").value);
+//   //       //$(parent.document).find("#welcome_user_span").show();
+//   //       //$(parent.document).find("#logout_button").show();
+//   //       console.log(json["status"]);
+//   //       //get_advertisements();
+//   //       //document.getElementById('iframeID').contentWindow.location.reload();
+//   //       //parent.document.getElementById("buy").location.reload();
+//   //       //swal.fire(json["status"]);
+//   //       window.top.location.href = "/";
+//   //     }
+//   //   },
+//   // });
+// });
