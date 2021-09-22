@@ -813,9 +813,15 @@ $("#instantiate_next_button").click(function () {
 function increase_progress_bar( sectionid) {
 
   alert(sectionid);
+  console.log("sectionid");
   console.log(sectionid);
 current_fs = $(sectionid).parent();
 next_fs = $(sectionid).parent().next();
+
+console.log("current_fs");
+console.log(current_fs);
+console.log("next_fs");
+console.log(next_fs);
 
 var next_fs_index = $("fieldset").index(next_fs);
 alert(next_fs_index);
