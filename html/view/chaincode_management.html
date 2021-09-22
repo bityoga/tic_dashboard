@@ -786,7 +786,7 @@ $("#install_next_button").click(function () {
             {
               //swal.fire('Chaincode Uploaded successfully');
               Swal.fire('Chaincode installed successfully').then(function(){
-                increase_progress_bar($(this));
+                increase_progress_bar("#install_next_button");
               });
               
             }
