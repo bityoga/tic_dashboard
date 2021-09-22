@@ -786,7 +786,7 @@ $("#install_next_button").click(function () {
             {
               //swal.fire('Chaincode Uploaded successfully');
               Swal.fire('Chaincode installed successfully').then(function(){
-                increase_progress_bar("#install_next_button");
+                increase_progress_bar($(this));
               });
               
             }
@@ -811,7 +811,9 @@ $("#instantiate_next_button").click(function () {
 
 
 function increase_progress_bar( sectionid) {
-  
+
+  alert(sectionid);
+  console.log(sectionid);
 current_fs = $(sectionid).parent();
 next_fs = $(sectionid).parent().next();
 

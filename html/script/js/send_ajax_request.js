@@ -271,7 +271,7 @@ $("#login_form").submit(function (e) {
       //swal.fire(json["status"]);
 
       swal.fire({
-        title: "Registration Status",
+        title: "Login Status",
         text: json["status"],
         icon: "success",
         confirmButtonText: '<i class="fa fa-thumbs-up"></i> Great!',
