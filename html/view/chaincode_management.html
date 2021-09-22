@@ -754,50 +754,50 @@ $("#upload_next_button").click(function () {
 });
 
 $("#install_next_button").click(function () {
-
-  var chaincodeName = $("#chaincodeName").val();
-  var chaincodeVersion = $("#chaincodeVersion").val();
-  var chaincodeSrcPath = $("#chaincodeSrcPath").val();
-  var peer =  document.getElementById("smart-contract-install-peer").value;
-  var channel = document.getElementById("smart-contract-install-channel").value;
-  var language = document.getElementById("smart-contract-language").value;
+  increase_progress_bar("#install_next_button");
+  // var chaincodeName = $("#chaincodeName").val();
+  // var chaincodeVersion = $("#chaincodeVersion").val();
+  // var chaincodeSrcPath = $("#chaincodeSrcPath").val();
+  // var peer =  document.getElementById("smart-contract-install-peer").value;
+  // var channel = document.getElementById("smart-contract-install-channel").value;
+  // var language = document.getElementById("smart-contract-language").value;
   
-  var ajaxData = {
-    chaincodeName: chaincodeName,
-    chaincodeVersion: chaincodeVersion,
-    chaincodeSrcPath:chaincodeSrcPath,
-    peer:peer,
-    channel:channel,
-    language:language,
-    };
+  // var ajaxData = {
+  //   chaincodeName: chaincodeName,
+  //   chaincodeVersion: chaincodeVersion,
+  //   chaincodeSrcPath:chaincodeSrcPath,
+  //   peer:peer,
+  //   channel:channel,
+  //   language:language,
+  //   };
     
-    console.log(ajaxData);
-    $("#overlay").show();
-    $.ajax({
-        type: "POST",
-        url: "/install_smart_contract",
-        async: true,
-        dataType: "json",
-        data: ajaxData,
-        complete: function (data) {
-          $("#overlay").hide();
-          var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
-          var shell_exec_status=json["data"];
-          if (shell_exec_status['Exit_Code']==0)
-            {
-              //swal.fire('Chaincode Uploaded successfully');
-              Swal.fire('Chaincode installed successfully').then(function(){
-                increase_progress_bar("#install_next_button");
-              });
+  //   console.log(ajaxData);
+  //   $("#overlay").show();
+  //   $.ajax({
+  //       type: "POST",
+  //       url: "/install_smart_contract",
+  //       async: true,
+  //       dataType: "json",
+  //       data: ajaxData,
+  //       complete: function (data) {
+  //         $("#overlay").hide();
+  //         var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+  //         var shell_exec_status=json["data"];
+  //         if (shell_exec_status['Exit_Code']==0)
+  //           {
+  //             //swal.fire('Chaincode Uploaded successfully');
+  //             Swal.fire('Chaincode installed successfully').then(function(){
+  //               increase_progress_bar("#install_next_button");
+  //             });
               
-            }
-          else {
-            swal.fire('Chaincode Install Failed - '+ shell_exec_status['Error']);
-          }
+  //           }
+  //         else {
+  //           swal.fire('Chaincode Install Failed - '+ shell_exec_status['Error']);
+  //         }
             
             
-        },
-      });
+  //       },
+  //     });
   
      
   
