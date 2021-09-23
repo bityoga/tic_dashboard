@@ -373,10 +373,10 @@ html {
                               <div id="github-private-repo-auth-credential-info-div">
 
                                 <label class="fieldlabels">Github Repo User Name: *</label> 
-                                <input type="text" name="githubUrl" placeholder="Github Repository Url" /> 
+                                <input type="text" name="githubUrl" id="githubUserName" placeholder="Github User Name" /> 
   
                                 <label class="fieldlabels">Github Repo Password: *</label> 
-                                <input type="text" name="githubUrl" placeholder="Github Repository Url" /> 
+                                <input type="password" name="githubUrl" id="githubUserPassword" placeholder="Github User Password" /> 
   
                               </div>
   
@@ -440,7 +440,7 @@ html {
                                   <label class="fieldlabels">Select Smart Contract Implementation Language</label> 
                                   <select id="smart-contract-language" class="custom-select custom-select-lg mb-3">
                                     <option selected value="node">node</option>
-                                    <option value="go">go</option>
+                                    <option value="golang">golang</option>
                                   </select>
                                 </div>
 
@@ -702,12 +702,19 @@ $("#upload_next_button").click(function () {
   
   var fileUploadType = $('input[name="fileUploadTypeSelection"]:checked').val();
   if (fileUploadType === "github") {
+    var githubRepoType = $('input[name="githubRepoType"]:checked').val();
     // send ajax request to git clone
     var githubUrl = $("#githubUrl").val();
     var githubUrlRename = $("#githubUrlRename").val();
+    var githubUserName = $("#githubUserName").val();
+    var githubUserPassword = $("#githubUserPassword").val();
+    
     var githubUrlJsondata = {
       githubUrlPath: githubUrl,
-      githubUrlRenamePath: githubUrlRename
+      githubUrlRenamePath: githubUrlRename,
+      githubRepoType:githubRepoType,
+      githubUserName:githubUserName,
+      githubUserPassword:githubUserPassword,
     };
     //alert(githubUrl);
     isvalidUrl = validURL(githubUrl);
