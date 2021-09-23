@@ -15,8 +15,8 @@ const { check_login_and_load_certificates } = require("./db_query");
 const { db_query } = require("./db_query");
 
 const shell = require("shelljs");
-//const chaincode_path = "/root/CLI/chaincodes/";
-const chaincode_path = "./chaincodes";
+const chaincode_path = "/root/CLI/chaincodes/";
+//const chaincode_path = "./chaincodes";
 
 // Create a express object
 const app = express();
