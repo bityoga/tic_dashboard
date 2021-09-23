@@ -721,7 +721,7 @@ app.post("/instantiate_smart_contract", async (req, res) => {
       chaincodeVersion +
       " -c " +
       chaincodeInstantiateParams +
-      "-o ${ORDERER_HOST}:7050 --tls --cafile " +
+      " -o ${ORDERER_HOST}:7050 --tls --cafile " +
       CORE_PEER_TLS_ROOTCERT_FILE;
 
     console.log("chaincode_instantiate_command");
