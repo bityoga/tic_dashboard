@@ -638,23 +638,6 @@ app.post("/install_smart_contract", async (req, res) => {
     var CORE_PEER_MSPCONFIGPATH = "/root/CLI/${ORGCA_HOST}/${ADMIN_USER}/msp";
     var CORE_PEER_TLS_ROOTCERT_FILE =
       "/root/CLI/${ORGCA_HOST}/" + PEER_HOST + "/msp/tls/ca.crt";
-    // var environmentalVariables = {
-    //   PEER_HOST: peer,
-    //   CORE_PEER_ADDRESS: peer + ":7051",
-    //   CORE_PEER_MSPCONFIGPATH: "/root/CLI/${ORGCA_HOST}/${ADMIN_USER}/msp",
-    //   CORE_PEER_TLS_ROOTCERT_FILE:
-    //     "/root/CLI/${ORGCA_HOST}/${PEER_HOST}/msp/tls/ca.crt",
-    // };
-    //console.log("environmentalVariables");
-    //console.log(environmentalVariables);
-    // shell.exec("export PEER_HOST=" + peer);
-    // shell.exec("export CORE_PEER_ADDRESS=" + peer + ":7051");
-    // shell.exec(
-    //   "export CORE_PEER_MSPCONFIGPATH=/root/CLI/${ORGCA_HOST}/${ADMIN_USER}/msp"
-    // );
-    // shell.exec(
-    //   "export CORE_PEER_TLS_ROOTCERT_FILE=/root/CLI/${ORGCA_HOST}/${PEER_HOST}/msp/tls/ca.crt"
-    // );
 
     var chaincode_install_command =
       "CORE_PEER_ADDRESS=" +
@@ -676,6 +659,75 @@ app.post("/install_smart_contract", async (req, res) => {
     console.log(chaincode_install_command);
 
     shell.exec(chaincode_install_command, function (code, stdout, stderr) {
+      console.log("Exit code:", code);
+      console.log("Program output:", stdout);
+      console.log("Program stderr:", stderr);
+      var exec_command_status = {
+        Exit_Code: code,
+        Output: stdout,
+        Error: stderr,
+      };
+      response = {
+        status: "success",
+        data: exec_command_status,
+      };
+      console.log(response);
+      res.json(response);
+    });
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/instantiate_smart_contract", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  var chaincodeName = req.body.chaincodeName;
+  var chaincodeVersion = req.body.chaincodeVersion;
+  var peer = req.body.peer;
+  var channel = req.body.channel;
+  var language = req.body.language;
+  var chaincodeSrcPath = req.body.chaincodeSrcPath;
+  var chaincodeInstantiateParams = req.body.chaincodeInstantiateParams;
+
+  if (app_session.user_name && app_session.password) {
+    var PEER_HOST = peer;
+    var CORE_PEER_ADDRESS = PEER_HOST + ":7051";
+    var CORE_PEER_MSPCONFIGPATH = "/root/CLI/${ORGCA_HOST}/${ADMIN_USER}/msp";
+    var CORE_PEER_TLS_ROOTCERT_FILE =
+      "/root/CLI/${ORGCA_HOST}/" + PEER_HOST + "/msp/tls/ca.crt";
+
+    // CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS CORE_PEER_MSPCONFIGPATH=$CORE_PEER_MSPCONFIGPATH CORE_PEER_TLS_ROOTCERT_FILE=$CORE_PEER_TLS_ROOTCERT_FILE peer chaincode instantiate -C $CHANNEL_NAME -n $CHAINCODE_NAME -v $CHAINCODE_VERSION -c $INSTANTIATE_PARAMS -o ${ORDERER_HOST}:7050 --tls --cafile ${CORE_PEER_TLS_ROOTCERT_FILE}
+
+    var chaincode_instantiate_command =
+      "CORE_PEER_ADDRESS=" +
+      CORE_PEER_ADDRESS +
+      " CORE_PEER_MSPCONFIGPATH=" +
+      CORE_PEER_MSPCONFIGPATH +
+      " CORE_PEER_TLS_ROOTCERT_FILE=" +
+      CORE_PEER_TLS_ROOTCERT_FILE +
+      " peer chaincode instantiate -C " +
+      channel +
+      " -n " +
+      chaincodeName +
+      " -v " +
+      chaincodeVersion +
+      " -c " +
+      chaincodeInstantiateParams +
+      "-o ${ORDERER_HOST}:7050 --tls --cafile " +
+      CORE_PEER_TLS_ROOTCERT_FILE;
+
+    console.log("chaincode_instantiate_command");
+    console.log(chaincode_instantiate_command);
+
+    shell.exec(chaincode_instantiate_command, function (code, stdout, stderr) {
       console.log("Exit code:", code);
       console.log("Program output:", stdout);
       console.log("Program stderr:", stderr);
