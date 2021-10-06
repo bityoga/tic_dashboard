@@ -375,11 +375,9 @@ html {
 
                               <div id="github-private-repo-auth-credential-info-div">
 
-                                <label class="fieldlabels">Github Repo User Name: *</label> 
-                                <input type="text" name="githubUrl" id="githubUserName" placeholder="Github User Name" /> 
-  
-                                <label class="fieldlabels">Github Repo Password: *</label> 
-                                <input type="password" name="githubUrl" id="githubUserPassword" placeholder="Github User Password" /> 
+                              
+                                <label class="fieldlabels">Your Github Access Token: (<a href="https://github.com/settings/tokens">Visit to generate a access token</a> )*</label> 
+                                <input type="password" name="githubAccessToken" id="githubAccessToken" placeholder="Github Access Token" /> 
   
                               </div>
   
@@ -709,16 +707,14 @@ $("#upload_next_button").click(function () {
     // send ajax request to git clone
     var githubUrl = $("#githubUrl").val();
     var githubUrlRename = $("#githubUrlRename").val();
-    var githubUserName = $("#githubUserName").val();
-    var githubUserPassword = $("#githubUserPassword").val();
+    var githubAccessToken = $("#githubAccessToken").val();
     var githubUrlBranch = $("#githubUrlBranch").val();
     
     var githubUrlJsondata = {
       githubUrlPath: githubUrl,
       githubUrlRenamePath: githubUrlRename,
       githubRepoType:githubRepoType,
-      githubUserName:githubUserName,
-      githubUserPassword:githubUserPassword,
+      githubAccessToken:githubAccessToken,
       githubUrlBranch:githubUrlBranch,
     };
     //alert(githubUrl);

@@ -160,8 +160,7 @@ app.post("/upload_smart_contract_git_clone", async (req, res) => {
   var githubUrl = req.body.githubUrlPath;
   var githubUrlRename = req.body.githubUrlRenamePath;
   var githubRepoType = req.body.githubRepoType;
-  var githubUserName = req.body.githubUserName;
-  var githubUserPassword = req.body.githubUserPassword;
+  var githubAccessToken = req.body.githubAccessToken;
   var githubUrlBranch = req.body.githubUrlBranch;
   console.log(githubUrl);
   if (app_session.user_name && app_session.password) {
@@ -177,12 +176,11 @@ app.post("/upload_smart_contract_git_clone", async (req, res) => {
       git_clone_command = git_clone_command + " " + githubUrl;
     } else {
       //git clone https://username:password@github.com/username/repository.git
+      //git clone https://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@github.com/bityoga/smart_energy_chaincodes.git
       git_clone_command =
         git_clone_command +
         " https://" +
-        githubUserName +
-        ":" +
-        githubUserPassword +
+        githubAccessToken +
         "@" +
         githubUrl.replace(/(^\w+:|^)\/\//, "");
     }
