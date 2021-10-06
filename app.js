@@ -162,29 +162,37 @@ app.post("/upload_smart_contract_git_clone", async (req, res) => {
   var githubRepoType = req.body.githubRepoType;
   var githubUserName = req.body.githubUserName;
   var githubUserPassword = req.body.githubUserPassword;
-
+  var githubUrlBranch = req.body.githubUrlBranch;
   console.log(githubUrl);
   if (app_session.user_name && app_session.password) {
-    var git_clone_command = "git clone " + githubUrl;
+    var git_clone_command = "git clone ";
+    if (githubUrlBranch) {
+      //--single-branch --branch <branchname>
+      git_clone_command =
+        git_clone_command + "--single-branch --branch " + githubUrlBranch + " ";
+    }
+
+    if (githubRepoType === "public") {
+      // git clone https://github.com/bityoga/smart_energy_chaincodes.git
+      git_clone_command = git_clone_command + " " + githubUrl;
+    } else {
+      //git clone https://username:password@github.com/username/repository.git
+      git_clone_command =
+        git_clone_command +
+        " https://" +
+        githubUserName +
+        ":" +
+        githubUserPassword +
+        "@" +
+        githubUrl.replace(/(^\w+:|^)\/\//, "");
+    }
+
     if (githubUrlRename) {
       console.log("new name");
       console.log(githubUrlRename);
-      if (githubRepoType === "public") {
-        // git clone https://github.com/bityoga/smart_energy_chaincodes.git
-        git_clone_command = git_clone_command + " " + githubUrlRename;
-      } else {
-        //git clone https://username:password@github.com/username/repository.git
-        git_clone_command =
-          git_clone_command +
-          " https://" +
-          githubUserName +
-          ":" +
-          githubUserPassword +
-          githubUrlRename +
-          "@" +
-          githubUrlRename.replace(/(^\w+:|^)\/\//, "");
-      }
+      git_clone_command = git_clone_command + " " + githubUrlRename;
     }
+    console.log("git_clone_command");
     console.log(git_clone_command);
     shell.cd(chaincode_path);
     shell.exec(git_clone_command, function (code, stdout, stderr) {

@@ -353,6 +353,9 @@ html {
                               <label class="fieldlabels">Github Repo Url: *</label> 
                               <input type="text" name="githubUrl" id="githubUrl" placeholder="Github Repository Url" /> 
 
+                              <label class="fieldlabels">Specific branch (Other than master) *</label> 
+                              <input type="text" name="githubUrlBranch" id="githubUrlBranch" placeholder="Github Repository Branch" /> 
+
                               <label class="fieldlabels">Rename Smart Contract(Optional): *</label> 
                               <input type="text" name="githubUrlRename" id="githubUrlRename" placeholder="New Name for chaincode" /> 
 
@@ -708,6 +711,7 @@ $("#upload_next_button").click(function () {
     var githubUrlRename = $("#githubUrlRename").val();
     var githubUserName = $("#githubUserName").val();
     var githubUserPassword = $("#githubUserPassword").val();
+    var githubUrlBranch = $("#githubUrlBranch").val();
     
     var githubUrlJsondata = {
       githubUrlPath: githubUrl,
@@ -715,6 +719,7 @@ $("#upload_next_button").click(function () {
       githubRepoType:githubRepoType,
       githubUserName:githubUserName,
       githubUserPassword:githubUserPassword,
+      githubUrlBranch:githubUrlBranch,
     };
     //alert(githubUrl);
     isvalidUrl = validURL(githubUrl);

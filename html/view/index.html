@@ -577,14 +577,11 @@
     </div>
     <script type="text/javascript" src="js/send_ajax_request.js"></script>
     <script type="text/javascript" src="js/double_menu.js"></script>
-    <script type="text/javascript">
-      //$("#home").load("home_page.html");
-      //$("#login").load("login.html");
-    </script>
-    <script type="text/javascript" src="js/modal.js"></script>
 
     <script type="text/javascript">
-      check_session();
+      $(document).ready(function () {
+        check_session();
+      });
     </script>
   </body>
 </html>
