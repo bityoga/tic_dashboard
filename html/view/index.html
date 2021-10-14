@@ -19,170 +19,30 @@
     ></script>
 
     <link rel="stylesheet" href="css/app.css" />
+    <!-- loading scripts and styles -->
+
+    <script src="js/getfilelist.js"></script>
+    <script src="js/uploader.js"></script>
   </head>
   <body>
-    <div class="w3-top">
-      <div
-        class="w3-bar w3-large w3-collapse"
-        style="background-color: #f8f8f8; color: #666;"
-      >
-        <button
-          onclick="check_session();"
-          class="w3-bar-item w3-left w3-hover-opacity"
-          style="cursor: pointer; color: #666; background-color: #f8f8f8;"
-          title="Home"
-        >
-          <i class="fa fa-cube"></i> Tic Dashboard
-        </button>
-
-        <a
-          href="#"
-          onclick="logout()"
-          style="width: auto; display: none;"
-          class="logout_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
-          ><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a
-        >
-
-        <a
-          href="#"
-          onclick="openLink(event, 'login_check')"
-          style="display: none;"
-          class="login_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
-          ><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a
-        >
-        <a
-          href="#"
-          onclick="openLink(event, 'register_check')"
-          style="display: none;"
-          class="register_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
-          ><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a
-        >
-
-        <a
-          href="#"
-          onclick="document.getElementById('sell').style.display='block'"
-          style="width: auto; display: none;"
-          class="query_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
-          ><i class="fa fa-pencil" aria-hidden="true"></i> Invoke</a
-        >
-        <a
-          href="#"
-          onclick="document.getElementById('query_chain_code_div').style.display='block'"
-          style="width: auto; display: none;"
-          class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
-          ><i class="fa fa-question-circle" aria-hidden="true"></i>Query</a
-        >
-        <a
-          href="#"
-          onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
-          style="width: auto; display: none;"
-          class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
-          ><i class="fa fa-trash" aria-hidden="true"></i>Delete</a
-        >
-
-        <a
-          href="#"
-          onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
-          style="width: auto; display: none;"
-          class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
-          ><i class="fa fa-refresh" aria-hidden="true"></i>Update</a
-        >
-
-        <a
-          href="#"
-          onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
-          style="width: auto; display: none;"
-          class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
-          ><i class="fa fa-desktop" aria-hidden="true"></i> Install</a
-        >
-
-        <a
-          href="#"
-          onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
-          style="width: auto; display: none;"
-          class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
-          ><i class="fa fa-file" aria-hidden="true"></i> Manage Uploads</a
-        >
-
-        <a
-          href="#"
-          onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
-          style="width: auto; display: none;"
-          class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
-          ><i class="fa fa-plus" aria-hidden="true"></i> Create</a
-        >
-
-        <a
-          href="javascript:void(0)"
-          class="w3-bar-item w3-button w3-right w3-hide-large w3-right w3-hover-blue"
-          onclick="myFunction()"
-          >&#9776;</a
-        >
-      </div>
-    </div>
     <div
-      id="demo"
-      class="w3-sidebar w3-bar-block w3-white w3-hide w3-hide-large w3-animate-right"
-      style="right: 0;"
+      class="w3-bar w3-large w3-collapse"
+      style="background-color: #f8f8f8; color: #666;"
     >
-      <button onclick="myFunction()" class="w3-bar-item w3-button w3-large">
-        Close &times;
+      <button
+        onclick="check_session();"
+        class="w3-bar-item w3-left w3-hover-opacity"
+        style="cursor: pointer; color: #666; background-color: #f8f8f8;"
+        title="Home"
+      >
+        <i class="fa fa-cube"></i> Tic Dashboard
       </button>
-      <a
-        href="#"
-        onclick="document.getElementById('sell').style.display='block'"
-        style="width: auto; display: none;"
-        class="query_button w3-bar-item w3-button w3-hover-blue tablink"
-        ><i class="fa fa-plus" aria-hidden="true"></i> Create</a
-      >
-      <a
-        href="#"
-        onclick="document.getElementById('sell').style.display='block'"
-        style="width: auto; display: none;"
-        class="query_button w3-bar-item w3-button w3-hover-blue tablink"
-        ><i class="fa fa-file" aria-hidden="true"></i> Manage Uploads</a
-      >
-      <a
-        href="#"
-        onclick="document.getElementById('sell').style.display='block'"
-        style="width: auto; display: none;"
-        class="query_button w3-bar-item w3-button w3-hover-blue tablink"
-        ><i class="fa fa-desktop" aria-hidden="true"></i> Install</a
-      >
-      <a
-        href="#"
-        onclick="document.getElementById('sell').style.display='block'"
-        style="width: auto; display: none;"
-        class="query_button w3-bar-item w3-button w3-hover-blue tablink"
-        ><i class="fa fa-refresh" aria-hidden="true"></i> Update</a
-      >
-      <a
-        href="#"
-        onclick="document.getElementById('sell').style.display='block'"
-        style="width: auto; display: none;"
-        class="query_button w3-bar-item w3-button w3-hover-blue tablink"
-        ><i class="fa fa-trash" aria-hidden="true"></i> Delete</a
-      >
-      <a
-        href="#"
-        onclick="document.getElementById('sell').style.display='block'"
-        style="width: auto; display: none;"
-        class="query_button w3-bar-item w3-button w3-hover-blue tablink"
-        ><i class="fa fa-question-circle" aria-hidden="true"></i> Query</a
-      >
-      <a
-        href="#"
-        onclick="document.getElementById('sell').style.display='block'"
-        style="width: auto; display: none;"
-        class="query_button w3-bar-item w3-button w3-hover-blue tablink"
-        ><i class="fa fa-pencil" aria-hidden="true"></i> Invoke</a
-      >
 
       <a
         href="#"
         onclick="logout()"
-        style="display: none;"
-        class="logout_button w3-bar-item w3-button w3-hover-blue tablink"
+        style="width: auto; display: none;"
+        class="logout_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
         ><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a
       >
 
@@ -190,16 +50,93 @@
         href="#"
         onclick="openLink(event, 'login_check')"
         style="display: none;"
-        class="login_button w3-bar-item w3-button w3-hover-blue tablink"
+        class="login_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
         ><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a
       >
       <a
         href="#"
         onclick="openLink(event, 'register_check')"
         style="display: none;"
-        class="register_button w3-bar-item w3-button w3-hover-blue tablink"
+        class="register_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
         ><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a
       >
+
+      <a
+        href="#"
+        onclick="document.getElementById('sell').style.display='block'"
+        style="width: auto; display: none;"
+        class="query_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+        ><i class="fa fa-pencil" aria-hidden="true"></i> Invoke</a
+      >
+      <a
+        href="#"
+        onclick="document.getElementById('query_chain_code_div').style.display='block'"
+        style="width: auto; display: none;"
+        class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+        ><i class="fa fa-question-circle" aria-hidden="true"></i>Query</a
+      >
+      <a
+        href="#"
+        onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
+        style="width: auto; display: none;"
+        class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+        ><i class="fa fa-trash" aria-hidden="true"></i>Delete</a
+      >
+
+      <a
+        href="#"
+        onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
+        style="width: auto; display: none;"
+        class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+        ><i class="fa fa-refresh" aria-hidden="true"></i>Update</a
+      >
+
+      <a
+        href="#"
+        onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
+        style="width: auto; display: none;"
+        class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+        ><i class="fa fa-desktop" aria-hidden="true"></i> Install</a
+      >
+
+      <a
+        href="#"
+        onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
+        style="width: auto; display: none;"
+        class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+        ><i class="fa fa-file" aria-hidden="true"></i> Manage Uploads</a
+      >
+
+      <a
+        href="#"
+        onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
+        style="width: auto; display: none;"
+        class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+        ><i class="fa fa-plus" aria-hidden="true"></i> Create</a
+      >
+
+      <a
+        href="#"
+        onclick="document.getElementById('certificates_div').style.display='block'"
+        style="width: auto; display: none;"
+        class="invoke_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+        ><i class="fa fa-plus" aria-hidden="true"></i> Certificates</a
+      >
+
+      <a
+        href="javascript:void(0)"
+        class="w3-bar-item w3-button w3-right w3-hide-large w3-right w3-hover-blue"
+        onclick="myFunction()"
+        >&#9776;</a
+      >
+    </div>
+
+    <div
+      id="certificates_div"
+      class="iframe_holder"
+      style="background-color: white; display: none;"
+    >
+      <div class="fileholder" id="fileholder"></div>
     </div>
 
     <div

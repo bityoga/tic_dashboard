@@ -3,6 +3,8 @@ const express = require("express");
 const session = require("express-session");
 const formidable = require("express-formidable");
 var bodyParser = require("body-parser");
+const fs = require("fs");
+const multer = require("multer");
 
 // import fabric node sdk helper functions
 const enrollAdmin = require("./fabric_node_sdk_helper/enrollAdmin");
@@ -15,8 +17,10 @@ const { check_login_and_load_certificates } = require("./db_query");
 const { db_query } = require("./db_query");
 
 const shell = require("shelljs");
-const chaincode_path = "/root/CLI/chaincodes/";
-//const chaincode_path = "./chaincodes";
+//const chaincode_path = "/root/CLI/chaincodes/";
+//const connection_profile_path = "/root/CLI/connection_profile";
+const chaincode_path = "./chaincodes";
+const connection_profile_path = "./connection_profile";
 
 // Create a express object
 const app = express();
@@ -35,6 +39,7 @@ const router = express.Router();
 const app_port_number = 3003;
 
 var app_session;
+const responsedelay = 50; // miliseconds
 
 async function load_html_template_and_start_app(app_port_number) {
   try {
@@ -45,6 +50,8 @@ async function load_html_template_and_start_app(app_port_number) {
 
     //Store all JS and CSS in Scripts folder.
     app.use(express.static(__dirname + "/html/script"));
+
+    app.use(express.static(connection_profile_path));
 
     app.use("/", router);
     app.listen(process.env.port || app_port_number, "0.0.0.0");
@@ -351,5 +358,84 @@ app.post("/instantiate_smart_contract", async (req, res) => {
     res.json(response);
   }
 });
+
+// upload handler
+var uploadStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, `./userfiles/${req.query.type}`); ///${req.folder}`);
+  },
+  filename: function (req, file, cb) {
+    //let fileName = checkFileExistense(req.query.folder ,file.originalname);
+    cb(null, file.originalname);
+  },
+});
+
+var upload = multer({ storage: uploadStorage });
+
+app.post("/smart-contract-upload", upload.single("file"), function (req, res) {
+  console.log(req.file);
+  console.log("file upload...");
+});
+
+// all type of files except images will explored here
+app.post("/files-list", function (req, res) {
+  let folder = req.query.folder;
+  let contents = "";
+
+  let readingdirectory = `./userfiles/${folder}`;
+
+  fs.readdir(readingdirectory, function (err, files) {
+    if (err) {
+      console.log(err);
+    } else if (files.length > 0) {
+      files.forEach(function (value, index, array) {
+        fs.stat(`${readingdirectory}/${value}`, function (err, stats) {
+          let filesize = ConvertSize(stats.size);
+          contents +=
+            '<tr><td><a href="/' +
+            folder +
+            "/" +
+            encodeURI(value) +
+            '">' +
+            value +
+            "</a></td><td>" +
+            filesize +
+            "</td><td>/" +
+            folder +
+            "/" +
+            value +
+            "</td></tr>" +
+            "\n";
+
+          if (index == array.length - 1) {
+            setTimeout(function () {
+              res.send(contents);
+            }, responsedelay);
+          }
+        });
+      });
+    } else {
+      setTimeout(function () {
+        res.send(contents);
+      }, responsedelay);
+    }
+  });
+});
+
+/**
+ * it gives a number as byte and convert it to KB, MB and GB (depends on file size) and return the result as string.
+ * @param number file size in Byte
+ */
+function ConvertSize(number) {
+  if (number <= 1024) {
+    return `${number} Byte`;
+  } else if (number > 1024 && number <= 1048576) {
+    return (number / 1024).toPrecision(3) + " KB";
+  } else if (number > 1048576 && number <= 1073741824) {
+    return (number / 1048576).toPrecision(3) + " MB";
+  } else if (number > 1073741824 && number <= 1099511627776) {
+    return (number / 1073741824).toPrecision(3) + " GB";
+  }
+}
 
 main();

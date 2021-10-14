@@ -1,7 +1,7 @@
 #!/bin/bash
 set -x #echo on
 
-IP_ADDRESS="104.248.203.116"
+IP_ADDRESS="164.90.206.123"
 REMOTE_MACHINE_ORDERER_TLS_CERT_FILE="/root/hlft-store/orgca/orderer/msp/tls/ca.crt"
 REMOTE_MACHINE_PEER2_TLS_CERT_FILE="/root/hlft-store/orgca/peer2/msp/tls/ca.crt"
 LOCAL_ORDER_TLS_CERT_FILE="./hlft-store/orderer/tls-msp/tlscacerts/ca.crt"
