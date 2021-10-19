@@ -9,7 +9,7 @@ const path = require("path");
 
 const shell = require("shelljs");
 
-const TEST_LOCAL = 1;
+const TEST_LOCAL = 0;
 var CHAINCODE_PATH;
 var CERTIFICATE_PATH;
 var CLI_PATH;
