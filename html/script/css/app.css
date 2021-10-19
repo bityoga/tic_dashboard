@@ -320,7 +320,12 @@ table {
   margin-bottom: 5vh;
 }
 
-.sorting_1 {
+.even .sorting_1 {
+  background-color: #000 !important;
+  color: white !important;
+}
+
+.odd .sorting_1 {
   background-color: #000;
-  color: white;
+  color: white !important;
 }
