@@ -319,3 +319,8 @@ table {
 #certificates_datatable_wrapper {
   margin-bottom: 5vh;
 }
+
+.sorting_1 {
+  background-color: #000;
+  color: white;
+}

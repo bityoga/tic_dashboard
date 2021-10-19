@@ -19,9 +19,9 @@ if (TEST_LOCAL == 1) {
   CERTIFICATE_PATH = "../file_explorer/certificates";
   CLI_PATH = "../../check_master";
 } else {
-  CHAINCODE_PATH = "../chaincodes/";
-  CERTIFICATE_PATH = "../orgca";
-  CLI_PATH = "../../root";
+  CHAINCODE_PATH = ".∕CLI/chaincodes";
+  CERTIFICATE_PATH = ".∕CLI/orgca";
+  CLI_PATH = "../root";
 }
 // Create a express object
 const app = express();
