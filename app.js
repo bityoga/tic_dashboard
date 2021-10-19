@@ -4,20 +4,25 @@ const session = require("express-session");
 const formidable = require("express-formidable");
 var bodyParser = require("body-parser");
 
-// import fabric node sdk helper functions
-const enrollAdmin = require("./fabric_node_sdk_helper/enrollAdmin");
-const registerUser = require("./fabric_node_sdk_helper/registerUser");
-const querychaincode = require("./fabric_node_sdk_helper/query");
-const invokechaincode = require("./fabric_node_sdk_helper/invoke");
-const { load_certificates_from_wallet } = require("./fileread");
-const { sqlite_json_insert } = require("./db_query");
-const { check_login_and_load_certificates } = require("./db_query");
-const { db_query } = require("./db_query");
+const fs = require("fs");
+const path = require("path");
 
 const shell = require("shelljs");
-const chaincode_path = "/root/CLI/chaincodes/";
-//const chaincode_path = "./chaincodes";
 
+const TEST_LOCAL = 0;
+var CHAINCODE_PATH;
+var CERTIFICATE_PATH;
+var CLI_PATH;
+
+if (TEST_LOCAL == 1) {
+  CHAINCODE_PATH = "../file_explorer/chaincodes";
+  CERTIFICATE_PATH = "../file_explorer/certificates";
+  CLI_PATH = "../../check_master";
+} else {
+  CHAINCODE_PATH = "../chaincodes";
+  CERTIFICATE_PATH = "../orgca";
+  CLI_PATH = "../../CLI";
+}
 // Create a express object
 const app = express();
 app.use(session({ secret: "ssshhhhh" }));
@@ -29,6 +34,11 @@ app.use(
     extended: true,
   })
 );
+
+// Enable app to access files under these folders
+//app.use(express.static(CHAINCODE_PATH));
+//app.use(express.static(CERTIFICATE_PATH));
+app.use(express.static(CLI_PATH));
 
 // Create a router for the express object
 const router = express.Router();
@@ -56,43 +66,6 @@ async function load_html_template_and_start_app(app_port_number) {
     process.exit(1);
   }
 }
-
-app.post("/register", async (req, res) => {
-  console.log("inside register");
-  let html_json_data;
-  let user_role = "client";
-  let register_status = "success";
-  let combined_user_data;
-  let fabric_register_status;
-  let json_response = {};
-
-  try {
-    html_json_data = req.body;
-    console.log(html_json_data);
-    fabric_register_status = await registerUser(
-      html_json_data["User_Name"],
-      html_json_data["User_Password"],
-      user_role
-    );
-    console.log(fabric_register_status);
-    if (fabric_register_status.includes("Success")) {
-      let user_certificates_json = await load_certificates_from_wallet(
-        html_json_data["User_Name"]
-      );
-      combined_user_data = { ...html_json_data, ...user_certificates_json };
-      let insert_status = await sqlite_json_insert(combined_user_data, "User");
-      register_status = insert_status;
-    } else {
-      register_status = fabric_register_status;
-    }
-  } catch (e) {
-    console.log(e);
-    register_status = e;
-  } finally {
-    json_response["status"] = register_status;
-    res.json(json_response);
-  }
-});
 
 app.post("/", async (req, res) => {
   app_session = req.session;
@@ -192,7 +165,7 @@ app.post("/upload_smart_contract_git_clone", async (req, res) => {
     }
     console.log("git_clone_command");
     console.log(git_clone_command);
-    shell.cd(chaincode_path);
+    shell.cd(CHAINCODE_PATH);
     shell.exec(git_clone_command, function (code, stdout, stderr) {
       console.log("Exit code:", code);
       console.log("Program output:", stdout);
@@ -342,6 +315,79 @@ app.post("/instantiate_smart_contract", async (req, res) => {
       console.log(response);
       res.json(response);
     });
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+/**
+ * it gives a number as byte and convert it to KB, MB and GB (depends on file size) and return the result as string.
+ * @param number file size in Byte
+ */
+function ConvertSize(number) {
+  if (number <= 1024) {
+    return `${number} Byte`;
+  } else if (number > 1024 && number <= 1048576) {
+    return (number / 1024).toPrecision(3) + " KB";
+  } else if (number > 1048576 && number <= 1073741824) {
+    return (number / 1048576).toPrecision(3) + " MB";
+  } else if (number > 1073741824 && number <= 1099511627776) {
+    return (number / 1073741824).toPrecision(3) + " GB";
+  }
+}
+
+const getAllFilesListofArrays = function (dirPath, arrayOfFiles) {
+  files = fs.readdirSync(dirPath);
+
+  arrayOfFiles = arrayOfFiles || [];
+
+  files.forEach(function (file) {
+    if (fs.statSync(dirPath + "/" + file).isDirectory()) {
+      arrayOfFiles = getAllFilesListofArrays(
+        dirPath + "/" + file,
+        arrayOfFiles
+      );
+    } else {
+      fileNameWithFullPath = path.join(__dirname, dirPath, "/", file);
+      fileNameWithRelativePath = path.join(dirPath, "/", file);
+      fileStats = fs.statSync(fileNameWithFullPath);
+      filesize = ConvertSize(fileStats.size);
+      fileDownloadButton =
+        '<a class="btn btn-primary text-break" href="' +
+        fileNameWithRelativePath +
+        '" role="button">Download</a>';
+      fileinfoArray = [
+        fileNameWithFullPath,
+        filesize,
+        fileStats.ctime,
+        fileStats.mtime,
+        fileDownloadButton,
+      ];
+      arrayOfFiles.push(fileinfoArray);
+    }
+  });
+
+  return arrayOfFiles;
+};
+
+app.post("/getCertificateFileList", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  if (app_session.user_name && app_session.password) {
+    var fileList = getAllFilesListofArrays(CERTIFICATE_PATH);
+    response = {
+      status: "success",
+      data: fileList,
+    };
+    console.log(response);
+    res.json(response);
   } else {
     response = {
       status: "Failed",
