@@ -7,16 +7,12 @@ function check_session() {
       var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
       console.log(json);
       if (json["status"] === "session active") {
-       
-
         $(".login_button").hide();
         $(".session_active_menu_bar_item").show();
         $("#chaincode_management_div").show();
         $("#login_check").hide();
-       
+        sendAjaxReqToGetListOfCertificateFiles();
       } else {
-    
-
         $(".login_button").show();
         $(".session_active_menu_bar_item").hide();
         $("#chaincode_management_div").hide();
@@ -35,9 +31,7 @@ function check_iframe_session() {
       var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
       console.log(json);
       if (json["status"] === "session active") {
-
         console.log("iframe session active");
-        
       } else {
         window.location.href = "/";
       }
@@ -64,7 +58,6 @@ $("#login_form").submit(function (e) {
     complete: function (data) {
       document.getElementById("login_loader").style.display = "none";
       var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
-  
 
       swal.fire({
         title: "Login Status",
@@ -74,7 +67,6 @@ $("#login_form").submit(function (e) {
       });
 
       if (json["status"] === "success") {
-
         window.top.location.href = "/";
       }
     },
@@ -93,7 +85,6 @@ function logout() {
   });
 }
 
-
 function sendAjaxReqToGetListOfCertificateFiles() {
   $.ajax({
     type: "POST",
@@ -103,17 +94,18 @@ function sendAjaxReqToGetListOfCertificateFiles() {
       var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
       console.log(json);
       if (json["status"] === "success") {
-        $('#certificates_datatable').DataTable( {
-          
+        $("#certificates_datatable").DataTable({
           data: json["data"],
-        columns: [
+          responsive: true,
+          pageLength: 5,
+          columns: [
             { title: "File Name" },
             { title: "Size" },
             { title: "Created" },
             { title: "Last Modified" },
             { title: "Download" },
-        ]
-      } );
+          ],
+        });
       }
     },
   });
