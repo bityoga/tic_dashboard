@@ -9,6 +9,21 @@ const path = require("path");
 
 const shell = require("shelljs");
 
+const APP_CONFIG_FILE = "app_config.json";
+// Global variable to store the api config from file
+let appConfigJson;
+// Load api config from json file
+try {
+  const apiConfigFilePath = path.resolve(__dirname, ".", APP_CONFIG_FILE);
+  console.log(apiConfigFilePath);
+  const apiConfigFileContent = fs.readFileSync(apiConfigFilePath, "utf8");
+  appConfigJson = JSON.parse(apiConfigFileContent);
+  console.log(appConfigJson);
+} catch (e) {
+  console.log(e);
+  throw Error("API Start Error - Error while reading API config", e);
+}
+
 const TEST_LOCAL = 0;
 var CHAINCODE_PATH;
 var CERTIFICATE_PATH;
@@ -42,7 +57,7 @@ app.use(express.static(CLI_PATH));
 
 // Create a router for the express object
 const router = express.Router();
-const app_port_number = 3003;
+const app_port_number = appConfigJson['tic_dashboard_port'];
 
 var app_session;
 
@@ -107,14 +122,45 @@ app.post("/login", async (req, res) => {
   let user_name = html_json_data["Login_User_Name"];
   let user_password = html_json_data["Login_Password"];
 
-  //temp
   app_session = req.session;
   app_session.user_name = user_name;
   app_session.password = user_password;
 
   let response = {
-    status: "success",
+    status: "Fail - Wrong credentials",
   };
+
+  if (
+    user_name ===
+    appConfigJson["tic_dashboard_user_name"] &&
+    user_password ===
+    appConfigJson["tic_dashboard_user_password"]
+  ) {
+
+    response = {
+      status: "success",
+    };
+  } else if (
+    user_name ===
+    appConfigJson["tic_dashboard_user_name"] &&
+    user_password !==
+    appConfigJson["tic_dashboard_user_password"]
+  ) {
+
+    response = {
+      status: "Fail - Wrong Password",
+    };
+  } else if (
+    user_name !==
+    appConfigJson["tic_dashboard_user_name"] &&
+    user_password ===
+    appConfigJson["tic_dashboard_user_password"]
+  ) {
+
+    response = {
+      status: "Fail - Wrong User Name",
+    };
+  }
   console.log(response);
   res.json(response);
 });
@@ -361,12 +407,14 @@ const getAllFilesListofArrays = function (dirPath, arrayOfFiles) {
         '<a class="btn btn-primary text-break" href="' +
         fileNameWithRelativePath +
         '" role="button">Download</a>';
+      FileViewButton = '<button data-link="' + fileNameWithRelativePath + '"onclick="sendAjaxRequestToReadAndShowFileConents(this)" class="btn btn-primary viewFileButton">View File</button>';
       fileinfoArray = [
         fileNameWithFullPath,
         filesize,
         fileStats.ctime,
         fileStats.mtime,
         fileDownloadButton,
+        FileViewButton
       ];
       arrayOfFiles.push(fileinfoArray);
     }
@@ -397,5 +445,45 @@ app.post("/getCertificateFileList", async (req, res) => {
     res.json(response);
   }
 });
+
+
+app.post("/viewFileContent", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+  var fileName = req.body.fileName;
+
+  if (app_session.user_name && app_session.password) {
+
+    try {
+      const fileNameWithPath = path.resolve(__dirname, ".", fileName);
+      console.log(fileNameWithPath);
+      const fileContent = fs.readFileSync(fileNameWithPath, "utf8");
+      //appConfigJson = JSON.parse(fileContent);
+      //console.log(appConfigJson);
+      response = {
+        status: "success",
+        data: fileContent,
+      };
+    } catch (e) {
+      console.log(e);
+      response = {
+        status: "Failed",
+        data: "File Read Failed" + String(e),
+      };
+
+    }
+    res.json(response);
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+
 
 main();
