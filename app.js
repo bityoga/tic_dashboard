@@ -24,19 +24,22 @@ try {
   throw Error("API Start Error - Error while reading API config", e);
 }
 
-const TEST_LOCAL = 0;
+const TEST_LOCAL = 1;
 var CHAINCODE_PATH;
 var CERTIFICATE_PATH;
 var CLI_PATH;
+var CREATE_CHAINCODE_SCRIPT;
 
 if (TEST_LOCAL == 1) {
   CHAINCODE_PATH = "../file_explorer/chaincodes";
   CERTIFICATE_PATH = "../file_explorer/certificates";
   CLI_PATH = "../../check_master";
+  CREATE_CHAINCODE_SCRIPT = "./create_chaincode_stand_alone.sh";
 } else {
   CHAINCODE_PATH = "../chaincodes";
   CERTIFICATE_PATH = "../orgca";
   CLI_PATH = "../../CLI";
+  CREATE_CHAINCODE_SCRIPT = "./create_chaincode_stand_alone.sh";
 }
 // Create a express object
 const app = express();
@@ -474,6 +477,61 @@ app.post("/viewFileContent", async (req, res) => {
 
     }
     res.json(response);
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+
+
+app.post("/createChaincode", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  var chaincodeNameInput = req.body.chaincodeNameInput;
+  var chaincodeClassNameInput = req.body.chaincodeClassNameInput;
+  
+  
+
+  if (app_session.user_name && app_session.password) {
+   
+    var chaincodeCreateCommand =
+      "sh " +
+      CREATE_CHAINCODE_SCRIPT +
+      " " +
+      chaincodeNameInput +
+      " " +
+      chaincodeClassNameInput +
+      " " +
+      CHAINCODE_PATH +
+      "/" +
+      chaincodeNameInput;
+
+    console.log("chaincodeCreateCommand");
+    console.log(chaincodeCreateCommand);
+
+    shell.exec(chaincodeCreateCommand, function (code, stdout, stderr) {
+      console.log("Exit code:", code);
+      console.log("Program output:", stdout);
+      console.log("Program stderr:", stderr);
+      var exec_command_status = {
+        Exit_Code: code,
+        Output: stdout,
+        Error: stderr,
+      };
+      response = {
+        status: "success",
+        data: exec_command_status,
+      };
+      console.log(response);
+      res.json(response);
+    });
   } else {
     response = {
       status: "Failed",
