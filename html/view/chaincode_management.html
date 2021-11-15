@@ -1,106 +1,154 @@
 <!DOCTYPE html>
 <html>
-<title>W3.CSS</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<link rel="stylesheet" type="text/css"
-  href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
-<link rel="stylesheet" href="css/app.css" />
+  <title>W3.CSS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+  />
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <link
+    rel="stylesheet"
+    type="text/css"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  />
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="css/app.css" />
 
-
-<body>
-
-  <div class="w3-sidebar w3-bar-block  w3-animate-left w3-collapse"
-    style="display:none;left:0;width: 25vw; z-index: 3;overflow: -moz-hidden-unscrollable;" id="leftMenu">
-    <button onclick="closeLeftMenu()" class="w3-bar-item w3-button w3-hide-large">Close &times;</button>
-    <div class="w3-row">
-      <div style="margin-top: 30vh; margin-left: 2vw;">
-        <a href="#" style="width: auto;" class="w3-bar-item w3-button  m-2"><i class="fa fa-pencil"
-            aria-hidden="true"></i> Invoke</a>
-        <a href="#" style="width: auto; " class="w3-bar-item w3-button   m-2"><i class="fa fa-question-circle"
-            aria-hidden="true"></i>Query</a>
-        <a href="#" style="width: auto; " class="w3-bar-item w3-button  m-2"><i class="fa fa-trash"
-            aria-hidden="true"></i>
-          Delete</a>
-        <a href="#" style="width: auto; " class="w3-bar-item w3-button   m-2"><i class="fa fa-refresh"
-            aria-hidden="true"></i>
-          Update</a>
-        <a href="chaincodeInstallForm.html" style="width: auto; " class="w3-bar-item w3-button   m-2"><i
-            class="fa fa-desktop" aria-hidden="true"></i> Install</a>
-        <a href="#" onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
-          style="width: auto; " class="w3-bar-item w3-button   m-2"><i class="fa fa-file" aria-hidden="true"></i>
-          Manage Uploads</a>
-        <a href="createChaincodeForm.html" style="width: auto; " class="w3-bar-item w3-button   m-2"><i
-            class="fa fa-plus" aria-hidden="true"></i>
-          Create</a>
+  <body>
+    <div
+      class="w3-sidebar w3-bar-block w3-animate-left w3-collapse"
+      style="
+        display: none;
+        left: 0;
+        width: 25vw;
+        z-index: 3;
+        overflow: -moz-hidden-unscrollable;
+      "
+      id="leftMenu"
+    >
+      <button
+        onclick="closeLeftMenu()"
+        class="w3-bar-item w3-button w3-hide-large"
+      >
+        Close &times;
+      </button>
+      <div class="w3-row">
+        <div style="margin-top: 30vh; margin-left: 2vw;">
+          <a
+            href="createChaincodeForm.html"
+            style="width: auto;"
+            class="w3-bar-item w3-button m-2"
+            id="createSmartContractMenuButton"
+            ><i class="fa fa-plus" aria-hidden="true"></i> Create</a
+          >
+          <a
+            href="chaincodeInstallForm.html"
+            style="width: auto;"
+            class="w3-bar-item w3-button m-2"
+            ><i class="fa fa-desktop" aria-hidden="true"></i> Install</a
+          >
+          <a
+            href="chaincodeUpdateForm.html"
+            style="width: auto;"
+            class="w3-bar-item w3-button m-2"
+            ><i class="fa fa-refresh" aria-hidden="true"></i> Update</a
+          >
+          <a href="#" style="width: auto;" class="w3-bar-item w3-button m-2"
+            ><i class="fa fa-trash" aria-hidden="true"></i> Delete</a
+          >
+          <a href="#" style="width: auto;" class="w3-bar-item w3-button m-2"
+            ><i class="fa fa-file" aria-hidden="true"></i> Manage Uploads</a
+          >
+          <a href="#" style="width: auto;" class="w3-bar-item w3-button m-2"
+            ><i class="fa fa-question-circle" aria-hidden="true"></i>Query</a
+          >
+          <a href="#" style="width: auto;" class="w3-bar-item w3-button m-2"
+            ><i class="fa fa-pencil" aria-hidden="true"></i> Invoke</a
+          >
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="w3-sidebar w3-bar-block  w3-animate-right w3-collapse"
-    style="display:none;right:0; width:30vw;z-index: 3;overflow: -moz-hidden-unscrollable;" id="rightMenu">
-    <button onclick="closeRightMenu()" class="w3-bar-item w3-button w3-hide-large">Close &times;</button>
-    <div class="w3-row">
+    <div
+      class="w3-sidebar w3-bar-block w3-animate-right w3-collapse"
+      style="
+        display: none;
+        right: 0;
+        width: 30vw;
+        z-index: 3;
+        overflow: -moz-hidden-unscrollable;
+      "
+      id="rightMenu"
+    >
+      <button
+        onclick="closeRightMenu()"
+        class="w3-bar-item w3-button w3-hide-large"
+      >
+        Close &times;
+      </button>
+      <div class="w3-row"></div>
     </div>
-  </div>
 
-
-  <div class="sticky w3-hide-large" style="color: #fff!important; background-color: #305342!important;z-index: 2;">
-    <button class="w3-button  w3-large w3-left  w3-hide-large" onclick="openLeftMenu()"><i class="fa fa-filter"
-        aria-hidden="true"></i> Filters</button>
-    <button class="w3-button  w3-large w3-right w3-hide-large" onclick="openRightMenu()"><i class="fas fa-user-circle"
-        aria-hidden="true"> My Profile</i></button>
-    <div class="w3-container ">
-      <h2 class="w3-hide"><i class='fas fa-solar-panel' aria-hidden="true"></i> Stats <i class="fas fa-house-day"></i>
-      </h2>
+    <div
+      class="sticky w3-hide-large"
+      style="
+        color: #fff !important;
+        background-color: #305342 !important;
+        z-index: 2;
+      "
+    >
+      <button
+        class="w3-button w3-large w3-left w3-hide-large"
+        onclick="openLeftMenu()"
+      >
+        <i class="fa fa-filter" aria-hidden="true"></i> Filters
+      </button>
+      <button
+        class="w3-button w3-large w3-right w3-hide-large"
+        onclick="openRightMenu()"
+      >
+        <i class="fas fa-user-circle" aria-hidden="true"> My Profile</i>
+      </button>
+      <div class="w3-container">
+        <h2 class="w3-hide">
+          <i class="fas fa-solar-panel" aria-hidden="true"></i> Stats
+          <i class="fas fa-house-day"></i>
+        </h2>
+      </div>
     </div>
-  </div>
 
-  <div class="w3-main w3-animate-opacity mt-2 d-flex justify-content-center align-items-center">
-    <div id="contentDiv">
+    <div
+      class="w3-main w3-animate-opacity mt-2 d-flex justify-content-center align-items-center"
+    >
+      <div id="contentDiv"></div>
     </div>
-  </div>
 
+    <script type="text/javascript" src="js/double_menu.js"></script>
+    <script type="text/javascript" src="js/send_ajax_request.js"></script>
+    <script type="text/javascript">
+      if (window.location !== window.parent.location) {
+        // The page is in an iframe
+        console.log("in iframe");
 
-  <script type="text/javascript" src="js/double_menu.js"> </script>
-  <script type="text/javascript" src="js/send_ajax_request.js"> </script>
-  <script type="text/javascript">
+        // get_session_details();
+      } else {
+        // The page is not in an iframe
+        console.log("out iframe");
+        check_iframe_session();
+      }
+    </script>
 
-    if (window.location !== window.parent.location) {
-      // The page is in an iframe
-      console.log("in iframe");
-
-      // get_session_details();
-
-    }
-
-    else {
-      // The page is not in an iframe
-      console.log("out iframe");
-      check_iframe_session();
-
-    }
-  </script>
-
-  ,
-  <script>
-    $(document).ready(function () {
-      $('a').click(function (e) {
-        e.preventDefault();
-        $("#contentDiv").load($(this).attr('href'));
+    ,
+    <script>
+      $(document).ready(function () {
+        $("#contentDiv").load($("#createSmartContractMenuButton").attr("href"));
+        $("a").click(function (e) {
+          e.preventDefault();
+          $("#contentDiv").load($(this).attr("href"));
+        });
       });
-    });
-  </script>
-
-
-
-</body>
-
-
-
-
-
+    </script>
+  </body>
 </html>
