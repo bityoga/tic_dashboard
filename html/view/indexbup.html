@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tic Dashboard</title>
+    <link rel="shortcut icon" type="image/png" href="images/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css"
+    />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+
+    <link rel="stylesheet" href="css/app.css" />
+  </head>
+
+  <body>
+    <div class="w3-top">
+      <div
+        class="w3-bar w3-large w3-collapse"
+        style="background-color: #f8f8f8; color: #666;"
+      >
+        <button
+          onclick="check_session();"
+          class="w3-bar-item w3-left w3-hover-opacity"
+          style="cursor: pointer; color: #666; background-color: #f8f8f8;"
+          title="Home"
+        >
+          <i class="fa fa-cubes"></i> Tic Dashboard
+        </button>
+
+        <a
+          href="#"
+          onclick="logout()"
+          style="width: auto; display: none;"
+          class="session_active_menu_bar_item w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a
+        >
+
+        <a
+          href="#"
+          onclick="openLink(event, 'login_check')"
+          style="display: none;"
+          class="login_button w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a
+        >
+
+        <a
+          href="#"
+          onclick="openLink(event, 'certificate_div')"
+          style="width: auto; display: none;"
+          class="session_active_menu_bar_item w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-file" aria-hidden="true"></i> Certificates</a
+        >
+
+        <a
+          href="#"
+          onclick="openLink(event, 'connection_profile_div')"
+          style="width: auto; display: none;"
+          class="session_active_menu_bar_item w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-file" aria-hidden="true"></i> Connection Profile</a
+        >
+
+        <a
+          href="#"
+          onclick="openLink(event, 'chaincode_management_div')"
+          style="width: auto; display: none;"
+          class="session_active_menu_bar_item w3-bar-item w3-button w3-hide-small w3-hide-medium tablink w3-hover-blue w3-right"
+          ><i class="fa fa-cube" aria-hidden="true"></i> Chaincode</a
+        >
+
+        <a
+          href="javascript:void(0)"
+          class="w3-bar-item w3-button w3-right w3-hide-large w3-right w3-hover-blue"
+          onclick="myFunction()"
+          >&#9776;</a
+        >
+      </div>
+    </div>
+    <div
+      id="demo"
+      class="w3-sidebar w3-bar-block w3-white w3-hide w3-hide-large w3-animate-right"
+      style="right: 0;"
+    >
+      <button onclick="myFunction()" class="w3-bar-item w3-button w3-large">
+        Close &times;
+      </button>
+      <a
+        href="#"
+        onclick="openLink(event, 'certificate_div')"
+        style="width: auto; display: none;"
+        class="session_active_menu_bar_item w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-file" aria-hidden="true"></i> Certificates</a
+      >
+      <a
+        href="#"
+        onclick="openLink(event, 'connection_profile_div')"
+        style="width: auto; display: none;"
+        class="session_active_menu_bar_item w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-file" aria-hidden="true"></i> Connection profile</a
+      >
+      <a
+        href="#"
+        onclick="openLink(event, 'chaincode_management_div')"
+        style="width: auto; display: none;"
+        class="session_active_menu_bar_item w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-cube" aria-hidden="true"></i> Chaincode</a
+      >
+
+      <a
+        href="#"
+        onclick="logout()"
+        style="display: none;"
+        class="session_active_menu_bar_item w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a
+      >
+
+      <a
+        href="#"
+        onclick="openLink(event, 'login_check')"
+        style="display: none;"
+        class="login_button w3-bar-item w3-button w3-hover-blue tablink"
+        ><i class="fa fa-sign-in" aria-hidden="true"></i> Login</a
+      >
+    </div>
+
+    <div id="login_check" class="iframe_holder" style="display: none;">
+      <iframe
+        src="login_check.html"
+        width="100%"
+        height="100%"
+        marginwidth="0"
+        marginheight="0"
+        frameborder="0"
+      ></iframe>
+    </div>
+
+    <div
+      id="chaincode_management_div"
+      class="iframe_holder"
+      style="background-color: white; display: none;"
+    >
+      <iframe
+        id="chaincode_management_iframe"
+        src="chaincode_management.html"
+        width="100%"
+        height="100%"
+        marginwidth="0"
+        marginheight="0"
+        frameborder="0"
+      ></iframe>
+    </div>
+
+    <div
+      id="certificate_div"
+      class="iframe_holder container"
+      style="background-color: white; display: none;"
+    >
+      <div class="container">
+        <header
+          class="w3-container w3-center mb-5"
+          style="background-color: #779687 !important; color: white;"
+        >
+          <h1>
+            <i class="fa fa-file-text" aria-hidden="true"></i> All Certificates
+          </h1>
+        </header>
+        <table
+          id="certificates_datatable"
+          class="table table-striped container"
+          style="width: 100%;"
+        ></table>
+      </div>
+    </div>
+
+    <div
+      id="connection_profile_div"
+      class="iframe_holder container"
+      style="background-color: white; display: none;"
+    >
+      <div class="container">
+        <header
+          class="p-4 w3-center"
+          style="background-color: #779687 !important; color: white;"
+        >
+          <h1>
+            <i class="fa fa-file-text" aria-hidden="true"></i> Network
+            Connection Profile Files
+          </h1>
+        </header>
+        <div class="row align-items-center">
+          <div class="col-xl-6 p-xl-5 mt-2 mt-xl-0">
+            <div class="card">
+              <i class="mt-5 fa fa-file-text fa-5x" aria-hidden="true"></i>
+              <div class="card-body mb-5">
+                <h5 class="card-title">Network Profile.json</h5>
+                <p class="card-text">
+                  This file contains the network connection profile as a json
+                  file useful for DApps to interact with the deployed blockchain
+                  network
+                </p>
+                <a
+                  href="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json"
+                  class="btn btn-primary"
+                  >Download network-profile.json</a
+                >
+                <div
+                  id="index_login_loader"
+                  class="loader w3-center"
+                  style="
+                    display: none;
+                    width: 50px;
+                    height: 50px;
+                    margin-left: 45%;
+                    margin-right: 45%;
+                  "
+                ></div>
+                <button
+                  data-link="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json"
+                  onclick="sendAjaxRequestToReadAndShowFileConents(this)"
+                  class="btn btn-primary viewFileButton"
+                >
+                  View File
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6 p-xl-5 mt-2 mt-xl-0">
+            <div class="card">
+              <i class="mt-5 fa fa-file-text fa-5x" aria-hidden="true"></i>
+              <div class="card-body mb-5">
+                <h5 class="card-title">Orderer CA Certificate</h5>
+                <p class="card-text">
+                  This file contains the ordered CA certificate which gives
+                  necessary permissions for DApp to interact with the deployed
+                  blockchain's orderer service
+                </p>
+                <a
+                  href="../orgca/orderer/msp/tls/ca.crt"
+                  class="btn btn-primary"
+                  >Download Orderer CA Cert</a
+                >
+                <button
+                  data-link="../orgca/orderer/msp/tls/ca.crt"
+                  onclick="sendAjaxRequestToReadAndShowFileConents(this)"
+                  class="btn btn-primary viewFileButton"
+                >
+                  View File
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-6 p-xl-5 mt-2 mt-xl-0">
+            <div class="card">
+              <i class="mt-5 fa fa-file-text fa-5x" aria-hidden="true"></i>
+              <div class="card-body mb-5">
+                <h5 class="card-title">Peer 2 CA Certificate</h5>
+                <p class="card-text">
+                  This File contains the peer2 CA certificate which gives
+                  necessary permissions for DApp to interact with the deployed
+                  blockchain's peer 2 service
+                </p>
+                <a href="../orgca/peer2/msp/tls/ca.crt" class="btn btn-primary"
+                  >Download Peer 2 CA Cert</a
+                >
+                <button
+                  data-link="../orgca/peer2/msp/tls/ca.crt"
+                  onclick="sendAjaxRequestToReadAndShowFileConents(this)"
+                  class="btn btn-primary viewFileButton"
+                >
+                  View File
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer" style="background-color: #f8f8f8; color: #666;">
+      <img
+        class="w3-left"
+        style="padding: 5px; margin-left: 5px;"
+        src="images/articonf4.png"
+        height="52"
+        alt="Avatar"
+      />
+      <img
+        class="w3-right"
+        style="padding: 5px;"
+        src="images/eu.png"
+        height="52"
+        alt="Avatar"
+      />
+      <img
+        class="w3-right"
+        style="padding: 5px;"
+        src="images/bityoga5.png"
+        height="52"
+        alt="Avatar"
+      />
+      <span class="w3-hide-small w3-right" style="margin-top: 16px;"
+        >Powered by :</span
+      >
+    </div>
+    <script type="text/javascript" src="js/send_ajax_request.js"></script>
+    <script type="text/javascript" src="js/double_menu.js"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function () {
+        check_session();
+        // sendAjaxReqToGetListOfCertificateFiles();
+      });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/languages/go.min.js"></script>
+
+    <script src="https://unpkg.com/highlightjs-badge/highlightjs-badge.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,190 @@
+<div class="container my-5">
+  <h1 class="my-2 p-3 text-white bg-secondary">
+    <i class="fa fa-file-text" aria-hidden="true"></i> Network Connection
+    Profile Files
+  </h1>
+  <div class="row align-items-center">
+    <div class="col-xl-6 p-xl-5 mt-2 mt-xl-0">
+      <div class="card">
+        <i class="mt-5 fa fa-file-text fa-5x" aria-hidden="true"></i>
+        <div class="card-body mb-5">
+          <h5 class="card-title">Network Profile.json</h5>
+          <p class="card-text">
+            This file contains the network connection profile as a json file
+            useful for DApps to interact with the deployed blockchain network
+          </p>
+          <a
+            href="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json"
+            class="btn btn-primary"
+            >Download network-profile.json</a
+          >
+          <div
+            id="index_login_loader"
+            class="loader w3-center"
+            style="
+              display: none;
+              width: 50px;
+              height: 50px;
+              margin-left: 45%;
+              margin-right: 45%;
+            "
+          ></div>
+          <button
+            data-link="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json"
+            onclick="sendAjaxRequestToReadAndShowConnectionProfileFileContents(this)"
+            class="btn btn-primary viewFileButton"
+          >
+            View File
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-6 p-xl-5 mt-2 mt-xl-0">
+      <div class="card">
+        <i class="mt-5 fa fa-file-text fa-5x" aria-hidden="true"></i>
+        <div class="card-body mb-5">
+          <h5 class="card-title">Orderer CA Certificate</h5>
+          <p class="card-text">
+            This file contains the ordered CA certificate which gives necessary
+            permissions for DApp to interact with the deployed blockchain's
+            orderer service
+          </p>
+          <a href="../orgca/orderer/msp/tls/ca.crt" class="btn btn-primary"
+            >Download Orderer CA Cert</a
+          >
+          <button
+            data-link="../orgca/orderer/msp/tls/ca.crt"
+            onclick="sendAjaxRequestToReadAndShowConnectionProfileFileContents(this)"
+            class="btn btn-primary viewFileButton"
+          >
+            View File
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-6 p-xl-5 mt-2 mt-xl-0">
+      <div class="card">
+        <i class="mt-5 fa fa-file-text fa-5x" aria-hidden="true"></i>
+        <div class="card-body mb-5">
+          <h5 class="card-title">Peer 2 CA Certificate</h5>
+          <p class="card-text">
+            This File contains the peer2 CA certificate which gives necessary
+            permissions for DApp to interact with the deployed blockchain's peer
+            2 service
+          </p>
+          <a href="../orgca/peer2/msp/tls/ca.crt" class="btn btn-primary"
+            >Download Peer 2 CA Cert</a
+          >
+          <button
+            data-link="../orgca/peer2/msp/tls/ca.crt"
+            onclick="sendAjaxRequestToReadAndShowConnectionProfileFileContents(this)"
+            class="btn btn-primary viewFileButton"
+          >
+            View File
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function sendAjaxRequestToReadAndShowConnectionProfileFileContents(
+    buttonObject
+  ) {
+    var fileName = buttonObject.getAttribute("data-link");
+
+    document.getElementById("index_login_loader").style.display = "block";
+
+    var request_json = {
+      fileName: fileName,
+    };
+
+    $.ajax({
+      type: "POST",
+      url: "/viewFileContent",
+      async: true,
+      dataType: "json",
+      data: request_json,
+      complete: function (data) {
+        document.getElementById("index_login_loader").style.display = "none";
+        //console.log(JSON.parse(data.responseText));
+        //var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        var json = JSON.parse(data.responseText);
+        if (json["status"] === "success") {
+          swal
+            .fire({
+              title: "File Contents : " + fileName,
+              width: "45vw",
+              showCloseButton: true,
+              html:
+                '<div class="codeBlock" style="max-height:40vh; overflow-y:scroll; text-align:initial"><pre><code id="fileContent">' +
+                json["data"] +
+                "</code></pre></div>",
+              icon: "success",
+              showCancelButton: true,
+              buttons: {
+                confirm: {
+                  //text: "OK",
+                  value: true,
+                  visible: true,
+                  className: "",
+                  closeModal: false,
+                },
+                cancel: {
+                  //text: "Cancel",
+                  value: false,
+                  visible: true,
+                  className: "",
+                  closeModal: true,
+                },
+              },
+              confirmButtonText:
+                '<i class="fa fa-file"></i> Copy to Clipboard !',
+              cancelButtonText: '<i class="fa fa-close"></i> Close',
+            })
+            .then((result) => {
+              /* Read more about isConfirmed, isDenied below */
+              if (result.isConfirmed) {
+                var copyText = document.getElementById("fileContent");
+                //copyText.select();
+                //copyText.setSelectionRange(0, 99999);
+                navigator.clipboard.writeText(copyText.textContent);
+
+                Swal.fire("Copied to Clipboard!", "", "success");
+              }
+            });
+
+          hljs.highlightAll();
+          // apply HighlightJS
+          var pres = document.querySelectorAll("pre>code");
+          for (var i = 0; i < pres.length; i++) {
+            hljs.highlightBlock(pres[i]);
+          }
+
+          // add HighlightJS-badge (options are optional)
+          var options = {
+            // optional
+            contentSelector: ".codeBlock",
+
+            // CSS class(es) used to render the copy icon.
+            copyIconClass: "fas fa-copy",
+            // CSS class(es) used to render the done icon.
+            checkIconClass: "fas fa-check text-success",
+          };
+          window.highlightJsBadge(options);
+        } else {
+          swal.fire({
+            title: "File Read : " + fileName,
+            text: json["status"],
+            icon: "error",
+            confirmButtonText:
+              '<i class="fa fa-thumbs-down"></i> File Read Failed',
+          });
+        }
+      },
+    });
+  }
+</script>

@@ -60,7 +60,7 @@ app.use(express.static(CLI_PATH));
 
 // Create a router for the express object
 const router = express.Router();
-const app_port_number = appConfigJson['tic_dashboard_port'];
+const app_port_number = appConfigJson["tic_dashboard_port"];
 
 var app_session;
 
@@ -126,40 +126,33 @@ app.post("/login", async (req, res) => {
   let user_password = html_json_data["Login_Password"];
 
   app_session = req.session;
-  app_session.user_name = user_name;
-  app_session.password = user_password;
 
   let response = {
     status: "Fail - Wrong credentials",
   };
 
   if (
-    user_name ===
-    appConfigJson["tic_dashboard_user_name"] &&
-    user_password ===
-    appConfigJson["tic_dashboard_user_password"]
+    user_name === appConfigJson["tic_dashboard_user_name"] &&
+    user_password === appConfigJson["tic_dashboard_user_password"]
   ) {
+    app_session.user_name = user_name;
+    app_session.password = user_password;
 
     response = {
       status: "success",
     };
   } else if (
-    user_name ===
-    appConfigJson["tic_dashboard_user_name"] &&
-    user_password !==
-    appConfigJson["tic_dashboard_user_password"]
+    user_name === appConfigJson["tic_dashboard_user_name"] &&
+    user_password !== appConfigJson["tic_dashboard_user_password"]
   ) {
-
     response = {
       status: "Fail - Wrong Password",
     };
   } else if (
-    user_name !==
-    appConfigJson["tic_dashboard_user_name"] &&
-    user_password ===
-    appConfigJson["tic_dashboard_user_password"]
+    user_name !== appConfigJson["tic_dashboard_user_name"] &&
+    user_password === appConfigJson["tic_dashboard_user_password"]
   ) {
-
+    app_session = null;
     response = {
       status: "Fail - Wrong User Name",
     };
@@ -410,14 +403,17 @@ const getAllFilesListofArrays = function (dirPath, arrayOfFiles) {
         '<a class="btn btn-primary text-break" href="' +
         fileNameWithRelativePath +
         '" role="button">Download</a>';
-      FileViewButton = '<button data-link="' + fileNameWithRelativePath + '"onclick="sendAjaxRequestToReadAndShowFileConents(this)" class="btn btn-primary viewFileButton">View File</button>';
+      FileViewButton =
+        '<button data-link="' +
+        fileNameWithRelativePath +
+        '"onclick="sendAjaxRequestToReadAndShowSelectedDataTableFile(this)" class="btn btn-primary viewFileButton">View File <span class="fileLoadSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></button>';
       fileinfoArray = [
         fileNameWithFullPath,
         filesize,
         fileStats.ctime,
         fileStats.mtime,
         fileDownloadButton,
-        FileViewButton
+        FileViewButton,
       ];
       arrayOfFiles.push(fileinfoArray);
     }
@@ -449,7 +445,6 @@ app.post("/getCertificateFileList", async (req, res) => {
   }
 });
 
-
 app.post("/viewFileContent", async (req, res) => {
   let response;
 
@@ -457,7 +452,6 @@ app.post("/viewFileContent", async (req, res) => {
   var fileName = req.body.fileName;
 
   if (app_session.user_name && app_session.password) {
-
     try {
       const fileNameWithPath = path.resolve(__dirname, ".", fileName);
       console.log(fileNameWithPath);
@@ -474,7 +468,6 @@ app.post("/viewFileContent", async (req, res) => {
         status: "Failed",
         data: "File Read Failed" + String(e),
       };
-
     }
     res.json(response);
   } else {
@@ -487,8 +480,6 @@ app.post("/viewFileContent", async (req, res) => {
   }
 });
 
-
-
 app.post("/createChaincode", async (req, res) => {
   let response;
 
@@ -496,11 +487,8 @@ app.post("/createChaincode", async (req, res) => {
 
   var chaincodeNameInput = req.body.chaincodeNameInput;
   var chaincodeClassNameInput = req.body.chaincodeClassNameInput;
-  
-  
 
   if (app_session.user_name && app_session.password) {
-   
     var chaincodeCreateCommand =
       "sh " +
       CREATE_CHAINCODE_SCRIPT +
@@ -541,7 +529,5 @@ app.post("/createChaincode", async (req, res) => {
     res.json(response);
   }
 });
-
-
 
 main();

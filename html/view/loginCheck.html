@@ -1,0 +1,94 @@
+<div class="d-flex align-items-center justify-content-center w-100">
+  <div class="card text-center">
+    <div class="card-header p-4">
+      <h2><i class="fa fa-sign-in-alt" aria-hidden="true"></i> Login</h2>
+    </div>
+    <div class="card-body">
+      <form
+        id="login_form"
+        action="/login"
+        enctype="multipart/form-data"
+        method="POST"
+      >
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">User Name</label>
+          <input
+            type="text"
+            required
+            class="form-control my-1"
+            name="Login_User_Name"
+            id="Login_User_Name"
+            placeholder="Enter Username"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Password</label>
+          <input
+            type="password"
+            required
+            class="form-control my-1"
+            id="Login_Password"
+            name="Login_Password"
+            placeholder="Enter Password"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">
+          <i class="fa fa-sign-in-alt" aria-hidden="true"></i> Login
+          <span
+            id="loginSpinner"
+            class="spinner-border spinner-border-sm"
+            role="status"
+            aria-hidden="true"
+          ></span>
+        </button>
+      </form>
+    </div>
+    <div class="card-footer text-muted">
+      Log in to Tic Dashboard
+    </div>
+  </div>
+</div>
+<script>
+  $("#login_form").submit(function (e) {
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+    $("#loginSpinner").show();
+
+    var user_json = {
+      Login_User_Name: document.getElementById("Login_User_Name").value,
+      Login_Password: document.getElementById("Login_Password").value,
+    };
+
+    $.ajax({
+      type: "POST",
+      url: "/login",
+      async: true,
+      dataType: "json",
+      data: user_json,
+      complete: function (data) {
+        $("#loginSpinner").hide();
+        var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        if (json["status"] === "success") {
+          swal.fire({
+            title: "Login Status",
+            text: json["status"],
+            icon: "success",
+            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Great!',
+          });
+          window.top.location.href = "/";
+        } else {
+          swal.fire({
+            title: "Login Status",
+            text: json["status"],
+            icon: "error",
+            confirmButtonText: '<i class="fa fa-thumbs-down"></i> Login Failed',
+          });
+        }
+      },
+    });
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    $("#loginSpinner").hide();
+  });
+</script>
