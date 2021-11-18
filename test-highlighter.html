@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css">
+
+    ,
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+
+</head>
+
+<body>
+    <input type="file" id="myFile">
+    <hr>
+
+    <div class="codeBlock">
+        <pre>
+        <code id="output">
+
+     
+        </code>
+     </pre>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/languages/go.min.js"></script>
+
+    <script src="https://unpkg.com/highlightjs-badge/highlightjs-badge.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <script>
+        // apply HighlightJS
+        var pres = document.querySelectorAll("pre>code");
+        for (var i = 0; i < pres.length; i++) {
+            hljs.highlightBlock(pres[i]);
+        }
+
+        // add HighlightJS-badge (options are optional)
+        var options = {   // optional
+            contentSelector: ".codeBlock",
+
+            // CSS class(es) used to render the copy icon.
+            copyIconClass: "fas fa-copy",
+            // CSS class(es) used to render the done icon.
+            checkIconClass: "fas fa-check text-success"
+        };
+        window.highlightJsBadge(options);
+    </script>
+    ,
+    <script>
+        var input = document.getElementById("myFile");
+        var output = document.getElementById("output");
+
+
+        input.addEventListener("change", function () {
+            if (this.files && this.files[0]) {
+                var myFile = this.files[0];
+                var reader = new FileReader();
+
+                reader.addEventListener('load', function (e) {
+                    output.textContent = e.target.result;
+                    hljs.highlightAll();
+                });
+
+                reader.readAsBinaryString(myFile);
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>

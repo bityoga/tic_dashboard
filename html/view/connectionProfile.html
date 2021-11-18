@@ -13,32 +13,26 @@
             This file contains the network connection profile as a json file
             useful for DApps to interact with the deployed blockchain network
           </p>
-          <a
-            href="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json"
-            class="btn btn-primary"
-            >Download network-profile.json</a
-          >
-          <div
-            id="index_login_loader"
-            class="loader w3-center"
-            style="
+          <a href="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json"
+            class="btn btn-primary">Download network-profile.json</a>
+          <div id="index_login_loader" class="loader w3-center" style="
               display: none;
               width: 50px;
               height: 50px;
               margin-left: 45%;
               margin-right: 45%;
-            "
-          ></div>
-          <button
-            data-link="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json"
+            "></div>
+          <button data-link="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json"
             onclick="sendAjaxRequestToReadAndShowConnectionProfileFileContents(this)"
-            class="btn btn-primary viewFileButton"
-          >
+            class="btn btn-primary viewFileButton">
             View File
           </button>
         </div>
       </div>
     </div>
+  </div>
+  <div class="row align-items-center">
+
 
     <div class="col-xl-6 p-xl-5 mt-2 mt-xl-0">
       <div class="card">
@@ -50,14 +44,10 @@
             permissions for DApp to interact with the deployed blockchain's
             orderer service
           </p>
-          <a href="../orgca/orderer/msp/tls/ca.crt" class="btn btn-primary"
-            >Download Orderer CA Cert</a
-          >
-          <button
-            data-link="../orgca/orderer/msp/tls/ca.crt"
+          <a href="../orgca/orderer/msp/tls/ca.crt" class="btn btn-primary">Download Orderer CA Cert</a>
+          <button data-link="../orgca/orderer/msp/tls/ca.crt"
             onclick="sendAjaxRequestToReadAndShowConnectionProfileFileContents(this)"
-            class="btn btn-primary viewFileButton"
-          >
+            class="btn btn-primary viewFileButton">
             View File
           </button>
         </div>
@@ -74,19 +64,18 @@
             permissions for DApp to interact with the deployed blockchain's peer
             2 service
           </p>
-          <a href="../orgca/peer2/msp/tls/ca.crt" class="btn btn-primary"
-            >Download Peer 2 CA Cert</a
-          >
-          <button
-            data-link="../orgca/peer2/msp/tls/ca.crt"
+          <a href="../orgca/peer2/msp/tls/ca.crt" class="btn btn-primary">Download Peer 2 CA Cert</a>
+          <button data-link="../orgca/peer2/msp/tls/ca.crt"
             onclick="sendAjaxRequestToReadAndShowConnectionProfileFileContents(this)"
-            class="btn btn-primary viewFileButton"
-          >
+            class="btn btn-primary viewFileButton">
             View File
           </button>
         </div>
       </div>
     </div>
+
+
+
   </div>
 </div>
 

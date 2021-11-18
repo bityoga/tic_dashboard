@@ -410,8 +410,8 @@ const getAllFilesListofArrays = function (dirPath, arrayOfFiles) {
       fileinfoArray = [
         fileNameWithFullPath,
         filesize,
-        fileStats.ctime,
-        fileStats.mtime,
+        new Date(fileStats.ctime).toLocaleString("no-No"),
+        new Date(fileStats.mtime).toLocaleString("no-NO"),
         fileDownloadButton,
         FileViewButton,
       ];
