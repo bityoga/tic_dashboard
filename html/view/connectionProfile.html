@@ -17,18 +17,6 @@
             This file contains the network connection profile as a json file
             useful for DApps to interact with the deployed blockchain network
           </p>
-
-          <div
-            id="index_login_loader"
-            class="loader w3-center"
-            style="
-              display: none;
-              width: 50px;
-              height: 50px;
-              margin-left: 45%;
-              margin-right: 45%;
-            "
-          ></div>
           <p class="text-center">
             <button
               data-link="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json"
@@ -36,6 +24,12 @@
               class="btn btn-primary viewFileButton"
             >
               View File
+              <span
+                style="display: none;"
+                class="spinner-border spinner-border-sm connectionProfileFileViewSpinner"
+                role="status"
+                aria-hidden="true"
+              ></span>
             </button>
           </p>
           <p class="text-center">
@@ -70,6 +64,12 @@
               class="btn btn-primary viewFileButton"
             >
               View File
+              <span
+                style="display: none;"
+                class="spinner-border spinner-border-sm connectionProfileFileViewSpinner"
+                role="status"
+                aria-hidden="true"
+              ></span>
             </button>
           </p>
           <p class="text-center">
@@ -104,6 +104,12 @@
               class="btn btn-primary viewFileButton"
             >
               View File
+              <span
+                style="display: none;"
+                class="spinner-border spinner-border-sm connectionProfileFileViewSpinner"
+                role="status"
+                aria-hidden="true"
+              ></span>
             </button>
           </p>
           <p class="text-center">
@@ -124,9 +130,9 @@
   function sendAjaxRequestToReadAndShowConnectionProfileFileContents(
     buttonObject
   ) {
+    // show the loading spinner span tag for selected the button
+    $(buttonObject).children().show();
     var fileName = buttonObject.getAttribute("data-link");
-
-    document.getElementById("index_login_loader").style.display = "block";
 
     var request_json = {
       fileName: fileName,
@@ -139,7 +145,8 @@
       dataType: "json",
       data: request_json,
       complete: function (data) {
-        document.getElementById("index_login_loader").style.display = "none";
+        // hide the loading spinner span tag for selected the button
+        $(buttonObject).children().hide();
         //console.log(JSON.parse(data.responseText));
         //var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
         var json = JSON.parse(data.responseText);

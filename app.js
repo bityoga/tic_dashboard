@@ -406,7 +406,7 @@ const getAllFilesListofArrays = function (dirPath, arrayOfFiles) {
       FileViewButton =
         '<button data-link="' +
         fileNameWithRelativePath +
-        '"onclick="sendAjaxRequestToReadAndShowSelectedDataTableFile(this)" class="btn btn-primary viewFileButton">View File <span class="fileLoadSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span></button>';
+        '"onclick="sendAjaxRequestToReadAndShowSelectedDataTableFile(this)" class="btn btn-primary viewFileButton">View File <span style="display:none" class="spinner-border spinner-border-sm allCertificatesFileViewSpinner" role="status" aria-hidden="true"></span></button>';
       fileinfoArray = [
         fileNameWithFullPath,
         filesize,
