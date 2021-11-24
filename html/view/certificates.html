@@ -3,7 +3,7 @@
   href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css"
 />
 
-<div class="container my-5">
+<div class="container mb-4">
   <h1 class="my-4 p-3 text-white bg-secondary text-center">
     <i class="fa fa-file-text" aria-hidden="true"></i> All Certificates
   </h1>
@@ -38,8 +38,9 @@
         if (json["status"] === "success") {
           $("#certificatesDataTable").DataTable({
             data: json["data"],
+            //pageResize: true,
             responsive: true,
-            pageLength: 5,
+            pageLength: 4,
             bAutoWidth: false,
             columns: [
               { title: "File Name" },
