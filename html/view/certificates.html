@@ -25,6 +25,7 @@
 <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
 <script>
   function sendAjaxReqToGetListOfCertificateFiles() {
+    $("#certificatesDataTable").empty();
     $(".tableContentFetchingSpinner").show();
     $.ajax({
       type: "POST",
