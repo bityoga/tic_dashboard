@@ -402,7 +402,7 @@ const getAllFilesListofArrays = function (dirPath, arrayOfFiles) {
       fileDownloadButton =
         '<a class="btn btn-primary text-break" href="' +
         fileNameWithRelativePath +
-        '" role="button">Download</a>';
+        '" role="button" download>Download</a>';
       FileViewButton =
         '<button data-link="' +
         fileNameWithRelativePath +

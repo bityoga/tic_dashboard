@@ -1,81 +1,122 @@
 <div class="container my-5">
-  <h1 class="my-2 p-3 text-white bg-secondary">
+  <h1 class="my-2 p-3 text-white bg-secondary text-center">
     <i class="fa fa-file-text" aria-hidden="true"></i> Network Connection
     Profile Files
   </h1>
+
   <div class="row align-items-center">
-    <div class="col-xl-6 p-xl-5 mt-2 mt-xl-0">
+    <div class="col-xl-4 p-xl-5 mt-2 mt-xl-0">
       <div class="card">
-        <i class="mt-5 fa fa-file-text fa-5x" aria-hidden="true"></i>
+        <i
+          class="mt-5 fa fa-file-text fa-5x text-center"
+          aria-hidden="true"
+        ></i>
         <div class="card-body mb-5">
-          <h5 class="card-title">Network Profile.json</h5>
-          <p class="card-text">
+          <h5 class="card-title text-center">Network Profile.json</h5>
+          <p class="card-text text-center">
             This file contains the network connection profile as a json file
             useful for DApps to interact with the deployed blockchain network
           </p>
-          <a href="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json"
-            class="btn btn-primary">Download network-profile.json</a>
-          <div id="index_login_loader" class="loader w3-center" style="
+
+          <div
+            id="index_login_loader"
+            class="loader w3-center"
+            style="
               display: none;
               width: 50px;
               height: 50px;
               margin-left: 45%;
               margin-right: 45%;
-            "></div>
-          <button data-link="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json"
-            onclick="sendAjaxRequestToReadAndShowConnectionProfileFileContents(this)"
-            class="btn btn-primary viewFileButton">
-            View File
-          </button>
+            "
+          ></div>
+          <p class="text-center">
+            <button
+              data-link="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json"
+              onclick="sendAjaxRequestToReadAndShowConnectionProfileFileContents(this)"
+              class="btn btn-primary viewFileButton"
+            >
+              View File
+            </button>
+          </p>
+          <p class="text-center">
+            <a
+              href="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json"
+              class="btn btn-primary"
+              download
+              >Download network-profile.json</a
+            >
+          </p>
         </div>
       </div>
     </div>
-  </div>
-  <div class="row align-items-center">
 
-
-    <div class="col-xl-6 p-xl-5 mt-2 mt-xl-0">
+    <div class="col-xl-4 p-xl-5 mt-2 mt-xl-0">
       <div class="card">
-        <i class="mt-5 fa fa-file-text fa-5x" aria-hidden="true"></i>
+        <i
+          class="mt-5 fa fa-file-text fa-5x text-center"
+          aria-hidden="true"
+        ></i>
         <div class="card-body mb-5">
-          <h5 class="card-title">Orderer CA Certificate</h5>
-          <p class="card-text">
+          <h5 class="card-title text-center">Orderer CA Certificate</h5>
+          <p class="card-text text-center">
             This file contains the ordered CA certificate which gives necessary
             permissions for DApp to interact with the deployed blockchain's
             orderer service
           </p>
-          <a href="../orgca/orderer/msp/tls/ca.crt" class="btn btn-primary">Download Orderer CA Cert</a>
-          <button data-link="../orgca/orderer/msp/tls/ca.crt"
-            onclick="sendAjaxRequestToReadAndShowConnectionProfileFileContents(this)"
-            class="btn btn-primary viewFileButton">
-            View File
-          </button>
+          <p class="text-center">
+            <button
+              data-link="../orgca/orderer/msp/tls/ca.crt"
+              onclick="sendAjaxRequestToReadAndShowConnectionProfileFileContents(this)"
+              class="btn btn-primary viewFileButton"
+            >
+              View File
+            </button>
+          </p>
+          <p class="text-center">
+            <a
+              href="../orgca/orderer/msp/tls/ca.crt"
+              class="btn btn-primary"
+              download
+              >Download Orderer CA Cert</a
+            >
+          </p>
         </div>
       </div>
     </div>
 
-    <div class="col-xl-6 p-xl-5 mt-2 mt-xl-0">
+    <div class="col-xl-4 p-xl-5 mt-2 mt-xl-0">
       <div class="card">
-        <i class="mt-5 fa fa-file-text fa-5x" aria-hidden="true"></i>
+        <i
+          class="mt-5 fa fa-file-text fa-5x text-center"
+          aria-hidden="true"
+        ></i>
         <div class="card-body mb-5">
-          <h5 class="card-title">Peer 2 CA Certificate</h5>
-          <p class="card-text">
+          <h5 class="card-title text-center">Peer 2 CA Certificate</h5>
+          <p class="card-text text-center">
             This File contains the peer2 CA certificate which gives necessary
             permissions for DApp to interact with the deployed blockchain's peer
             2 service
           </p>
-          <a href="../orgca/peer2/msp/tls/ca.crt" class="btn btn-primary">Download Peer 2 CA Cert</a>
-          <button data-link="../orgca/peer2/msp/tls/ca.crt"
-            onclick="sendAjaxRequestToReadAndShowConnectionProfileFileContents(this)"
-            class="btn btn-primary viewFileButton">
-            View File
-          </button>
+          <p class="text-center">
+            <button
+              data-link="../orgca/peer2/msp/tls/ca.crt"
+              onclick="sendAjaxRequestToReadAndShowConnectionProfileFileContents(this)"
+              class="btn btn-primary viewFileButton"
+            >
+              View File
+            </button>
+          </p>
+          <p class="text-center">
+            <a
+              href="../orgca/peer2/msp/tls/ca.crt"
+              class="btn btn-primary"
+              download
+              >Download Peer 2 CA Cert</a
+            >
+          </p>
         </div>
       </div>
     </div>
-
-
-
   </div>
 </div>
 

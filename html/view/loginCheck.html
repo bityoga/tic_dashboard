@@ -1,24 +1,48 @@
 <div class="d-flex align-items-center justify-content-center w-100">
-  <div class="col-12 col-sm-12 col-md-7 col-lg-6 col-xl-4  px-4">
+  <div class="col-12 col-sm-12 col-md-7 col-lg-6 col-xl-4 px-4">
     <div class="card text-center">
       <div class="card-header p-4 bg-secondary text-white">
-        <h2><i class="fa fa-sign-in-alt " aria-hidden="true"></i> Login</h2>
+        <h2><i class="fa fa-sign-in-alt" aria-hidden="true"></i> Login</h2>
       </div>
       <div class="card-body">
-        <form id="login_form" action="/login" enctype="multipart/form-data" method="POST">
+        <form
+          id="login_form"
+          action="/login"
+          enctype="multipart/form-data"
+          method="POST"
+        >
           <div class="mb-3">
             <label for="exampleInputEmail1" class="form-label">User Name</label>
-            <input type="text" required class="form-control my-1" name="Login_User_Name" id="Login_User_Name"
-              placeholder="Enter Username" />
+            <input
+              type="text"
+              required
+              class="form-control my-1"
+              name="Login_User_Name"
+              id="Login_User_Name"
+              placeholder="Enter Username"
+            />
           </div>
           <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Password</label>
-            <input type="password" required class="form-control my-1" id="Login_Password" name="Login_Password"
-              placeholder="Enter Password" />
+            <label for="exampleInputPassword1" class="form-label"
+              >Password</label
+            >
+            <input
+              type="password"
+              required
+              class="form-control my-1"
+              id="Login_Password"
+              name="Login_Password"
+              placeholder="Enter Password"
+            />
           </div>
           <button type="submit" class="btn btn-primary mt-2">
             <i class="fa fa-sign-in-alt" aria-hidden="true"></i> Login
-            <span id="loginSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <span
+              id="loginSpinner"
+              class="spinner-border spinner-border-sm"
+              role="status"
+              aria-hidden="true"
+            ></span>
           </button>
         </form>
       </div>
@@ -30,13 +54,6 @@
 </div>
 <script>
   $("#loginSpinner").hide();
-  swal.fire({
-    title: "Login Status",
-    text: 'summa',
-    icon: "error",
-    heightAuto: false,
-    confirmButtonText: '<i class="fa fa-thumbs-down"></i> Login Failed',
-  });
 </script>
 <script>
   $("#login_form").submit(function (e) {
@@ -58,36 +75,34 @@
         $("#loginSpinner").hide();
         var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
         if (json["status"] === "success") {
-          swal.fire({
-            title: "Login Status",
-            text: json["status"],
-            icon: "success",
-            timer: 1000,
-            heightAuto: false,
-            confirmButtonText: '<i class="fa fa-thumbs-up"></i> Great!',
-            didOpen: () => {
-              Swal.showLoading()
-              const b = Swal.getHtmlContainer().querySelector('b')
-              timerInterval = setInterval(() => {
-                b.textContent = Swal.getTimerLeft()
-              }, 100)
-            },
-            willClose: () => {
-              clearInterval(timerInterval)
-            }
-
-          }).then((result) => {
-
-            if (result.isConfirmed) {
-              window.top.location.href = "/";
-            }
-            /* Read more about handling dismissals below */
-            if (result.dismiss === Swal.DismissReason.timer) {
-              window.top.location.href = "/";
-            }
-
-          });
-
+          swal
+            .fire({
+              title: "Login Status",
+              text: json["status"],
+              icon: "success",
+              timer: 1000,
+              heightAuto: false,
+              confirmButtonText: '<i class="fa fa-thumbs-up"></i> Great!',
+              didOpen: () => {
+                Swal.showLoading();
+                const b = Swal.getHtmlContainer().querySelector("b");
+                timerInterval = setInterval(() => {
+                  b.textContent = Swal.getTimerLeft();
+                }, 100);
+              },
+              willClose: () => {
+                clearInterval(timerInterval);
+              },
+            })
+            .then((result) => {
+              if (result.isConfirmed) {
+                window.top.location.href = "/";
+              }
+              /* Read more about handling dismissals below */
+              if (result.dismiss === Swal.DismissReason.timer) {
+                window.top.location.href = "/";
+              }
+            });
         } else {
           swal.fire({
             title: "Login Status",
