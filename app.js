@@ -402,11 +402,11 @@ const getAllFilesListofArrays = function (dirPath, arrayOfFiles) {
       fileDownloadButton =
         '<a class="btn btn-primary text-break" href="' +
         fileNameWithRelativePath +
-        '" role="button" download>Download</a>';
+        '" role="button" download><i class="fa fa-download" aria-hidden="true"></i> Download</a>';
       FileViewButton =
         '<button data-link="' +
         fileNameWithRelativePath +
-        '"onclick="sendAjaxRequestToReadAndShowSelectedDataTableFile(this)" class="btn btn-primary viewFileButton">View File <span style="display:none" class="spinner-border spinner-border-sm allCertificatesFileViewSpinner" role="status" aria-hidden="true"></span></button>';
+        '"onclick="sendAjaxRequestToReadAndShowSelectedDataTableFile(this)" class="btn btn-primary viewFileButton"><i class="fa fa-eye" aria-hidden="true"></i> View File <span style="display:none" class="spinner-border spinner-border-sm allCertificatesFileViewSpinner" role="status" aria-hidden="true"></span></button>';
       fileinfoArray = [
         fileNameWithFullPath,
         filesize,

@@ -7,10 +7,7 @@
   <div class="row align-items-center">
     <div class="col-xl-4 p-xl-5 mt-2 mt-xl-0">
       <div class="card">
-        <i
-          class="mt-5 fa fa-file-text fa-5x text-center"
-          aria-hidden="true"
-        ></i>
+        <i class="mt-5 fa fa-file-text fa-5x text-center" aria-hidden="true"></i>
         <div class="card-body mb-5">
           <h5 class="card-title text-center">Network Profile.json</h5>
           <p class="card-text text-center">
@@ -18,27 +15,17 @@
             useful for DApps to interact with the deployed blockchain network
           </p>
           <p class="text-center">
-            <button
-              data-link="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json"
+            <button data-link="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json"
               onclick="sendAjaxRequestToReadAndShowConnectionProfileFileContents(this)"
-              class="btn btn-primary viewFileButton"
-            >
-              View File
-              <span
-                style="display: none;"
-                class="spinner-border spinner-border-sm connectionProfileFileViewSpinner"
-                role="status"
-                aria-hidden="true"
-              ></span>
+              class="btn btn-primary viewFileButton">
+              <i class="fa fa-eye" aria-hidden="true"></i> View File
+              <span style="display: none;" class="spinner-border spinner-border-sm connectionProfileFileViewSpinner"
+                role="status" aria-hidden="true"></span>
             </button>
           </p>
           <p class="text-center">
-            <a
-              href="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json"
-              class="btn btn-primary"
-              download
-              >Download network-profile.json</a
-            >
+            <a href="../fabric_as_code_restapi/fabric_node_sdk_helper/network_profile.json" class="btn btn-primary"
+              download><i class="fa fa-download" aria-hidden="true"></i> Download network-profile.json</a>
           </p>
         </div>
       </div>
@@ -46,10 +33,7 @@
 
     <div class="col-xl-4 p-xl-5 mt-2 mt-xl-0">
       <div class="card">
-        <i
-          class="mt-5 fa fa-file-text fa-5x text-center"
-          aria-hidden="true"
-        ></i>
+        <i class="mt-5 fa fa-file-text fa-5x text-center" aria-hidden="true"></i>
         <div class="card-body mb-5">
           <h5 class="card-title text-center">Orderer CA Certificate</h5>
           <p class="card-text text-center">
@@ -58,27 +42,17 @@
             orderer service
           </p>
           <p class="text-center">
-            <button
-              data-link="../orgca/orderer/msp/tls/ca.crt"
+            <button data-link="../orgca/orderer/msp/tls/ca.crt"
               onclick="sendAjaxRequestToReadAndShowConnectionProfileFileContents(this)"
-              class="btn btn-primary viewFileButton"
-            >
-              View File
-              <span
-                style="display: none;"
-                class="spinner-border spinner-border-sm connectionProfileFileViewSpinner"
-                role="status"
-                aria-hidden="true"
-              ></span>
+              class="btn btn-primary viewFileButton">
+              <i class="fa fa-eye" aria-hidden="true"></i> View File
+              <span style="display: none;" class="spinner-border spinner-border-sm connectionProfileFileViewSpinner"
+                role="status" aria-hidden="true"></span>
             </button>
           </p>
           <p class="text-center">
-            <a
-              href="../orgca/orderer/msp/tls/ca.crt"
-              class="btn btn-primary"
-              download
-              >Download Orderer CA Cert</a
-            >
+            <a href="../orgca/orderer/msp/tls/ca.crt" class="btn btn-primary" download><i class="fa fa-download"
+                aria-hidden="true"></i> Download Orderer CA Cert</a>
           </p>
         </div>
       </div>
@@ -86,10 +60,7 @@
 
     <div class="col-xl-4 p-xl-5 mt-2 mt-xl-0">
       <div class="card">
-        <i
-          class="mt-5 fa fa-file-text fa-5x text-center"
-          aria-hidden="true"
-        ></i>
+        <i class="mt-5 fa fa-file-text fa-5x text-center" aria-hidden="true"></i>
         <div class="card-body mb-5">
           <h5 class="card-title text-center">Peer 2 CA Certificate</h5>
           <p class="card-text text-center">
@@ -98,27 +69,17 @@
             2 service
           </p>
           <p class="text-center">
-            <button
-              data-link="../orgca/peer2/msp/tls/ca.crt"
+            <button data-link="../orgca/peer2/msp/tls/ca.crt"
               onclick="sendAjaxRequestToReadAndShowConnectionProfileFileContents(this)"
-              class="btn btn-primary viewFileButton"
-            >
-              View File
-              <span
-                style="display: none;"
-                class="spinner-border spinner-border-sm connectionProfileFileViewSpinner"
-                role="status"
-                aria-hidden="true"
-              ></span>
+              class="btn btn-primary viewFileButton">
+              <i class="fa fa-eye" aria-hidden="true"></i> View File
+              <span style="display: none;" class="spinner-border spinner-border-sm connectionProfileFileViewSpinner"
+                role="status" aria-hidden="true"></span>
             </button>
           </p>
           <p class="text-center">
-            <a
-              href="../orgca/peer2/msp/tls/ca.crt"
-              class="btn btn-primary"
-              download
-              >Download Peer 2 CA Cert</a
-            >
+            <a href="../orgca/peer2/msp/tls/ca.crt" class="btn btn-primary" download><i class="fa fa-download"
+                aria-hidden="true"></i> Download Peer 2 CA Cert</a>
           </p>
         </div>
       </div>
@@ -131,7 +92,7 @@
     buttonObject
   ) {
     // show the loading spinner span tag for selected the button
-    $(buttonObject).children().show();
+    $(buttonObject).children('.connectionProfileFileViewSpinner').show();
     var fileName = buttonObject.getAttribute("data-link");
 
     var request_json = {
@@ -146,7 +107,7 @@
       data: request_json,
       complete: function (data) {
         // hide the loading spinner span tag for selected the button
-        $(buttonObject).children().hide();
+        $(buttonObject).children('.connectionProfileFileViewSpinner').hide();
         //console.log(JSON.parse(data.responseText));
         //var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
         var json = JSON.parse(data.responseText);
