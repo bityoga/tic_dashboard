@@ -61,11 +61,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
       function menuNavigator() {
-        $("a").click(function (e) {
+        $(".nav-item a").click(function (e) {
           e.preventDefault();
           $(".nav-link").removeClass("active");
           $(this).addClass("active");
-          console.log("empty index");
+          console.log("empty index menuNavigator");
           $("#indexContentDiv").empty();
           $("#indexContentDiv").load($(this).attr("href"));
         });
@@ -97,11 +97,14 @@
             console.log(json);
             if (json["status"] === "session active") {
               $(".sessionActiveNavMenuBarItem").show();
+              console.log("empty index checkSession");
+              $("#indexContentDiv").empty();
               $("#indexContentDiv").load(
                 $("#chainCodeManagement").attr("href")
               );
             } else {
               $(".sessionActiveNavMenuBarItem").hide();
+              console.log("empty index checkSession");
               $("#indexContentDiv").empty();
               $("#indexContentDiv").load($("#loginForm").attr("href"));
             }
@@ -115,6 +118,8 @@
     </script>
     <script>
       $(document).ready(function () {
+        console.log("empty index document ready");
+        $("#indexContentDiv").empty();
         check_session();
         menuNavigator();
       });

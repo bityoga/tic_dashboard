@@ -1,27 +1,53 @@
-<div class="d-flex flex-column justify-content-center align-items-center pb-5" style="height: inherit; width: inherit;">
+<div
+  class="d-flex flex-column justify-content-center align-items-center pb-5"
+  style="height: inherit; width: inherit;"
+>
   <div class="btn-group-horizontal p-5">
-    <a class="btn btn-primary m-2" href="chaincodeManagement/createChaincodeForm.html"
-      id="createSmartContractMenuButton"><i class="fa fa-plus" aria-hidden="true"></i> Create</a>
-    <a class="btn btn-primary m-2" href="chaincodeManagement/chaincodeInstallForm.html"><i class="fa fa-desktop"
-        aria-hidden="true"></i> Install</a>
-    <a class="btn btn-primary m-2" href="chaincodeManagement/chaincodeUpdateForm.html"><i class="fa fa-refresh"
-        aria-hidden="true"></i> Update</a>
-    <a class="btn btn-primary m-2" href="#"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
-    <a class="btn btn-primary m-2" href="#"><i class="fa fa-file" aria-hidden="true"></i> Manage Uploads</a>
-    <a class="btn btn-primary m-2" href="#"><i class="fa fa-question-circle" aria-hidden="true"></i>Query</a>
-    <a class="btn btn-primary m-2" href="#"><i class="fa fa-pencil" aria-hidden="true"></i> Invoke</a>
+    <a
+      class="btn btn-primary m-2"
+      href="chaincodeManagement/createChaincodeForm.html"
+      id="createSmartContractMenuButton"
+      ><i class="fa fa-plus" aria-hidden="true"></i> Create</a
+    >
+    <a
+      class="btn btn-primary m-2"
+      href="chaincodeManagement/chaincodeInstallForm.html"
+      ><i class="fa fa-desktop" aria-hidden="true"></i> Install</a
+    >
+    <a
+      class="btn btn-primary m-2"
+      href="chaincodeManagement/chaincodeUpdateForm.html"
+      ><i class="fa fa-refresh" aria-hidden="true"></i> Update</a
+    >
+    <a class="btn btn-primary m-2" href="#"
+      ><i class="fa fa-trash" aria-hidden="true"></i> Delete</a
+    >
+    <a class="btn btn-primary m-2" href="#"
+      ><i class="fa fa-file" aria-hidden="true"></i> Manage Uploads</a
+    >
+    <a class="btn btn-primary m-2" href="#"
+      ><i class="fa fa-question-circle" aria-hidden="true"></i>Query</a
+    >
+    <a class="btn btn-primary m-2" href="#"
+      ><i class="fa fa-pencil" aria-hidden="true"></i> Invoke</a
+    >
   </div>
-  <div id="chainCodeManagementContentDiv" style="width: 100%; height: 100%;"></div>
+  <div
+    id="chainCodeManagementContentDiv"
+    style="width: 100%; height: 100%;"
+  ></div>
 </div>
 
 <script type="text/javascript" src="js/send_ajax_request.js"></script>
 
 <script>
+  $("#chainCodeManagementContentDiv").empty();
   $("#chainCodeManagementContentDiv").load(
     $("#createSmartContractMenuButton").attr("href")
   );
   $("a").click(function (e) {
     e.preventDefault();
+    $("#chainCodeManagementContentDiv").empty();
     $("#chainCodeManagementContentDiv").load($(this).attr("href"));
   });
 </script>
