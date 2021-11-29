@@ -17,10 +17,10 @@ div.floating-action-menu.active > .action-menu {
   max-height: 1000px;
 }
 
-/* div.floating-action-menu > .action-menu > .floating-action a {
+div.floating-action-menu > .action-menu > .floating-action a {
   width: -webkit-fill-available;
   text-align: end;
-} */
+}
 
 /* div.floating-action-menu > .action-menu > .floating-action {
   padding-right: 0.45rem;
@@ -41,15 +41,15 @@ div.floating-action-menu > .action-button > .btn-floating {
   cursor: pointer;
 }
 div.floating-action-menu.active > .action-button > .btn-floating {
-  background-color: black;
-  border-color: black;
+  /* background-color: black;
+  border-color: black; */
   opacity: 0.9;
   cursor: pointer;
 }
 div.floating-action-menu.active > .action-button > .btn-floating:hover {
-  background-color: grey;
-  border-color: black;
-  opacity: 0.9;
+  /* background-color: grey;
+  border-color: black; */
+  opacity: 0.5;
   cursor: pointer;
 }
 
