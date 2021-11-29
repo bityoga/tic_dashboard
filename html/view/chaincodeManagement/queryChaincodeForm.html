@@ -1,0 +1,90 @@
+<div class="d-flex align-items-center justify-content-center pb-5" style="height: inherit;">
+    <div class="col-12 col-sm-12 col-md-7 col-lg-6 col-xl-4 px-4">
+        <div class="card text-center">
+            <div class="card-header p-4 bg-secondary text-white">
+                <h2><i class="fa fa-plus" aria-hidden="true"></i> Create Chaincode</h2>
+            </div>
+            <div class="card-body">
+                <form id="createChaincodeForm" action="/login" enctype="multipart/form-data" method="POST">
+                    <div class="mb-3">
+                        <label for="chaincodeNameInput" class="form-label">Chaincode Class Name</label>
+                        <input type="text" required class="form-control my-1" name="chaincodeNameInput"
+                            id="chaincodeNameInput" placeholder="Enter chaincode name" />
+                        <small class="form-text text-muted my-1">Example : car-details
+                            (underscores
+                            are
+                            not allowed)</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="chaincodeClassNameInput" class="form-label">Chaincode Class Name</label>
+                        <input type="text" required class="form-control my-1" id="chaincodeClassNameInput"
+                            name="chaincodeClassNameInput" placeholder="Enter Chaincode Class Name" />
+                        <small class="form-text text-muted my-1">Example :
+                            CarDetailsChaincode</small>
+                    </div>
+                    <!--  <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="downloadZip">
+                    <label class="form-check-label" for="downloadZip">Download zip</label>
+                </div> -->
+                    <button type="submit" class="btn btn-primary mt-2">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Create Chaincode
+                        <span class="spinner-border spinner-border-sm createChaincodeSpinner" role="status"
+                            aria-hidden="true" style="display: none;"></span>
+                    </button>
+                </form>
+            </div>
+            <div class="card-footer text-muted">
+                Create a new chaincode
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $("#createChaincodeForm").submit(function (e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+
+        $(".createChaincodeSpinner").show();
+        $('#createChaincodeForm input').attr('readonly', true);
+
+        var user_json = {
+            chaincodeNameInput: document.getElementById("chaincodeNameInput").value,
+            chaincodeClassNameInput: document.getElementById("chaincodeClassNameInput").value,
+            /* downloadZip : document.getElementById("downloadZip").value, */
+        };
+
+        console.log(user_json);
+
+        $.ajax({
+            type: "POST",
+            url: "/createChaincode",
+            async: true,
+            dataType: "json",
+            data: user_json,
+            complete: function (data) {
+                $('.createChaincodeSpinner').hide();
+                $('#createChaincodeForm input').attr('readonly', false);
+                var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+                console.log(json);
+                if (json["status"] === "success") {
+                    swal.fire({
+                        title: "Create Chaincode Status",
+                        text: json["status"],
+                        icon: "success",
+                        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Chaincode Created Successfully!',
+                    });
+                }
+                else {
+                    swal.fire({
+                        title: "Create Chaincode Status",
+                        text: json["status"],
+                        icon: "fail",
+                        confirmButtonText: '<i class="fa fa-thumbs-down"></i> Chaincode Creation Failed',
+                    });
+                }
+            },
+        });
+    });
+</script>

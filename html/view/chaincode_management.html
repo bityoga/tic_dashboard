@@ -1,53 +1,94 @@
+<link rel="stylesheet" href="css/floatingActionMenu.css" />
 <div
   class="d-flex flex-column justify-content-center align-items-center pb-5"
   style="height: inherit; width: inherit;"
 >
-  <div class="btn-group-horizontal p-5">
-    <a
-      class="btn btn-primary m-2"
-      href="chaincodeManagement/createChaincodeForm.html"
-      id="createSmartContractMenuButton"
-      ><i class="fa fa-plus" aria-hidden="true"></i> Create</a
-    >
-    <a
-      class="btn btn-primary m-2"
-      href="chaincodeManagement/chaincodeInstallForm.html"
-      ><i class="fa fa-desktop" aria-hidden="true"></i> Install</a
-    >
-    <a
-      class="btn btn-primary m-2"
-      href="chaincodeManagement/chaincodeUpdateForm.html"
-      ><i class="fa fa-refresh" aria-hidden="true"></i> Update</a
-    >
-    <a class="btn btn-primary m-2" href="#"
-      ><i class="fa fa-trash" aria-hidden="true"></i> Delete</a
-    >
-    <a class="btn btn-primary m-2" href="#"
-      ><i class="fa fa-file" aria-hidden="true"></i> Manage Uploads</a
-    >
-    <a class="btn btn-primary m-2" href="#"
-      ><i class="fa fa-question-circle" aria-hidden="true"></i>Query</a
-    >
-    <a class="btn btn-primary m-2" href="#"
-      ><i class="fa fa-pencil" aria-hidden="true"></i> Invoke</a
-    >
-  </div>
   <div
     id="chainCodeManagementContentDiv"
     style="width: 100%; height: 100%;"
   ></div>
+
+  <!-- floating-action-menu starts here -->
+  <div
+    class="position-absolute position-fixed text-right floating-action-menu"
+    style="bottom: 80px; right: 10px;"
+  >
+    <div class="action-menu my-3">
+      <div class="floating-action text-end">
+        <a
+          class="btn btn-primary m-2"
+          href="chaincodeManagement/createChaincodeForm.html"
+          id="createSmartContractMenuButton"
+          >Create &nbsp;<i class="fa fa-plus" aria-hidden="true"></i
+        ></a>
+      </div>
+      <div class="floating-action text-end">
+        <a
+          class="btn btn-primary m-2"
+          href="chaincodeManagement/chaincodeInstallForm.html"
+          >Install &nbsp;<i class="fa fa-desktop" aria-hidden="true"></i
+        ></a>
+      </div>
+      <div class="floating-action text-end">
+        <a
+          class="btn btn-primary m-2"
+          href="chaincodeManagement/chaincodeUpdateForm.html"
+          >Update &nbsp;<i class="fa fa-refresh" aria-hidden="true"></i
+        ></a>
+      </div>
+      <div class="floating-action text-end">
+        <a
+          class="btn btn-primary m-2"
+          href="chaincodeManagement/deleteChaincodeForm.html"
+          >Delete &nbsp;<i class="fa fa-trash" aria-hidden="true"></i
+        ></a>
+      </div>
+      <div class="floating-action text-end">
+        <a
+          class="btn btn-primary m-2"
+          href="chaincodeManagement/manageChaincodeUploads.html"
+          >Manage Uploads &nbsp;<i class="fa fa-file" aria-hidden="true"></i
+        ></a>
+      </div>
+      <div class="floating-action text-end">
+        <a
+          class="btn btn-primary m-2"
+          href="chaincodeManagement/queryChaincodeForm.html"
+          >Query &nbsp;<i class="fa fa-question-circle" aria-hidden="true"></i
+        ></a>
+      </div>
+      <div class="floating-action text-end">
+        <a
+          class="btn btn-primary m-2"
+          href="chaincodeManagement/invokeChaincodeForm.html"
+          >Invoke &nbsp;<i class="fa fa-pencil" aria-hidden="true"></i
+        ></a>
+      </div>
+    </div>
+    <div class="d-block action-button text-end mx-2 my-2">
+      <a
+        class="btn-floating btn-primary p-3"
+        onclick="$(this).closest('div.floating-action-menu').toggleClass('active')"
+      >
+        <i class="fa fa-circle-chevron-up"></i>
+      </a>
+    </div>
+  </div>
+  <!-- floating-action-menu ends here-->
 </div>
 
 <script type="text/javascript" src="js/send_ajax_request.js"></script>
 
 <script>
   $("#chainCodeManagementContentDiv").empty();
+  $(".action-button a").trigger("click");
   $("#chainCodeManagementContentDiv").load(
     $("#createSmartContractMenuButton").attr("href")
   );
-  $("a").click(function (e) {
+  $(".floating-action a").click(function (e) {
     e.preventDefault();
     $("#chainCodeManagementContentDiv").empty();
     $("#chainCodeManagementContentDiv").load($(this).attr("href"));
+    // $(".action-button a").trigger("click");
   });
 </script>
