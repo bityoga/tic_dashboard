@@ -1,123 +1,177 @@
-<div
-  class="d-flex align-items-center justify-content-center pb-5"
-  style="height: inherit;"
->
-  <div class="col-12 col-sm-12 col-md-7 col-lg-6 col-xl-4 px-4">
-    <div class="card text-center">
-      <div class="card-header p-4 bg-secondary text-white">
-        <h2>
-          <i class="fa fa-folder" aria-hidden="true"></i> Manage Chaincode
-          Uploads
-        </h2>
-      </div>
-      <div class="card-body">
-        <form
-          id="createChaincodeForm"
-          action="/manageChainCodeUploads"
-          enctype="multipart/form-data"
-          method="POST"
-        >
-          <div class="mb-3">
-            <label for="chaincodeNameInput" class="form-label"
-              >Chaincode Class Name</label
-            >
-            <input
-              type="text"
-              required
-              class="form-control my-1"
-              name="chaincodeNameInput"
-              id="chaincodeNameInput"
-              placeholder="Enter chaincode name"
-            />
-            <small class="form-text text-muted my-1"
-              >Example : car-details (underscores are not allowed)</small
-            >
-          </div>
-          <div class="mb-3">
-            <label for="chaincodeClassNameInput" class="form-label"
-              >Chaincode Class Name</label
-            >
-            <input
-              type="text"
-              required
-              class="form-control my-1"
-              id="chaincodeClassNameInput"
-              name="chaincodeClassNameInput"
-              placeholder="Enter Chaincode Class Name"
-            />
-            <small class="form-text text-muted my-1"
-              >Example : CarDetailsChaincode</small
-            >
-          </div>
-          <!--  <div class="form-check mb-3">
-                    <input type="checkbox" class="form-check-input" id="downloadZip">
-                    <label class="form-check-label" for="downloadZip">Download zip</label>
-                </div> -->
-          <button type="submit" class="btn btn-primary mt-2">
-            <i class="fa fa-folder" aria-hidden="true"></i> Manage Chaincode
-            Uploads
-            <span
-              class="spinner-border spinner-border-sm createChaincodeSpinner"
-              role="status"
-              aria-hidden="true"
-              style="display: none;"
-            ></span>
-          </button>
-        </form>
-      </div>
-      <div class="card-footer text-muted">
-        Manage chaincode uploads
-      </div>
+<link
+  rel="stylesheet"
+  href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css"
+/>
+
+<div class="container mb-4">
+  <h1 class="my-4 p-3 text-white bg-secondary text-center">
+    <i class="fa fa-folder" aria-hidden="true"></i> Uploaded Chaincodes
+  </h1>
+  <div class="text-center uploadedChainCodesTableContentFetchingSpinner">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
+  </div>
+  <div class="table-responsive">
+    <table
+      id="uploadedChainCodesListDataTable"
+      class="table table-striped table-hover dt-responsive display nowrap text-center"
+    ></table>
   </div>
 </div>
 
+<script type="text/javascript" src="js/send_ajax_request.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
 <script>
-  $("#createChaincodeForm").submit(function (e) {
-    e.preventDefault(); // avoid to execute the actual submit of the form.
-
-    $(".createChaincodeSpinner").show();
-    $("#createChaincodeForm input").attr("readonly", true);
-
-    var user_json = {
-      chaincodeNameInput: document.getElementById("chaincodeNameInput").value,
-      chaincodeClassNameInput: document.getElementById(
-        "chaincodeClassNameInput"
-      ).value,
-      /* downloadZip : document.getElementById("downloadZip").value, */
-    };
-
-    console.log(user_json);
-
+  function sendAjaxReqToGetListOfUploadedChaincodes() {
+    $("#uploadedChainCodesListDataTable").empty();
+    $(".uploadedChainCodesTableContentFetchingSpinner").show();
     $.ajax({
       type: "POST",
-      url: "/createChaincode",
+      url: "/getCertificateFileList",
       async: true,
-      dataType: "json",
-      data: user_json,
       complete: function (data) {
-        $(".createChaincodeSpinner").hide();
-        $("#createChaincodeForm input").attr("readonly", false);
         var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
         console.log(json);
+
         if (json["status"] === "success") {
-          swal.fire({
-            title: "Create Chaincode Status",
-            text: json["status"],
-            icon: "success",
-            confirmButtonText:
-              '<i class="fa fa-thumbs-up"></i> Chaincode Created Successfully!',
+          $("#uploadedChainCodesListDataTable").DataTable({
+            data: json["data"],
+            //pageResize: true,
+            responsive: true,
+            pageLength: 4,
+            bAutoWidth: false,
+            columns: [
+              { title: "File Name" },
+              { title: "Size" },
+              { title: "Created" },
+              { title: "Last Modified" },
+              { title: "Download" },
+              { title: "View" },
+            ],
+            initComplete: function (settings, json) {
+              $(".uploadedChainCodesTableContentFetchingSpinner").hide();
+            },
           });
         } else {
           swal.fire({
-            title: "Create Chaincode Status",
+            title: "Certificates Retrieval",
             text: json["status"],
-            icon: "fail",
-            confirmButtonText:
-              '<i class="fa fa-thumbs-down"></i> Chaincode Creation Failed',
+            icon: "error",
+            confirmButtonText: '<i class="fa fa-thumbs-down"></i> Failed',
           });
         }
       },
     });
+  }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+<!-- and it's easy to individually load additional languages -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/languages/go.min.js"></script>
+
+<script src="https://unpkg.com/highlightjs-badge/highlightjs-badge.min.js"></script>
+
+<script>
+  function sendAjaxRequestToReadAndShowSelectedDataTableFile(buttonObject) {
+    // show the loading spinner span tag for selected the button
+    $(buttonObject).children(".allCertificatesFileViewSpinner").show();
+    var fileName = buttonObject.getAttribute("data-link");
+
+    var request_json = {
+      fileName: fileName,
+    };
+
+    $.ajax({
+      type: "POST",
+      url: "/viewFileContent",
+      async: true,
+      dataType: "json",
+      data: request_json,
+      complete: function (data) {
+        // hide the loading spinner span tag for selected the button
+        $(buttonObject).children(".allCertificatesFileViewSpinner").hide();
+        //console.log(JSON.parse(data.responseText));
+        //var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        var json = JSON.parse(data.responseText);
+        if (json["status"] === "success") {
+          swal
+            .fire({
+              title: "File Contents : " + fileName,
+              width: "min-content",
+              showCloseButton: true,
+              html:
+                '<div class="codeBlock" style="max-height:40vh; overflow-y:scroll; text-align:initial"><pre><code id="fileContent">' +
+                json["data"] +
+                "</code></pre></div>",
+              icon: "success",
+              showCancelButton: true,
+              buttons: {
+                confirm: {
+                  //text: "OK",
+                  value: true,
+                  visible: true,
+                  className: "",
+                  closeModal: false,
+                },
+                cancel: {
+                  //text: "Cancel",
+                  value: false,
+                  visible: true,
+                  className: "",
+                  closeModal: true,
+                },
+              },
+              confirmButtonText:
+                '<i class="fa fa-file"></i> Copy to Clipboard !',
+              cancelButtonText: '<i class="fa fa-close"></i> Close',
+            })
+            .then((result) => {
+              /* Read more about isConfirmed, isDenied below */
+              if (result.isConfirmed) {
+                var copyText = document.getElementById("fileContent");
+                //copyText.select();
+                //copyText.setSelectionRange(0, 99999);
+                navigator.clipboard.writeText(copyText.textContent);
+
+                Swal.fire("Copied to Clipboard!", "", "success");
+              }
+            });
+
+          hljs.highlightAll();
+          // apply HighlightJS
+          var pres = document.querySelectorAll("pre>code");
+          for (var i = 0; i < pres.length; i++) {
+            hljs.highlightBlock(pres[i]);
+          }
+
+          // add HighlightJS-badge (options are optional)
+          var options = {
+            // optional
+            contentSelector: ".codeBlock",
+
+            // CSS class(es) used to render the copy icon.
+            copyIconClass: "fas fa-copy",
+            // CSS class(es) used to render the done icon.
+            checkIconClass: "fas fa-check text-success",
+          };
+          window.highlightJsBadge(options);
+        } else {
+          swal.fire({
+            title: "File Read : " + fileName,
+            text: json["status"],
+            icon: "error",
+            confirmButtonText:
+              '<i class="fa fa-thumbs-down"></i> File Read Failed',
+          });
+        }
+      },
+    });
+  }
+</script>
+
+<script>
+  $(document).ready(function () {
+    sendAjaxReqToGetListOfUploadedChaincodes();
   });
 </script>
