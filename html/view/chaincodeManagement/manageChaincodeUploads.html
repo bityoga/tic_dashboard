@@ -2,6 +2,10 @@
   rel="stylesheet"
   href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css"
 />
+<!-- <link
+  rel="stylesheet"
+  href="https://cdn.datatables.net/rowgroup/1.1.4/css/rowGroup.bootstrap5.min.css"
+/> -->
 
 <div class="container mb-4">
   <h1 class="my-4 p-3 text-white bg-secondary text-center">
@@ -23,13 +27,14 @@
 <script type="text/javascript" src="js/send_ajax_request.js"></script>
 <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+<!-- <script src="https://cdn.datatables.net/rowgroup/1.1.4/js/dataTables.rowGroup.min.js"></script> -->
 <script>
   function sendAjaxReqToGetListOfUploadedChaincodes() {
     $("#uploadedChainCodesListDataTable").empty();
     $(".uploadedChainCodesTableContentFetchingSpinner").show();
     $.ajax({
       type: "POST",
-      url: "/getCertificateFileList",
+      url: "/getAllUploadedChainCodeFilesList",
       async: true,
       complete: function (data) {
         var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
@@ -43,6 +48,7 @@
             pageLength: 4,
             bAutoWidth: false,
             columns: [
+              { title: "Chaincode Name" },
               { title: "File Name" },
               { title: "Size" },
               { title: "Created" },
@@ -50,6 +56,9 @@
               { title: "Download" },
               { title: "View" },
             ],
+            rowGroup: {
+              dataSrc: 0,
+            },
             initComplete: function (settings, json) {
               $(".uploadedChainCodesTableContentFetchingSpinner").hide();
             },

@@ -422,6 +422,50 @@ const getAllFilesListofArrays = function (dirPath, arrayOfFiles) {
   return arrayOfFiles;
 };
 
+const getAllChainCodeFilesListOfArrays = function (dirPath, arrayOfFiles) {
+  files = fs.readdirSync(dirPath);
+
+  arrayOfFiles = arrayOfFiles || [];
+
+  files.forEach(function (file) {
+    if (fs.statSync(dirPath + "/" + file).isDirectory()) {
+      arrayOfFiles = getAllChainCodeFilesListOfArrays(
+        dirPath + "/" + file,
+        arrayOfFiles
+      );
+    } else {
+      fileNameWithFullPath = path.join(__dirname, dirPath, "/", file);
+      fileNameWithRelativePath = path.join(dirPath, "/", file);
+      fileStats = fs.statSync(fileNameWithFullPath);
+      filesize = ConvertSize(fileStats.size);
+      fileDownloadButton =
+        '<a class="btn btn-primary text-break" href="' +
+        fileNameWithRelativePath +
+        '" role="button" download><i class="fa fa-download" aria-hidden="true"></i> Download</a>';
+      FileViewButton =
+        '<button data-link="' +
+        fileNameWithRelativePath +
+        '"onclick="sendAjaxRequestToReadAndShowSelectedDataTableFile(this)" class="btn btn-primary viewFileButton"><i class="fa fa-eye" aria-hidden="true"></i> View File <span style="display:none" class="spinner-border spinner-border-sm allCertificatesFileViewSpinner" role="status" aria-hidden="true"></span></button>';
+      const chaincodeName = fileNameWithRelativePath
+        .split(CHAINCODE_PATH + "/")
+        .pop()
+        .split("/")[0];
+      fileinfoArray = [
+        chaincodeName,
+        fileNameWithFullPath,
+        filesize,
+        new Date(fileStats.ctime).toLocaleString("no-No"),
+        new Date(fileStats.mtime).toLocaleString("no-NO"),
+        fileDownloadButton,
+        FileViewButton,
+      ];
+      arrayOfFiles.push(fileinfoArray);
+    }
+  });
+
+  return arrayOfFiles;
+};
+
 app.post("/getCertificateFileList", async (req, res) => {
   let response;
 
@@ -429,6 +473,29 @@ app.post("/getCertificateFileList", async (req, res) => {
 
   if (app_session.user_name && app_session.password) {
     var fileList = getAllFilesListofArrays(CERTIFICATE_PATH);
+    response = {
+      status: "success",
+      data: fileList,
+    };
+    console.log(response);
+    res.json(response);
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/getAllUploadedChainCodeFilesList", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  if (app_session.user_name && app_session.password) {
+    var fileList = getAllChainCodeFilesListOfArrays(CHAINCODE_PATH);
     response = {
       status: "success",
       data: fileList,
