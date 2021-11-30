@@ -6,14 +6,13 @@
     <div class="card text-center">
       <div class="card-header p-4 bg-secondary text-white">
         <h2>
-          <i class="fa fa-folder" aria-hidden="true"></i> Manage Chaincode
-          Uploads
+          <i class="fa fa-refresh" aria-hidden="true"></i> Update Chaincode
         </h2>
       </div>
       <div class="card-body">
         <form
           id="createChaincodeForm"
-          action="/manageChainCodeUploads"
+          action="/login"
           enctype="multipart/form-data"
           method="POST"
         >
@@ -54,8 +53,7 @@
                     <label class="form-check-label" for="downloadZip">Download zip</label>
                 </div> -->
           <button type="submit" class="btn btn-primary mt-2">
-            <i class="fa fa-folder" aria-hidden="true"></i> Manage Chaincode
-            Uploads
+            <i class="fa fa-refresh" aria-hidden="true"></i> Update Chaincode
             <span
               class="spinner-border spinner-border-sm createChaincodeSpinner"
               role="status"
@@ -66,7 +64,7 @@
         </form>
       </div>
       <div class="card-footer text-muted">
-        Manage chaincode uploads
+        Update chaincode
       </div>
     </div>
   </div>
@@ -105,6 +103,7 @@
             title: "Create Chaincode Status",
             text: json["status"],
             icon: "success",
+            heightAuto: false,
             confirmButtonText:
               '<i class="fa fa-thumbs-up"></i> Chaincode Created Successfully!',
           });
@@ -113,6 +112,7 @@
             title: "Create Chaincode Status",
             text: json["status"],
             icon: "fail",
+            heightAuto: false,
             confirmButtonText:
               '<i class="fa fa-thumbs-down"></i> Chaincode Creation Failed',
           });
