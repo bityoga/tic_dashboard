@@ -8,6 +8,7 @@ const fs = require("fs");
 const path = require("path");
 
 const shell = require("shelljs");
+const { response } = require("express");
 
 const APP_CONFIG_FILE = "app_config.json";
 // Global variable to store the api config from file
@@ -678,6 +679,105 @@ app.post("/deleteSelectedChainCodeFile", async (req, res) => {
     };
     console.log(response);
     res.json(response);
+  }
+});
+
+function generateGitCloneCommand(
+  githubUrl,
+  githubUrlBranch,
+  githubUrlRename,
+  githubRepoType,
+  githubAccessToken
+) {
+  var gitCloneCommand = "git clone ";
+  if (githubUrlBranch) {
+    //--single-branch --branch <branchname>
+    gitCloneCommand =
+      gitCloneCommand + "--single-branch --branch " + githubUrlBranch + " ";
+  }
+
+  if (githubRepoType === "public") {
+    // git clone https://github.com/bityoga/smart_energy_chaincodes.git
+    gitCloneCommand = gitCloneCommand + " " + githubUrl;
+    console.log("pubic gitCloneCommand");
+    console.log(gitCloneCommand);
+  } else {
+    //git clone https://username:password@github.com/username/repository.git
+    //git clone https://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@github.com/bityoga/smart_energy_chaincodes.git
+    gitCloneCommand =
+      gitCloneCommand +
+      " https://" +
+      githubAccessToken +
+      "@" +
+      githubUrl.replace(/(^\w+:|^)\/\//, "");
+  }
+
+  var repoName = githubUrl.split("/").pop(); // will return repoName.git
+
+  var repoDirectoryName = repoName.split(".")[0]; // will get repoName
+
+  if (githubUrlRename) {
+    console.log("new name");
+    console.log(githubUrlRename);
+    gitCloneCommand =
+      gitCloneCommand + " " + CHAINCODE_PATH + "/" + githubUrlRename;
+  } else {
+    gitCloneCommand =
+      gitCloneCommand + " " + CHAINCODE_PATH + "/" + repoDirectoryName;
+  }
+
+  gitCloneCommand =
+    "rm -rf " +
+    CHAINCODE_PATH +
+    "/" +
+    repoDirectoryName +
+    " && " +
+    gitCloneCommand;
+  return gitCloneCommand;
+}
+
+app.post("/uploadChainCode", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+  console.log(req.body);
+
+  var fileUploadTypeSelection = req.body.fileUploadTypeSelection;
+  if (fileUploadTypeSelection === "fileUpload") {
+    // file upload option selected
+  } else {
+    // github option selected
+    var githubUrl = req.body.githubUrl;
+    var githubUrlBranch = req.body.githubUrlBranch;
+    var githubUrlRename = req.body.githubUrlRename;
+    var githubRepoType = req.body.githubRepoType;
+    var githubAccessToken = req.body.githubAccessToken;
+    var generatedGitCloneCommand = generateGitCloneCommand(
+      githubUrl,
+      githubUrlBranch,
+      githubUrlRename,
+      githubRepoType,
+      githubAccessToken
+    );
+    console.log("generatedGitCloneCommand");
+    console.log(generatedGitCloneCommand);
+    //shell.cd(CHAINCODE_PATH);
+    shell.exec(generatedGitCloneCommand, function (code, stdout, stderr) {
+      console.log("Exit code:", code);
+      console.log("Program output:", stdout);
+      console.log("Program stderr:", stderr);
+      var execCommandStatus = {
+        Exit_Code: code,
+        Output: stdout,
+        Error: stderr,
+      };
+      response = {
+        status: "success",
+        data: execCommandStatus,
+      };
+      console.log(response);
+      res.json(response);
+    });
   }
 });
 

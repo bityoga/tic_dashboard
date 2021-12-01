@@ -50,7 +50,9 @@
               >Only zip files are supported</small
             >
           </div>
-          <div class="mb-3 gitUploadSelectorDiv">
+          <div
+            class="mb-3 gitUploadSelectorDiv gitUploadSelectorDivMandatoryField"
+          >
             <label for="githubUrl" class="form-label">Github Repo Url: *</label>
             <input
               type="text"
@@ -67,11 +69,10 @@
           </div>
           <div class="mb-3 gitUploadSelectorDiv">
             <label for="githubUrlBranch" class="form-label"
-              >Specific branch (Other than master) *</label
+              >Specific branch (Other than master)</label
             >
             <input
               type="text"
-              required
               class="form-control my-1"
               id="githubUrlBranch"
               name="githubUrlBranch"
@@ -84,11 +85,10 @@
 
           <div class="mb-3 gitUploadSelectorDiv">
             <label for="githubUrlRename" class="form-label"
-              >Rename Smart Contract (Optional): *</label
+              >Rename Smart Contract (Optional)</label
             >
             <input
               type="text"
-              required
               class="form-control my-1"
               id="githubUrlRename"
               name="githubUrlRename"
@@ -154,27 +154,51 @@
   </div>
 </div>
 <script>
-  $(".gitUploadSelectorDiv").hide();
+  function showGitHubFormControls() {
+    $(".gitUploadSelectorDiv").show();
+    $(".gitUploadSelectorDivMandatoryField input").attr("required", true);
+    $(".privateRepositoryElements").hide();
+    $(".privateRepositoryElements input").attr("required", false);
+  }
+  function hideGitHubFormControls() {
+    $(".gitUploadSelectorDiv").hide();
+    $(".gitUploadSelectorDivMandatoryField input").attr("required", false);
+    $(".privateRepositoryElements").hide();
+    $(".privateRepositoryElements input").attr("required", false);
+  }
+  function showFileUploadFormControls() {
+    $(".fileUploadSelectorDiv").show();
+    $(".fileUploadSelectorDiv input").attr("required", true);
+  }
+  function hideFileUploadFormControls() {
+    $(".fileUploadSelectorDiv").hide();
+    $(".fileUploadSelectorDiv input").attr("required", false);
+  }
+</script>
+<script>
+  hideGitHubFormControls();
   $("#fileUploadTypeSelection").on("change", function () {
     //alert(this.value);
     if (this.value === "github") {
-      $(".fileUploadSelectorDiv").hide();
-      $(".gitUploadSelectorDiv").show();
-      $(".privateRepositoryElements").hide();
+      hideFileUploadFormControls();
+      showGitHubFormControls();
     } else {
-      $(".gitUploadSelectorDiv").hide();
-      $(".fileUploadSelectorDiv").show();
+      hideGitHubFormControls();
+      showFileUploadFormControls();
     }
   });
 </script>
 <script>
-  $(".privateRepositoryElements").hide();
+  // $(".privateRepositoryElements").hide();
+  // $(".privateRepositoryElements input").attr("required", false);
   $("#githubRepoType").on("change", function () {
     //alert(this.value);
     if (this.value === "public") {
       $(".privateRepositoryElements").hide();
+      $(".privateRepositoryElements input").attr("required", false);
     } else {
       $(".privateRepositoryElements").show();
+      $(".privateRepositoryElements input").attr("required", true);
     }
   });
 </script>
@@ -183,44 +207,50 @@
     e.preventDefault(); // avoid to execute the actual submit of the form.
 
     $(".uploadChaincodeSpinner").show();
-    $("#createChaincodeForm input").attr("readonly", true);
+    $("#uploadChaincodeForm input").attr("readonly", true);
 
-    var user_json = {
-      chaincodeNameInput: document.getElementById("chaincodeNameInput").value,
-      chaincodeClassNameInput: document.getElementById(
-        "chaincodeClassNameInput"
-      ).value,
-      /* downloadZip : document.getElementById("downloadZip").value, */
-    };
+    var form = $(this);
+    var url = form.attr("action");
 
-    console.log(user_json);
+    // var user_json = {
+    //   chaincodeNameInput: document.getElementById("chaincodeNameInput").value,
+    //   chaincodeClassNameInput: document.getElementById(
+    //     "chaincodeClassNameInput"
+    //   ).value,
+    //   /* downloadZip : document.getElementById("downloadZip").value, */
+    // };
+
+    //console.log(user_json);
 
     $.ajax({
       type: "POST",
-      url: "/createChaincode",
+      url: url,
       async: true,
-      dataType: "json",
-      data: user_json,
+      // dataType: "json",
+      data: form.serialize(),
       complete: function (data) {
         $(".uploadChaincodeSpinner").hide();
-        $("#createChaincodeForm input").attr("readonly", false);
+        $("#uploadChaincodeForm input").attr("readonly", false);
+        console.log(data);
         var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
         console.log(json);
         if (json["status"] === "success") {
           swal.fire({
-            title: "Create Chaincode Status",
+            heightAuto: false,
+            title: "Upload Chaincode Status",
             text: json["status"],
             icon: "success",
             confirmButtonText:
-              '<i class="fa fa-thumbs-up"></i> Chaincode Created Successfully!',
+              '<i class="fa fa-thumbs-up"></i> Chaincode Uploaded Successfully!',
           });
         } else {
           swal.fire({
-            title: "Create Chaincode Status",
+            heightAuto: false,
+            title: "Upload Chaincode Status",
             text: json["status"],
             icon: "fail",
             confirmButtonText:
-              '<i class="fa fa-thumbs-down"></i> Chaincode Creation Failed',
+              '<i class="fa fa-thumbs-down"></i> Chaincode Upload Failed',
           });
         }
       },
