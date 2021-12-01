@@ -1,5 +1,11 @@
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/vs2015.min.css">
+<link
+  rel="stylesheet"
+  href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/vs2015.min.css"
+/>
 <div class="container mb-4">
   <h1 class="my-4 p-3 text-white bg-secondary text-center">
     <i class="fa fa-file-text" aria-hidden="true"></i> All Certificates
@@ -10,8 +16,10 @@
     </div>
   </div>
   <div class="table-responsive">
-    <table id="certificatesDataTable" class="table table-striped table-hover dt-responsive display nowrap text-center">
-    </table>
+    <table
+      id="certificatesDataTable"
+      class="table table-striped table-hover dt-responsive display nowrap text-center"
+    ></table>
   </div>
 </div>
 
@@ -32,6 +40,7 @@
 
         if (json["status"] === "success") {
           $("#certificatesDataTable").DataTable({
+            destroy: true,
             data: json["data"],
             //pageResize: true,
             responsive: true,
@@ -70,7 +79,7 @@
 <script>
   function sendAjaxRequestToReadAndShowSelectedDataTableFile(buttonObject) {
     // show the loading spinner span tag for selected the button
-    $(buttonObject).children('.allCertificatesFileViewSpinner').show();
+    $(buttonObject).children(".allCertificatesFileViewSpinner").show();
     var fileName = buttonObject.getAttribute("data-link");
 
     var request_json = {
@@ -85,7 +94,7 @@
       data: request_json,
       complete: function (data) {
         // hide the loading spinner span tag for selected the button
-        $(buttonObject).children('.allCertificatesFileViewSpinner').hide();
+        $(buttonObject).children(".allCertificatesFileViewSpinner").hide();
         //console.log(JSON.parse(data.responseText));
         //var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
         var json = JSON.parse(data.responseText);
