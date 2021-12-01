@@ -1,11 +1,3 @@
-<link
-  rel="stylesheet"
-  href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css"
-/>
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/vs2015.min.css"
-/>
 <div class="container mb-4">
   <h1 class="my-4 p-3 text-white bg-secondary text-center">
     <i class="fa fa-file-text" aria-hidden="true"></i> All Certificates
@@ -23,9 +15,6 @@
   </div>
 </div>
 
-<script type="text/javascript" src="js/send_ajax_request.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
 <script>
   function sendAjaxReqToGetListOfCertificateFiles() {
     $("#certificatesDataTable").empty();
@@ -70,11 +59,6 @@
     });
   }
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
-<!-- and it's easy to individually load additional languages -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/languages/go.min.js"></script> -->
-
-<script src="https://unpkg.com/highlightjs-badge/highlightjs-badge.min.js"></script>
 
 <script>
   function sendAjaxRequestToReadAndShowSelectedDataTableFile(buttonObject) {
