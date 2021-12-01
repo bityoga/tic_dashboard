@@ -576,11 +576,11 @@ const getAllChainCodeFilesListOfArrays = function (dirPath, arrayOfFiles) {
       FileViewButton =
         '<button data-link="' +
         fileNameWithRelativePath +
-        '"onclick="sendAjaxRequestToReadAndShowSelectedDataTableFile(this)" class="btn btn-primary viewFileButton"><i class="fa fa-eye" aria-hidden="true"></i> View File <span style="display:none" class="spinner-border spinner-border-sm chainCodeFileViewSpinner" role="status" aria-hidden="true"></span></button>';
+        '"onclick="sendAjaxRequestToReadAndShowSelectedDataTableFile(this)" class="btn btn-primary viewFileButton"><i class="fa fa-eye" aria-hidden="true"></i> View <span style="display:none" class="spinner-border spinner-border-sm chainCodeFileViewSpinner" role="status" aria-hidden="true"></span></button>';
       deleteFileButton =
         '<button data-link="' +
         fileNameWithFullPath +
-        '"onclick="processRequestToDeleteSelectedChainCodeFile(this)" class="btn btn-primary deleteFileButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete File <span style="display:none" class="spinner-border spinner-border-sm chainCodeFileDeleteSpinner" role="status" aria-hidden="true"></span></button>';
+        '"onclick="processRequestToDeleteSelectedChainCodeFile(this)" class="btn btn-primary deleteFileButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete <span style="display:none" class="spinner-border spinner-border-sm chainCodeFileDeleteSpinner" role="status" aria-hidden="true"></span></button>';
       const chaincodeName = fileNameWithRelativePath
         .split(CHAINCODE_PATH + "/")
         .pop()

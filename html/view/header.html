@@ -31,7 +31,7 @@
             <a
               class="nav-link active"
               aria-current="page"
-              href="chaincode_management.html"
+              href="chainCodeManagement.html"
               id="chainCodeManagement"
               ><i class="fa fa-cube" aria-hidden="true"></i> Chaincode</a
             >
@@ -74,3 +74,16 @@
     </div>
   </div>
 </nav>
+
+<script>
+  $(".nav-item a").click(function (e) {
+    console.log("menu navigator clicked");
+    e.preventDefault();
+    e.stopPropagation();
+    $(".nav-link").removeClass("active");
+    $(this).addClass("active");
+    console.log("empty index menuNavigator");
+    $("#indexContentDiv").empty();
+    $("#indexContentDiv").load($(this).attr("href"));
+  });
+</script>
