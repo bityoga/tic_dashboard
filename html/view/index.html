@@ -102,6 +102,7 @@
     <script>
       function menuNavigator() {
         $(".nav-item a").click(function (e) {
+          console.log("menu navigator clicked");
           e.preventDefault();
           e.stopPropagation();
           $(".nav-link").removeClass("active");

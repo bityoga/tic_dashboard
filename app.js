@@ -591,9 +591,9 @@ const getAllChainCodeFilesListOfArrays = function (dirPath, arrayOfFiles) {
         filesize,
         new Date(fileStats.ctime).toLocaleString("no-No"),
         new Date(fileStats.mtime).toLocaleString("no-NO"),
+        deleteFileButton,
         fileDownloadButton,
         FileViewButton,
-        deleteFileButton,
       ];
       arrayOfFiles.push(fileinfoArray);
     }
