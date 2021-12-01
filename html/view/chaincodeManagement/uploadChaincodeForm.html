@@ -212,22 +212,29 @@
     var form = $(this);
     var url = form.attr("action");
 
-    // var user_json = {
-    //   chaincodeNameInput: document.getElementById("chaincodeNameInput").value,
-    //   chaincodeClassNameInput: document.getElementById(
-    //     "chaincodeClassNameInput"
-    //   ).value,
-    //   /* downloadZip : document.getElementById("downloadZip").value, */
-    // };
+    // var uploadType = $("#fileUploadTypeSelection option:selected").val();
 
-    //console.log(user_json);
+    // var ajaxDataToSend;
+    // ajaxDataToSend = form.serialize();
+    // console.log("uploadType");
+    // console.log(uploadType);
+    // if (uploadType === "fileUpload") {
+    //   var fileUploadData = new FormData($("#uploadChaincodeForm")[0]);
+    //   console.log("appending file");
+    //   ajaxDataToSend = { ...ajaxDataToSend, ...{ files: fileUploadData } };
+    // }
+
+    // console.log("ajaxDataToSend");
+    // console.log(ajaxDataToSend);
 
     $.ajax({
       type: "POST",
       url: url,
       async: true,
       // dataType: "json",
-      data: form.serialize(),
+      data: new FormData(this),
+      processData: false,
+      contentType: false,
       complete: function (data) {
         $(".uploadChaincodeSpinner").hide();
         $("#uploadChaincodeForm input").attr("readonly", false);

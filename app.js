@@ -1,5 +1,6 @@
 // import app essential libraries
 const express = require("express");
+const fileUpload = require("express-fileupload");
 const session = require("express-session");
 const formidable = require("express-formidable");
 var bodyParser = require("body-parser");
@@ -44,6 +45,8 @@ if (TEST_LOCAL == 1) {
 }
 // Create a express object
 const app = express();
+// default file Upload options
+app.use(fileUpload());
 app.use(session({ secret: "ssshhhhh" }));
 //  Body-parser
 app.use(bodyParser.json()); // to support JSON-encoded bodies
@@ -745,6 +748,60 @@ app.post("/uploadChainCode", async (req, res) => {
   var fileUploadTypeSelection = req.body.fileUploadTypeSelection;
   if (fileUploadTypeSelection === "fileUpload") {
     // file upload option selected
+    let fileToUpload;
+    let uploadPath;
+    // console.log("req");
+    // console.log(req);
+
+    if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).send("No files were uploaded.");
+    }
+
+    // The name of the input field (i.e. "fileToUpload") is used to retrieve the uploaded file
+    console.log("req.files");
+    console.log(req.files);
+    fileToUpload = req.files.fileToUpload;
+    console.log("fileToUpload");
+    console.log(fileToUpload);
+    uploadPath = CHAINCODE_PATH + "/" + fileToUpload.name;
+    console.log("uploadPath");
+    console.log(uploadPath);
+
+    // Use the mv() method to place the file somewhere on your server
+    fileToUpload.mv(uploadPath, function (err) {
+      if (err) return res.status(500).send(err);
+      console.log("File Uploaded");
+      // upload is success
+      // unzip ../file_explorer/chaincodes/articonf-bank-chaincode-main.zip -d ../file_explorer/chaincodes/ && rm -f ../file_explorer/chaincodes/articonf-bank-chaincode-main.zip
+      var unZipCommand =
+        "unzip -o " +
+        uploadPath.replace(/(?=[() ])/g, "\\") +
+        " -d " +
+        CHAINCODE_PATH +
+        "/" +
+        " && rm -f " +
+        uploadPath.replace(/(?=[() ])/g, "\\");
+      console.log("unZipCommand");
+      console.log(unZipCommand);
+
+      shell.exec(unZipCommand, function (code, stdout, stderr) {
+        console.log("Exit code:", code);
+        console.log("Program output:", stdout);
+        console.log("Program stderr:", stderr);
+        var execCommandStatus = {
+          Exit_Code: code,
+          Output: stdout,
+          Error: stderr,
+        };
+        response = {
+          status: "success",
+          data: execCommandStatus,
+        };
+        console.log(response);
+        res.json(response);
+      });
+      //res.send(response);
+    });
   } else {
     // github option selected
     var githubUrl = req.body.githubUrl;
