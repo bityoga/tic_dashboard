@@ -32,6 +32,7 @@ var CERTIFICATE_PATH;
 var CLI_PATH;
 var CREATE_CHAINCODE_SCRIPT;
 
+
 if (TEST_LOCAL === 1) {
   CHAINCODE_PATH = "../file_explorer/chaincodes";
   CERTIFICATE_PATH = "../file_explorer/certificates";
