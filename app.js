@@ -26,7 +26,7 @@ try {
   throw Error("API Start Error - Error while reading API config", e);
 }
 
-const TEST_LOCAL = 1;
+const TEST_LOCAL = 0;
 var CHAINCODE_PATH;
 var CERTIFICATE_PATH;
 var CLI_PATH;
