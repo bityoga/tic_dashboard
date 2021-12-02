@@ -80,7 +80,7 @@
           swal.fire({
             heightAuto: false,
             title: "Query Chaincode Status",
-            text: JSON.parse(JSON.parse(json["data"].Output)),
+            text: JSON.stringify(JSON.parse(json["data"].Output), null, '\t'),
             icon: "success",
             confirmButtonText:
               '<i class="fa fa-thumbs-up"></i> Chaincode Queried Successfully!',
