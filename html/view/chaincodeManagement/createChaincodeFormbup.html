@@ -1,0 +1,94 @@
+<html>
+
+<head>
+    <style>
+        .divToBeOverlayedWrapper {
+
+            position: relative;
+        }
+
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 2;
+
+        }
+
+        .loader {
+            position: relative;
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 70px;
+            height: 70px;
+            left: 40%;
+            top: 35%;
+            -webkit-animation: spin 2s linear infinite;
+            /* Safari */
+            animation: spin 2s linear infinite;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="d-flex border flex-column p-4 ">
+
+        <h3 class="my-2 p-3 text-white bg-secondary"><i class="fa fa-file" aria-hidden="true"></i> Create Chaincode
+        </h3>
+
+        <div class="divToBeOverlayedWrapper">
+
+            <div class="overlay" style="display: none;">
+                <div class="loader"></div>
+            </div>
+
+
+
+            <form class="mt-3" id="createChaincodeForm" enctype="multipart/form-data" method="POST">
+
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Chaincode Name</label>
+                    <input type="text" class="form-control" id="chaincodeNameInput"
+                        aria-describedby="chaincodeNameInputHelp" placeholder="Enter chaincode name" required>
+                    <small id="chaincodeNameInputHelp" class="form-text text-muted">Example : car-details
+                        (underscores
+                        are
+                        not allowed)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Chaincode Class Name</label>
+                    <input type="text" class="form-control" id="chaincodeClassNameInput"
+                        aria-describedby="chaincodeNameInputHelp" placeholder="Enter chaincode class name" required>
+                    <small id="chaincodeClassNameInputHelp" class="form-text text-muted">Example :
+                        CarDetailsChaincode</small>
+                </div>
+
+                <!--  <div class="form-check mt-4">
+                    <input type="checkbox" class="form-check-input" id="downloadZip">
+                    <label class="form-check-label" for="downloadZip">Download zip</label>
+                </div> -->
+                <button type="submit" id="creatChaincodeSubmitButton" class="btn btn-primary my-4">Create
+                    Chaincode</button>
+            </form>
+
+        </div>
+
+
+    </div>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script type="text/javascript" src="js/send_ajax_request.js"> </script>
+
+
+</body>
+
+
+</html>

@@ -1,0 +1,266 @@
+<div
+  class="d-flex align-items-center justify-content-center pb-5 mt-3"
+  style="height: inherit;"
+>
+  <div class="col-12 col-sm-12 col-md-7 col-lg-6 col-xl-4">
+    <div class="card text-center">
+      <div class="card-header p-4 bg-secondary text-white">
+        <h2>
+          <i class="fa fa-upload" aria-hidden="true"></i> Upload Chaincode
+        </h2>
+      </div>
+      <div class="card-body">
+        <form
+          id="uploadChaincodeForm"
+          action="/uploadChainCode"
+          enctype="multipart/form-data"
+          method="POST"
+        >
+          <div class="mb-3">
+            <label for="chaincodeNameInput" class="form-label"
+              >Select an Upload Method :</label
+            >
+            <select
+              name="fileUploadTypeSelection"
+              id="fileUploadTypeSelection"
+              class="form-select"
+              aria-label="Select an Upload Method :"
+            >
+              <option selected value="fileUpload">File Upload</option>
+              <option value="github">From Git</option>
+            </select>
+            <small class="form-text text-muted my-1"
+              >Upload file (or) Pull from Git</small
+            >
+          </div>
+          <div class="mb-3 fileUploadSelectorDiv">
+            <label for="fileToUpload" class="form-label"
+              >Select file to upload</label
+            >
+            <input
+              required
+              class="form-control"
+              type="file"
+              id="fileToUpload"
+              name="fileToUpload"
+              accept="zip,application/octet-stream,application/zip,application/x-zip,application/x-zip-compressed"
+            />
+
+            <small class="form-text text-muted my-1"
+              >Only zip files are supported</small
+            >
+          </div>
+          <div
+            class="mb-3 gitUploadSelectorDiv gitUploadSelectorDivMandatoryField"
+          >
+            <label for="githubUrl" class="form-label">Github Repo Url: *</label>
+            <input
+              type="text"
+              required
+              class="form-control my-1"
+              name="githubUrl"
+              id="githubUrl"
+              placeholder="Enter Github Repository Url"
+            />
+            <small class="form-text text-muted my-1"
+              >Example :
+              https://github.com/bityoga/articonf-bank-chaincode.git</small
+            >
+          </div>
+          <div class="mb-3 gitUploadSelectorDiv">
+            <label for="githubUrlBranch" class="form-label"
+              >Specific branch (Other than master)</label
+            >
+            <input
+              type="text"
+              class="form-control my-1"
+              id="githubUrlBranch"
+              name="githubUrlBranch"
+              placeholder="Github Repository Branch"
+            />
+            <small class="form-text text-muted my-1"
+              >Example : updated_chaincodes</small
+            >
+          </div>
+
+          <div class="mb-3 gitUploadSelectorDiv">
+            <label for="githubUrlRename" class="form-label"
+              >Rename Smart Contract (Optional)</label
+            >
+            <input
+              type="text"
+              class="form-control my-1"
+              id="githubUrlRename"
+              name="githubUrlRename"
+              placeholder="New Name for the smart contract"
+            />
+            <small class="form-text text-muted my-1"
+              >Example : bankAppChainCode</small
+            >
+          </div>
+
+          <div class="mb-3 gitUploadSelectorDiv">
+            <label for="githubRepoType" class="form-label"
+              >Repository Type</label
+            >
+            <select
+              name="githubRepoType"
+              id="githubRepoType"
+              class="form-select"
+              aria-label="Select an Upload Method :"
+            >
+              <option selected value="public">Public</option>
+              <option value="private">Private</option>
+            </select>
+            <small class="form-text text-muted my-1"
+              >Please select a repository type (public/private)</small
+            >
+          </div>
+
+          <div class="mb-3 gitUploadSelectorDiv privateRepositoryElements">
+            <label for="githubAccessToken" class="form-label"
+              >Your Github Access Token</label
+            >
+            <input
+              type="text"
+              required
+              class="form-control my-1"
+              id="githubAccessToken"
+              name="githubAccessToken"
+              placeholder="Github Access Token"
+            />
+            <small class="form-text text-muted my-1"
+              ><a href="https://github.com/settings/tokens"
+                >Generate a access token</a
+              ></small
+            >
+          </div>
+
+          <button type="submit" class="btn btn-primary mt-2">
+            <i class="fa fa-upload" aria-hidden="true"></i> Upload Chaincode
+            <span
+              class="spinner-border spinner-border-sm uploadChaincodeSpinner"
+              role="status"
+              aria-hidden="true"
+              style="display: none;"
+            ></span>
+          </button>
+        </form>
+      </div>
+      <div class="card-footer text-muted">
+        Upload chaincode
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function showGitHubFormControls() {
+    $(".gitUploadSelectorDiv").show();
+    $(".gitUploadSelectorDivMandatoryField input").attr("required", true);
+    $(".privateRepositoryElements").hide();
+    $(".privateRepositoryElements input").attr("required", false);
+  }
+  function hideGitHubFormControls() {
+    $(".gitUploadSelectorDiv").hide();
+    $(".gitUploadSelectorDivMandatoryField input").attr("required", false);
+    $(".privateRepositoryElements").hide();
+    $(".privateRepositoryElements input").attr("required", false);
+  }
+  function showFileUploadFormControls() {
+    $(".fileUploadSelectorDiv").show();
+    $(".fileUploadSelectorDiv input").attr("required", true);
+  }
+  function hideFileUploadFormControls() {
+    $(".fileUploadSelectorDiv").hide();
+    $(".fileUploadSelectorDiv input").attr("required", false);
+  }
+</script>
+<script>
+  hideGitHubFormControls();
+  $("#fileUploadTypeSelection").on("change", function () {
+    //alert(this.value);
+    if (this.value === "github") {
+      hideFileUploadFormControls();
+      showGitHubFormControls();
+    } else {
+      hideGitHubFormControls();
+      showFileUploadFormControls();
+    }
+  });
+</script>
+<script>
+  // $(".privateRepositoryElements").hide();
+  // $(".privateRepositoryElements input").attr("required", false);
+  $("#githubRepoType").on("change", function () {
+    //alert(this.value);
+    if (this.value === "public") {
+      $(".privateRepositoryElements").hide();
+      $(".privateRepositoryElements input").attr("required", false);
+    } else {
+      $(".privateRepositoryElements").show();
+      $(".privateRepositoryElements input").attr("required", true);
+    }
+  });
+</script>
+<script>
+  $("#uploadChaincodeForm").submit(function (e) {
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+    $(".uploadChaincodeSpinner").show();
+    $("#uploadChaincodeForm input").attr("readonly", true);
+
+    var form = $(this);
+    var url = form.attr("action");
+
+    // var uploadType = $("#fileUploadTypeSelection option:selected").val();
+
+    // var ajaxDataToSend;
+    // ajaxDataToSend = form.serialize();
+    // console.log("uploadType");
+    // console.log(uploadType);
+    // if (uploadType === "fileUpload") {
+    //   var fileUploadData = new FormData($("#uploadChaincodeForm")[0]);
+    //   console.log("appending file");
+    //   ajaxDataToSend = { ...ajaxDataToSend, ...{ files: fileUploadData } };
+    // }
+
+    // console.log("ajaxDataToSend");
+    // console.log(ajaxDataToSend);
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      async: true,
+      // dataType: "json",
+      data: new FormData(this),
+      processData: false,
+      contentType: false,
+      complete: function (data) {
+        $(".uploadChaincodeSpinner").hide();
+        $("#uploadChaincodeForm input").attr("readonly", false);
+        console.log(data);
+        var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        console.log(json);
+        if (json["status"] === "success") {
+          swal.fire({
+            heightAuto: false,
+            title: "Upload Chaincode Status",
+            text: json["status"],
+            icon: "success",
+            confirmButtonText:
+              '<i class="fa fa-thumbs-up"></i> Chaincode Uploaded Successfully!',
+          });
+        } else {
+          swal.fire({
+            heightAuto: false,
+            title: "Upload Chaincode Status",
+            text: json["status"],
+            icon: "fail",
+            confirmButtonText:
+              '<i class="fa fa-thumbs-down"></i> Chaincode Upload Failed',
+          });
+        }
+      },
+    });
+  });
+</script>

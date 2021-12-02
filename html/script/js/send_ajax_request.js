@@ -209,3 +209,47 @@ function sendAjaxRequestToReadAndShowFileConents(buttonObject) {
   });
 }
 
+
+
+$("#createChaincodeForm").submit(function (e) {
+  e.preventDefault(); // avoid to execute the actual submit of the form.
+
+  $('.overlay').show();
+
+  var user_json = {
+    chaincodeNameInput: document.getElementById("chaincodeNameInput").value,
+    chaincodeClassNameInput: document.getElementById("chaincodeClassNameInput").value,
+    /* downloadZip : document.getElementById("downloadZip").value, */
+  };
+
+  console.log(user_json);
+
+  $.ajax({
+    type: "POST",
+    url: "/createChaincode",
+    async: true,
+    dataType: "json",
+    data: user_json,
+    complete: function (data) {
+      $('.overlay').hide();
+      var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+      console.log(json);
+      if (json["status"] === "success") {
+        swal.fire({
+          title: "Create Chaincode Status",
+          text: json["status"],
+          icon: "success",
+          confirmButtonText: '<i class="fa fa-thumbs-up"></i> Chaincode Created Successfully!',
+        });
+      }
+      else {
+        swal.fire({
+          title: "Create Chaincode Status",
+          text: json["status"],
+          icon: "fail",
+          confirmButtonText: '<i class="fa fa-thumbs-down"></i> Chaincode Creation Failed',
+        });
+      }
+    },
+  });
+});

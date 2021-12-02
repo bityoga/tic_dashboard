@@ -248,91 +248,14 @@ html {
   </style>
 
 <body >
-<button class="w3-hover-opacity" onclick="topFunction()" id="myBtn" title="Go to top"><i class="fa fa-arrow-circle-up" aria-hidden="true"></i> Top</button>
-<div class="w3-sidebar w3-bar-block  w3-animate-left w3-collapse" style="display:none;left:0;width: 25vw; z-index: 3;overflow: -moz-hidden-unscrollable;" id="leftMenu">
-  <button onclick="closeLeftMenu()" class="w3-bar-item w3-button w3-hide-large">Close &times;</button>
-  <div class="w3-row">
-    <div style="margin-top: 30vh; margin-left: 2vw;">
-      <!-- <video autoplay loop muted  style = "width: 90%;" src="images/by21.mp4"></video> -->
-      <div>
-        <!-- <img style="width: 50%; margin-left: 25%;" src="images/p2p-3.gif" alt="Avatar" class="w3-image"  /> -->
-        <!-- <img style="margin-left: 6vw;" src="images/bc_anim.gif" alt="Avatar" class="w3-image" /> -->
-        <a
-        href="#"
-        onclick="document.getElementById('sell').style.display='block'"
-        style="width: auto;"
-        class="w3-bar-item w3-button  m-2"
-        ><i class="fa fa-pencil" aria-hidden="true"></i> Invoke</a
-      >
-      <a
-        href="#"
-        onclick="document.getElementById('query_chain_code_div').style.display='block'"
-        style="width: auto; "
-        class="w3-bar-item w3-button   m-2"
-        ><i class="fa fa-question-circle" aria-hidden="true"></i>Query</a
-      >
-      <a
-        href="#"
-        onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
-        style="width: auto; "
-        class="w3-bar-item w3-button  m-2"
-        ><i class="fa fa-trash" aria-hidden="true"></i> Delete</a
-      >
 
-      <a
-        href="#"
-        onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
-        style="width: auto; "
-        class="w3-bar-item w3-button   m-2"
-        ><i class="fa fa-refresh" aria-hidden="true"></i> Update</a
-      >
-
-      <a
-        href="#"
-        onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
-        style="width: auto; "
-        class="w3-bar-item w3-button   m-2"
-        ><i class="fa fa-desktop" aria-hidden="true"></i> Install</a
-      >
-
-      <a
-        href="#"
-        onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
-        style="width: auto; "
-        class="w3-bar-item w3-button   m-2"
-        ><i class="fa fa-file" aria-hidden="true"></i> Manage Uploads</a
-      >
-
-      <a
-        href="#"
-        onclick="document.getElementById('query_uploaded_smart_contracts_div').style.display='block'"
-        style="width: auto; "
-        class="w3-bar-item w3-button   m-2"
-        ><i class="fa fa-plus" aria-hidden="true"></i> Create</a
-      >
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="w3-sidebar w3-bar-block  w3-animate-right w3-collapse" style="display:none;right:0; width:30vw;z-index: 3;overflow: -moz-hidden-unscrollable;" id="rightMenu">
-  <button onclick="closeRightMenu()" class="w3-bar-item w3-button w3-hide-large">Close &times;</button>
-  <div class="w3-row">
-</div>
-</div>
 
 <div class="w3-main w3-animate-opacity" style="margin-left: 30vw; margin-right: 30vw;">
-    <div class="sticky w3-hide-large" style="color: #fff!important; background-color: #305342!important;z-index: 2;">
-        <button class="w3-button  w3-large w3-left  w3-hide-large" onclick="openLeftMenu()"><i class="fa fa-filter" aria-hidden="true"></i> Filters</button>
-        <button class="w3-button  w3-large w3-right w3-hide-large" onclick="openRightMenu()"><i class="fas fa-user-circle" aria-hidden="true"> My Profile</i></button>
-        <div class="w3-container ">
-            <h2 class="w3-hide"><i class='fas fa-solar-panel' aria-hidden="true"></i> Stats <i class="fas fa-house-day"></i></h2>
-        </div>
-    </div> 
+    
 
     <div class="sticky w3-border" style="padding: 20px; margin-bottom: 4vh;">
       <header class="w3-container  w3-center " style="background-color:  #779687!important; color: white;">
-        <h1><i class="fa fa-file-text" aria-hidden="true"></i> New Smart Contract Installaion</h1>
+        <h1><i class="fa fa-file-text" aria-hidden="true"></i> Update Smart Contract</h1>
       </header>
      
 
@@ -371,15 +294,19 @@ html {
 
                             <div id="select-upload-method-radio-button-div">
 
-                              <label class="fieldlabels">Select an Upload Method :</label> 
-                              <div class="form-check form-check-inline">
+                              <label class="fieldlabels">Select an Upload Method :</label>  <br>
+                              <!-- <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="fileUploadTypeSelection" id="radio-button-file-upload" value="fileUpload">
                                 <label class="form-check-label" for="inlineRadio1">File Upload</label>
                               </div>
                               <div class="form-check form-check-inline ">
                                 <input class="form-check-input" type="radio" name="fileUploadTypeSelection" id="radio-button-github-repo" value="github" checked>
                                 <label class="form-check-label" for="inlineRadio2">From Github</label>
-                              </div>
+                              </div> -->
+                              <select name="fileUploadTypeSelection" name="fileUploadTypeSelection" class="form-select" aria-label="Select an Upload Method :">
+                                <option selected value="fileUpload">File Upload</option>
+                                <option value="github">From Git</option>
+                              </select>
 
                               
 
@@ -638,7 +565,7 @@ smartContractUploadFileButton.addEventListener('change', function(){
 <script type="text/javascript">
  $("#github-repo-selector-div").show();
 $("#file-upload-div").hide();
-$('input:radio[name="fileUploadTypeSelection"]').change(
+$('input:checkbox[name="fileUploadTypeSelection"]').change(
     function(){
         if ($(this).val() == 'github') {
             //alert("github");
