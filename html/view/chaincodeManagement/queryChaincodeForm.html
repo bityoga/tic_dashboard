@@ -79,7 +79,7 @@
         if (json["status"] === "success") {
           swal.fire({
             title: "Query Chaincode Status",
-            text: json["data"],
+            text: json["data"].Output,
             icon: "success",
             confirmButtonText:
               '<i class="fa fa-thumbs-up"></i> Chaincode Queried Successfully!',
