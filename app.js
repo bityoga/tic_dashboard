@@ -472,6 +472,30 @@ app.post("/getAllUploadedChainCodeFilesList", async (req, res) => {
   }
 });
 
+
+app.post("/getAllUploadedChainCodeFilesListToInstall", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  if (app_session.user_name && app_session.password) {
+    var fileList = getAllChainCodeFilesListOfArraysToInstall(CHAINCODE_PATH);
+    response = {
+      status: "success",
+      data: fileList,
+    };
+    console.log(response);
+    res.json(response);
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
 app.post("/viewFileContent", async (req, res) => {
   let response;
 
@@ -600,6 +624,59 @@ const getAllChainCodeFilesListOfArrays = function (dirPath, arrayOfFiles) {
         FileViewButton,
       ];
       arrayOfFiles.push(fileinfoArray);
+    }
+  });
+
+  return arrayOfFiles;
+};
+
+
+
+const getAllChainCodeFilesListOfArraysToInstall = function (dirPath, arrayOfFiles) {
+  files = fs.readdirSync(dirPath);
+
+  arrayOfFiles = arrayOfFiles || [];
+
+  files.forEach(function (file) {
+    if (fs.statSync(dirPath + "/" + file).isDirectory()) {
+      arrayOfFiles = getAllChainCodeFilesListOfArraysToInstall(
+        dirPath + "/" + file,
+        arrayOfFiles
+      );
+    } else {
+      fileNameWithFullPath = path.join(__dirname, dirPath, "/", file);
+      fileNameWithRelativePath = path.join(dirPath, "/", file);
+      fileStats = fs.statSync(fileNameWithFullPath);
+      filesize = ConvertSize(fileStats.size);
+      fileDownloadButton =
+        '<a class="btn btn-primary text-break" href="' +
+        fileNameWithRelativePath +
+        '" role="button" download><i class="fa fa-download" aria-hidden="true"></i> Download</a>';
+      FileViewButton =
+        '<button data-link="' +
+        fileNameWithRelativePath +
+        '"onclick="sendAjaxRequestToReadAndShowSelectedDataTableFile(this)" class="btn btn-primary viewFileButton"><i class="fa fa-eye" aria-hidden="true"></i> View <span style="display:none" class="spinner-border spinner-border-sm chainCodeFileViewSpinner" role="status" aria-hidden="true"></span></button>';
+      deleteFileButton =
+        '<button data-link="' +
+        fileNameWithFullPath +
+        '"onclick="processRequestToDeleteSelectedChainCodeFile(this)" class="btn btn-primary deleteFileButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete <span style="display:none" class="spinner-border spinner-border-sm chainCodeFileDeleteSpinner" role="status" aria-hidden="true"></span></button>';
+      const chaincodeName = fileNameWithRelativePath
+        .split(CHAINCODE_PATH + "/")
+        .pop()
+        .split("/")[0];
+      fileInfoDict = 
+      
+        {"chainCodeName": chaincodeName,
+        "fileName": fileNameWithFullPath,
+        }
+        /* filesize,
+        new Date(fileStats.ctime).toLocaleString("no-No"),
+        new Date(fileStats.mtime).toLocaleString("no-NO"),
+        deleteFileButton,
+        fileDownloadButton,
+        FileViewButton, */
+      
+      arrayOfFiles.push(fileInfoDict);
     }
   });
 
@@ -837,5 +914,148 @@ app.post("/uploadChainCode", async (req, res) => {
     });
   }
 });
+
+
+app.post("/installChaincode", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+  console.log(req.body);
+
+  var chaincodeName = req.body.chaincodeNameInput;
+  var chaincodeVersion = req.body.chaincodeVersionInput;
+  var peer = req.body.peerSelection;
+  /* var channel = req.body.channelSelection; */
+  var language = req.body.chainCodeProgrammingLanguage;
+  var chaincodeSrcPath = req.body.selectedChainCodeRootSrcFile;
+  chaincodeSrcPath = chaincodeSrcPath.substring(0,chaincodeSrcPath.lastIndexOf('/')+1);
+ 
+  
+
+  if (app_session.user_name && app_session.password) {
+    var PEER_HOST = peer;
+    var CORE_PEER_ADDRESS = PEER_HOST + ":7051";
+    var CORE_PEER_MSPCONFIGPATH = "/root/CLI/${ORGCA_HOST}/${ADMIN_USER}/msp";
+    var CORE_PEER_TLS_ROOTCERT_FILE =
+      "/root/CLI/${ORGCA_HOST}/" + PEER_HOST + "/msp/tls/ca.crt";
+
+    var chaincode_install_command =
+      "CORE_PEER_ADDRESS=" +
+      CORE_PEER_ADDRESS +
+      " CORE_PEER_MSPCONFIGPATH=" +
+      CORE_PEER_MSPCONFIGPATH +
+      " CORE_PEER_TLS_ROOTCERT_FILE=" +
+      CORE_PEER_TLS_ROOTCERT_FILE +
+      " peer chaincode install -n " +
+      chaincodeName +
+      " -v " +
+      chaincodeVersion +
+      " -l " +
+      language +
+      " -p " +
+      chaincodeSrcPath;
+
+    console.log("chaincode_install_command");
+    console.log(chaincode_install_command);
+
+    shell.exec(chaincode_install_command, function (code, stdout, stderr) {
+      console.log("Exit code:", code);
+      console.log("Program output:", stdout);
+      console.log("Program stderr:", stderr);
+      var exec_command_status = {
+        Exit_Code: code,
+        Output: stdout,
+        Error: stderr,
+      };
+      response = {
+        status: "success",
+        data: exec_command_status,
+      };
+      console.log(response);
+      res.json(response);
+    });
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  } 
+});
+
+
+
+app.post("/instantiateChaincode", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+  console.log(req.body);
+
+  var chaincodeName = req.body.chaincodeNameInput;
+  var chaincodeVersion = req.body.chaincodeVersionInput;
+  var peer = req.body.peerSelection;
+  var channel = req.body.channelSelection;
+  var chaincodeInstantiateParams = req.body.chaincodeInstantiateParams;
+
+
+
+  if (app_session.user_name && app_session.password) {
+    var PEER_HOST = peer;
+    var CORE_PEER_ADDRESS = PEER_HOST + ":7051";
+    var CORE_PEER_MSPCONFIGPATH = "/root/CLI/${ORGCA_HOST}/${ADMIN_USER}/msp";
+    var CORE_PEER_TLS_ROOTCERT_FILE =
+      "/root/CLI/${ORGCA_HOST}/" + PEER_HOST + "/msp/tls/ca.crt";
+
+    // CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS CORE_PEER_MSPCONFIGPATH=$CORE_PEER_MSPCONFIGPATH CORE_PEER_TLS_ROOTCERT_FILE=$CORE_PEER_TLS_ROOTCERT_FILE peer chaincode instantiate -C $CHANNEL_NAME -n $CHAINCODE_NAME -v $CHAINCODE_VERSION -c $INSTANTIATE_PARAMS -o ${ORDERER_HOST}:7050 --tls --cafile ${CORE_PEER_TLS_ROOTCERT_FILE}
+
+    var chaincode_instantiate_command =
+      "CORE_PEER_ADDRESS=" +
+      CORE_PEER_ADDRESS +
+      " CORE_PEER_MSPCONFIGPATH=" +
+      CORE_PEER_MSPCONFIGPATH +
+      " CORE_PEER_TLS_ROOTCERT_FILE=" +
+      CORE_PEER_TLS_ROOTCERT_FILE +
+      " peer chaincode instantiate -C " +
+      channel +
+      " -n " +
+      chaincodeName +
+      " -v " +
+      chaincodeVersion +
+      " -c '" +
+      chaincodeInstantiateParams +
+      "' -o ${ORDERER_HOST}:7050 --tls --cafile " +
+      CORE_PEER_TLS_ROOTCERT_FILE;
+
+    console.log("chaincode_instantiate_command");
+    console.log(chaincode_instantiate_command);
+
+    shell.exec(chaincode_instantiate_command, function (code, stdout, stderr) {
+      console.log("Exit code:", code);
+      console.log("Program output:", stdout);
+      console.log("Program stderr:", stderr);
+      var exec_command_status = {
+        Exit_Code: code,
+        Output: stdout,
+        Error: stderr,
+      };
+      response = {
+        status: "success",
+        data: exec_command_status,
+      };
+      console.log(response);
+      res.json(response);
+    });
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+
 
 main();

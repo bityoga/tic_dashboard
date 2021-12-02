@@ -1,0 +1,349 @@
+<div class="d-flex align-items-center justify-content-center pb-5" style="height: inherit;">
+  <div class="col-12 col-sm-12 col-md-7 col-lg-6 col-xl-5 px-4 mt-3">
+    <div class="card text-center">
+      <div class="card-header p-4 bg-secondary text-white">
+        <h2>
+          <i class="fa fa-desktop" aria-hidden="true"></i> Install & Instantiate Chaincode
+        </h2>
+      </div>
+      <div class="card-body">
+        <form id="installChaincodeForm" action="/installChaincode" enctype="multipart/form-data" method="POST">
+
+          <div class="mb-3 form-label step1Fields">
+            <h4 class="bg-dark text-white p-3"> Step 1 - Select the Chaincode Src File </h4>
+          </div>
+          <div class="mb-3 step1Fields">
+            <label for="selectedChainCodeToInstall" class="form-label">Filter by Chaincode Uploads</label>
+            <div class="text-center uploadedChainCodesTableContentFetchingSpinner">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+            <!-- <input class="form-control" list="uploadedChaincodeListOptions" id="selectedChainCodeToInstall"
+              name="selectedChainCodeRootSrcFile" placeholder="Type to search..."> -->
+            <select class="form-select breakUrlLink" id="uploadedChaincodeListOptions"
+              name="uploadedChaincodeListOptions">
+              <option value="">Select an Uploaded Chaincode</option>
+              <!-- <option value="San Francisco">
+              <option value="New York"> -->
+            </select>
+            <small id="uploadedChaincodeListOptionsHelperText" class="form-text text-muted my-1">Select a Uploaded
+              Chaincode</small>
+          </div>
+
+          <div class="mb-3 step1Fields">
+            <label for="selectedChainCodeRootSrcFile" class="form-label">Select Chaincode Root Src File</label>
+            <!-- <input class="form-control" list="selectedChainCodeRootSrcFile" id="selectedChainCodeRootSrcFile"
+              name="selectedChainCodeRootSrcFile" placeholder="Type to search..."> -->
+            <select class="form-select breakUrlLink" id="selectedChainCodeRootSrcFile"
+              name="selectedChainCodeRootSrcFile">
+              <!-- <option value="San Francisco">
+              <option value="New York">
+              <option value="Seattle">
+              <option value="Los Angeles">
+              <option value="Chicago"> -->
+            </select>
+            <small id="uploadedChaincodeFileListOptionsHelperText" class="form-text text-muted my-1">Specify the root
+              src file for the chaincode to install</small>
+          </div>
+
+          <div class="mb-3 step1Fields">
+            <label for="chainCodeProgrammingLanguage" class="form-label">Select Chaincode's Programming Language</label>
+            <select name="chainCodeProgrammingLanguage" id="chainCodeProgrammingLanguage" class="form-select"
+              aria-label="Select channel :">
+              <option selected value="node">node</option>
+              <option value="golang">golang</option>
+              <option value="java">java</option>
+            </select>
+            <small class="form-text text-muted my-1">Select the channel to be used</small>
+          </div>
+
+          <div class="mb-3 step1Fields">
+
+            <button id="installFormNextButton" type="btn btn-primary" class="btn btn-primary mt-2">
+              <i class="fa fa-arrow-right" aria-hidden="true"></i> Next
+            </button>
+
+          </div>
+
+
+          <div class="mb-3 form-label step2Fields" style="display: none;">
+            <h4 class="bg-dark text-white p-3"> Step 2 - Configure & Install</h4>
+          </div>
+
+          <div class="mb-3 step2Fields" style="display: none;">
+            <label for="chaincodeNameInput" class="form-label">Chaincode Name</label>
+            <input type="text" required class="form-control my-1" name="chaincodeNameInput" id="chaincodeNameInput"
+              placeholder="Enter chaincode name" />
+            <small class="form-text text-muted my-1">Example : car-details (underscores are not allowed)</small>
+          </div>
+
+          <div class="mb-3 step2Fields" style="display: none;">
+            <label for="chaincodeVersionInput" class="form-label">Chaincode Chaincode Version: *</label>
+            <input type="text" required class="form-control my-1" id="chaincodeVersionInput" value="1.0"
+              name="chaincodeVersionInput" placeholder="Enter Chaincode Class Name" />
+            <small class="form-text text-muted my-1">Example : 1.0</small>
+          </div>
+
+          <div class="mb-3 step2Fields" style="display: none;">
+            <label for="peerSelection" class="form-label">Select Peer</label>
+            <select name="peerSelection" id="peerSelection" class="form-select" aria-label="Select a Peer :">
+              <option value="peer1">Peer1</option>
+              <option selected value="peer2">Peer2</option>
+            </select>
+            <small class="form-text text-muted my-1">Select the peer on which the chaincode is to be installed</small>
+          </div>
+
+
+          <div class="mb-3 step2Fields" style="display: none;">
+            <div class="d-flex justify-content-center align-items-center">
+              <div class="mx-2">
+                <button id="installFormPreviousButton" type="btn btn-primary" class="btn btn-primary mt-2">
+                  <i class="fa fa-arrow-left" aria-hidden="true"></i> Previous
+                </button>
+              </div>
+              <div class="mx-2">
+                <button type="submit" id="chainCodeInstallButton" class="btn btn-primary mt-2">
+                  <i class="fa fa-desktop" aria-hidden="true"></i> Install
+                  <span class="spinner-border spinner-border-sm installChaincodeSpinner" role="status"
+                    aria-hidden="true" style="display: none;"></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3 form-label step3Fields" style="display: none;">
+            <h4 class="bg-dark text-white p-3"> Step 3 - Instantiate</h4>
+          </div>
+
+          <div class="mb-3 step3Fields" style="display: none;">
+            <label for="chaincodeInstantiateParams" class="form-label">Instantiate Parameters</label>
+            <input type="text" required class="form-control my-1" name="chaincodeInstantiateParams"
+              id="chaincodeInstantiateParams" placeholder="Enter chaincode Instantiate Params"
+              value='{"Args":["InitLedger"]}' />
+            <small class="form-text text-muted my-1">Example : '{"Args":["InitLedger"]}'</small>
+          </div>
+
+          <div class="mb-3 step3Fields" style="display: none;">
+            <label for="channelSelection" class="form-label">Select Channel</label>
+            <select name="channelSelection" id="channelSelection" class="form-select" aria-label="Select channel :">
+              <option selected value="appchannel">appchannel</option>
+            </select>
+            <small class="form-text text-muted my-1">Select the channel to be used</small>
+          </div>
+
+          <div class="mb-3 step3Fields" style="display: none;">
+
+
+            <button type="submit" id="chainCodeInstantiateButton" class="btn btn-primary mt-2">
+              <i class="fa fa-pencil" aria-hidden="true"></i> Instantiate
+              <span class="spinner-border spinner-border-sm instantiateChaincodeSpinner" role="status"
+                aria-hidden="true" style="display: none;"></span>
+            </button>
+
+
+          </div>
+
+        </form>
+      </div>
+      <div class="card-footer text-muted">
+        Install & Instantiate chaincode
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  /* $("#installChaincodeForm").submit(function (e) { */
+  $("#chainCodeInstallButton").click(function (e) {
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+    $(".installChaincodeSpinner").show();
+    $("#installChaincodeForm input").attr("readonly", true);
+
+    /* var form = $("#installChaincodeForm");
+    var url = form.attr("action");
+    console.log(url); */
+
+    $.ajax({
+      type: "POST",
+      url: "/installChaincode",
+      async: true,
+      data: new FormData(document.getElementById("installChaincodeForm")),
+      processData: false,
+      contentType: false,
+      complete: function (data) {
+        $(".installChaincodeSpinner").hide();
+        $("#installChaincodeForm input").attr("readonly", false);
+        var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        console.log(json);
+        if (json["status"] === "success") {
+          swal.fire({
+            title: "Install Chaincode Status",
+            text: json["status"],
+            icon: "success",
+            heightAuto: false,
+            confirmButtonText:
+              '<i class="fa fa-thumbs-up"></i> Chaincode Installed Successfully!',
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+              $(".step1Fields").hide();
+              $(".step2Fields").hide();
+              $(".step3Fields").show();
+            }
+          });
+
+        } else {
+          swal.fire({
+            title: "Install Chaincode Status",
+            text: json["status"],
+            icon: "fail",
+            heightAuto: false,
+            confirmButtonText:
+              '<i class="fa fa-thumbs-down"></i> Chaincode Install Failed',
+          });
+        }
+      },
+    });
+  });
+</script>
+
+
+<script>
+  /* $("#installChaincodeForm").submit(function (e) { */
+  $("#chainCodeInstantiateButton").click(function (e) {
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+    $(".instantiateChaincodeSpinner").show();
+    $("#installChaincodeForm input").attr("readonly", true);
+
+    /* var form = $("#installChaincodeForm");
+    var url = form.attr("action");
+    console.log(url); */
+
+    $.ajax({
+      type: "POST",
+      url: "/instantiateChaincode",
+      async: true,
+      data: new FormData(document.getElementById("installChaincodeForm")),
+      processData: false,
+      contentType: false,
+      complete: function (data) {
+        $(".instantiateChaincodeSpinner").hide();
+        $("#installChaincodeForm input").attr("readonly", false);
+        var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        console.log(json);
+        if (json["status"] === "success") {
+          swal.fire({
+            title: "Instantiate Chaincode Status",
+            text: json["status"],
+            icon: "success",
+            heightAuto: false,
+            confirmButtonText:
+              '<i class="fa fa-thumbs-up"></i> Chaincode Instantiated Successfully!',
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+              window.location.href = "/";
+            }
+          });
+
+
+        } else {
+          swal.fire({
+            title: "Instantiate Chaincode Status",
+            text: json["status"],
+            icon: "fail",
+            heightAuto: false,
+            confirmButtonText:
+              '<i class="fa fa-thumbs-down"></i> Chaincode Instantiation Failed',
+          });
+        }
+      },
+    });
+  });
+</script>
+
+<script>
+  $("#installFormNextButton").click(function (e) {
+    e.preventDefault();
+    $(".step1Fields").hide();
+    $(".step3Fields").hide();
+    $(".step2Fields").show();
+  });
+  $("#installFormPreviousButton").click(function (e) {
+    e.preventDefault();
+    $(".step2Fields").hide();
+    $(".step3Fields").hide();
+    $(".step1Fields").show();
+  });
+</script>
+<script>
+
+  function sendAjaxReqToGetListOfUploadedChaincodes() {
+    $("#uploadedChainCodesListDataTable").empty();
+    $(".uploadedChainCodesTableContentFetchingSpinner").show();
+    $.ajax({
+      type: "POST",
+      url: "/getAllUploadedChainCodeFilesListToInstall",
+      async: true,
+      complete: function (data) {
+        var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        console.log(json);
+        $(".uploadedChainCodesTableContentFetchingSpinner").hide();
+
+        if (json["status"] === "success") {
+
+          let fileListArray = json["data"];
+          //console.log(fileListArray);
+          const uniqueChainCodeNameList = [...new Set(fileListArray.map(item => item.chainCodeName))];
+          const uniqueChainCodeFileNameList = [...new Set(fileListArray.map(item => item.fileName))];
+          //console.log(uniqueChainCodeNameList);
+          //console.log(uniqueChainCodeFileNameList);
+          $("#uploadedChaincodeListOptionsHelperText").text('Total Chaincodes Uploaded- ' + String(uniqueChainCodeNameList.length));
+          $("#uploadedChaincodeFileListOptionsHelperText").text('Total Files - ' + String(uniqueChainCodeFileNameList.length));
+          $.each(uniqueChainCodeNameList, function (i, item) {
+            $("#uploadedChaincodeListOptions").append($("<option class='breakUrlLink'>").attr('value', item).text(item));
+          });
+          $("#selectedChainCodeRootSrcFile").empty();
+          $.each(uniqueChainCodeFileNameList, function (i, item) {
+            $("#selectedChainCodeRootSrcFile").append($("<option class='breakUrlLink'>").attr('value', item).text(item));
+          });
+          $("#uploadedChaincodeListOptions").on("change", function () {
+
+            if (this.value) {
+              const filteredChainCodeFileListArray = fileListArray.filter(item => item.chainCodeName === this.value);
+              const filteredChainCodeFileList = [...new Set(filteredChainCodeFileListArray.map(item => item.fileName))];
+              $("#selectedChainCodeRootSrcFile").empty();
+              $.each(filteredChainCodeFileList, function (i, item) {
+                $("#selectedChainCodeRootSrcFile").append($("<option class='breakUrlLink'>").attr('value', item).text(item));
+              });
+              $("#uploadedChaincodeFileListOptionsHelperText").text('Total Files - ' + String(filteredChainCodeFileList.length));
+            } else {
+              $("#selectedChainCodeRootSrcFile").empty();
+              $.each(uniqueChainCodeFileNameList, function (i, item) {
+                $("#selectedChainCodeRootSrcFile").append($("<option class='breakUrlLink'>").attr('value', item).text(item));
+              });
+              $("#uniqueChainCodeFileNameList").text('Total Files - ' + String(uniqueChainCodeFileNameList.length));
+            }
+          });
+
+        } else {
+          swal.fire({
+            title: "Certificates Retrieval",
+            text: json["status"],
+            icon: "error",
+            confirmButtonText: '<i class="fa fa-thumbs-down"></i> Failed',
+          });
+        }
+      },
+    });
+  }
+</script>
+
+
+<script>
+  sendAjaxReqToGetListOfUploadedChaincodes();
+</script>

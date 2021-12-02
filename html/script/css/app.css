@@ -24,3 +24,8 @@ table {
   background-color: #000;
   color: white !important;
 }
+
+.breakUrlLink {
+  white-space: pre-wrap !important;
+  overflow-wrap: break-word !important;
+}
