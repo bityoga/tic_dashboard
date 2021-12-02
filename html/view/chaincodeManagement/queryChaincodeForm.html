@@ -79,6 +79,7 @@
         if (json["status"] === "success") {
           swal.fire({
             heightAuto: false,
+            width: "min-content",
             title: "Query Chaincode Status",
             html:
               '<div class="codeBlock" style="max-height:40vh; overflow-y:scroll; text-align:initial"><pre><code id="fileContent">' +
