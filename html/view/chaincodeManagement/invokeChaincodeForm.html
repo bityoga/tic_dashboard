@@ -1,8 +1,5 @@
-<div
-  class="d-flex align-items-center justify-content-center pb-5"
-  style="height: inherit;"
->
-  <div class="col-12 col-sm-12 col-md-7 col-lg-6 col-xl-4 px-4">
+<div class="d-flex align-items-center justify-content-center pb-5" style="height: inherit;">
+  <div class="col-12 col-sm-12 col-md-7 col-lg-6 col-xl-4 px-4 mt-3">
     <div class="card text-center">
       <div class="card-header p-4 bg-secondary text-white">
         <h2>
@@ -10,57 +7,44 @@
         </h2>
       </div>
       <div class="card-body">
-        <form
-          id="createChaincodeForm"
-          action="/login"
-          enctype="multipart/form-data"
-          method="POST"
-        >
+        <form id="invokeChainCodeForm" action="/invokeChaincode" enctype="multipart/form-data" method="POST">
           <div class="mb-3">
-            <label for="chaincodeNameInput" class="form-label"
-              >Chaincode Class Name</label
-            >
-            <input
-              type="text"
-              required
-              class="form-control my-1"
-              name="chaincodeNameInput"
-              id="chaincodeNameInput"
-              placeholder="Enter chaincode name"
-            />
-            <small class="form-text text-muted my-1"
-              >Example : car-details (underscores are not allowed)</small
-            >
+            <label for="chaincodeNameInput" class="form-label">Chaincode Name</label>
+            <input type="text" required class="form-control my-1" name="chaincodeNameInput" id="chaincodeNameInput"
+              placeholder="Enter chaincode name" />
+            <small class="form-text text-muted my-1">Example : car-details (underscores are not allowed)</small>
           </div>
           <div class="mb-3">
-            <label for="chaincodeClassNameInput" class="form-label"
-              >Chaincode Class Name</label
-            >
-            <input
-              type="text"
-              required
-              class="form-control my-1"
-              id="chaincodeClassNameInput"
-              name="chaincodeClassNameInput"
-              placeholder="Enter Chaincode Class Name"
-            />
-            <small class="form-text text-muted my-1"
-              >Example : CarDetailsChaincode</small
-            >
+            <label for="chainCodeInvokeParameters" class="form-label">Invoke Parameters</label>
+            <input type="text" required class="form-control my-1" id="chainCodeInvokeParameters"
+              name="chainCodeInvokeParameters" placeholder="Enter Chaincode Class Name"
+              value='{"Args":["CreateAssetJson","srk","1000","InitialCredit"]}' />
+            <small class="form-text text-muted my-1">Example :
+              '{"Args":["CreateAssetJson","srk","1000","InitialCredit"]}'</small>
           </div>
-          <!--  <div class="form-check mb-3">
-                    <input type="checkbox" class="form-check-input" id="downloadZip">
-                    <label class="form-check-label" for="downloadZip">Download zip</label>
-                </div> -->
-          <button type="submit" class="btn btn-primary mt-2">
-            <i class="fa fa-pencil" aria-hidden="true"></i> Invoke Chaincode
-            <span
-              class="spinner-border spinner-border-sm createChaincodeSpinner"
-              role="status"
-              aria-hidden="true"
-              style="display: none;"
-            ></span>
-          </button>
+          <div class="mb-3">
+            <label for="channelSelection" class="form-label">Select Channel</label>
+            <select name="channelSelection" id="channelSelection" class="form-select" aria-label="Select channel :">
+              <option selected value="appchannel">appchannel</option>
+            </select>
+            <small class="form-text text-muted my-1">Select the channel to be used</small>
+          </div>
+          <div class="mb-3">
+            <label for="peerSelection" class="form-label">Select Peer</label>
+            <select name="peerSelection" id="peerSelection" class="form-select" aria-label="Select a Peer :">
+              <option value="peer1">Peer1</option>
+              <option selected value="peer2">Peer2</option>
+            </select>
+            <small class="form-text text-muted my-1">Select the peer on which the chaincode is to be invoked</small>
+          </div>
+          <div class="mb-3">
+            <button type="submit" class="btn btn-primary mt-2">
+              <i class="fa fa-pencil" aria-hidden="true"></i>
+              Invoke Chaincode
+              <span class="spinner-border spinner-border-sm invokeChainCodeSpinner" role="status" aria-hidden="true"
+                style="display: none;"></span>
+            </button>
+          </div>
         </form>
       </div>
       <div class="card-footer text-muted">
@@ -71,48 +55,43 @@
 </div>
 
 <script>
-  $("#createChaincodeForm").submit(function (e) {
+  $("#invokeChainCodeForm").submit(function (e) {
     e.preventDefault(); // avoid to execute the actual submit of the form.
 
-    $(".createChaincodeSpinner").show();
-    $("#createChaincodeForm input").attr("readonly", true);
+    $(".invokeChainCodeSpinner").show();
+    $("#invokeChainCodeForm input").attr("readonly", true);
 
-    var user_json = {
-      chaincodeNameInput: document.getElementById("chaincodeNameInput").value,
-      chaincodeClassNameInput: document.getElementById(
-        "chaincodeClassNameInput"
-      ).value,
-      /* downloadZip : document.getElementById("downloadZip").value, */
-    };
 
-    console.log(user_json);
+
+    //console.log(user_json);
 
     $.ajax({
       type: "POST",
-      url: "/createChaincode",
+      url: "/invokeChaincode",
       async: true,
-      dataType: "json",
-      data: user_json,
+      data: new FormData(document.getElementById("invokeChainCodeForm")),
+      processData: false,
+      contentType: false,
       complete: function (data) {
-        $(".createChaincodeSpinner").hide();
-        $("#createChaincodeForm input").attr("readonly", false);
+        $(".invokeChainCodeSpinner").hide();
+        $("#invokeChainCodeForm input").attr("readonly", false);
         var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
         console.log(json);
         if (json["status"] === "success") {
           swal.fire({
-            title: "Create Chaincode Status",
-            text: json["status"],
+            title: "Invoke Chaincode Status",
+            text: json["data"],
             icon: "success",
             confirmButtonText:
-              '<i class="fa fa-thumbs-up"></i> Chaincode Created Successfully!',
+              '<i class="fa fa-thumbs-up"></i> Chaincode Invoked Successfully!',
           });
         } else {
           swal.fire({
-            title: "Create Chaincode Status",
+            title: "Invoke Chaincode Status",
             text: json["status"],
             icon: "fail",
             confirmButtonText:
-              '<i class="fa fa-thumbs-down"></i> Chaincode Creation Failed',
+              '<i class="fa fa-thumbs-down"></i> Chaincode Invoke Failed',
           });
         }
       },

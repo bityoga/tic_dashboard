@@ -1058,4 +1058,220 @@ app.post("/instantiateChaincode", async (req, res) => {
 
 
 
+app.post("/upgradeChaincode", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+  console.log(req.body);
+
+  var chaincodeName = req.body.chaincodeNameInput;
+  var chaincodeVersion = req.body.chaincodeVersionInput;
+  var peer = req.body.peerSelection;
+  var channel = req.body.channelSelection;
+  var chaincodeInstantiateParams = req.body.chaincodeInstantiateParams;
+  var chaincodeSrcPath = req.body.selectedChainCodeRootSrcFile;
+  chaincodeSrcPath = chaincodeSrcPath.substring(0,chaincodeSrcPath.lastIndexOf('/')+1);
+
+
+
+  if (app_session.user_name && app_session.password) {
+    var PEER_HOST = peer;
+    var CORE_PEER_ADDRESS = PEER_HOST + ":7051";
+    var CORE_PEER_MSPCONFIGPATH = "/root/CLI/${ORGCA_HOST}/${ADMIN_USER}/msp";
+    var CORE_PEER_TLS_ROOTCERT_FILE =
+      "/root/CLI/${ORGCA_HOST}/" + PEER_HOST + "/msp/tls/ca.crt";
+
+    //instantiate- CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS CORE_PEER_MSPCONFIGPATH=$CORE_PEER_MSPCONFIGPATH CORE_PEER_TLS_ROOTCERT_FILE=$CORE_PEER_TLS_ROOTCERT_FILE peer chaincode instantiate -C $CHANNEL_NAME -n $CHAINCODE_NAME -v $CHAINCODE_VERSION -c $INSTANTIATE_PARAMS -o ${ORDERER_HOST}:7050 --tls --cafile ${CORE_PEER_TLS_ROOTCERT_FILE}
+    //upgrade -  CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS CORE_PEER_MSPCONFIGPATH=$CORE_PEER_MSPCONFIGPATH CORE_PEER_TLS_ROOTCERT_FILE=$CORE_PEER_TLS_ROOTCERT_FILE peer chaincode upgrade -C $CHANNEL_NAME -n $CHAINCODE_NAME -v $CHAINCODE_VERSION -c $INSTANTIATE_PARAMS -p $CHAINCODE_SRC_CODE_PATH -o ${ORDERER_HOST}:7050 --tls --cafile ${CORE_PEER_TLS_ROOTCERT_FILE}
+
+    var chaincodeUpgradeCommand =
+      "CORE_PEER_ADDRESS=" +
+      CORE_PEER_ADDRESS +
+      " CORE_PEER_MSPCONFIGPATH=" +
+      CORE_PEER_MSPCONFIGPATH +
+      " CORE_PEER_TLS_ROOTCERT_FILE=" +
+      CORE_PEER_TLS_ROOTCERT_FILE +
+      " peer chaincode upgrade -C " +
+      channel +
+      " -n " +
+      chaincodeName +
+      " -v " +
+      chaincodeVersion +
+      " -c '" +
+      chaincodeInstantiateParams +
+      "' -p " +
+      chaincodeSrcPath +
+      " -o ${ORDERER_HOST}:7050 --tls --cafile " +
+      CORE_PEER_TLS_ROOTCERT_FILE;
+
+    console.log("chaincodeUpgradeCommand");
+    console.log(chaincodeUpgradeCommand);
+
+    shell.exec(chaincodeUpgradeCommand, function (code, stdout, stderr) {
+      console.log("Exit code:", code);
+      console.log("Program output:", stdout);
+      console.log("Program stderr:", stderr);
+      var exec_command_status = {
+        Exit_Code: code,
+        Output: stdout,
+        Error: stderr,
+      };
+      response = {
+        status: "success",
+        data: exec_command_status,
+      };
+      console.log(response);
+      res.json(response);
+    });
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+
+
+app.post("/queryChaincode", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+  console.log(req.body);
+
+  var chaincodeName = req.body.chaincodeNameInput;
+  var peer = req.body.peerSelection;
+  var channel = req.body.channelSelection;
+  var chainCodeQueryParameters = req.body.chainCodeQueryParameters;
+ 
+
+
+  if (app_session.user_name && app_session.password) {
+    var PEER_HOST = peer;
+    var CORE_PEER_ADDRESS = PEER_HOST + ":7051";
+    var CORE_PEER_MSPCONFIGPATH = "/root/CLI/${ORGCA_HOST}/${ADMIN_USER}/msp";
+    var CORE_PEER_TLS_ROOTCERT_FILE =
+      "/root/CLI/${ORGCA_HOST}/" + PEER_HOST + "/msp/tls/ca.crt";
+
+    //instantiate- CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS CORE_PEER_MSPCONFIGPATH=$CORE_PEER_MSPCONFIGPATH CORE_PEER_TLS_ROOTCERT_FILE=$CORE_PEER_TLS_ROOTCERT_FILE peer chaincode instantiate -C $CHANNEL_NAME -n $CHAINCODE_NAME -v $CHAINCODE_VERSION -c $INSTANTIATE_PARAMS -o ${ORDERER_HOST}:7050 --tls --cafile ${CORE_PEER_TLS_ROOTCERT_FILE}
+    //upgrade -  CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS CORE_PEER_MSPCONFIGPATH=$CORE_PEER_MSPCONFIGPATH CORE_PEER_TLS_ROOTCERT_FILE=$CORE_PEER_TLS_ROOTCERT_FILE peer chaincode upgrade -C $CHANNEL_NAME -n $CHAINCODE_NAME -v $CHAINCODE_VERSION -c $INSTANTIATE_PARAMS -p $CHAINCODE_SRC_CODE_PATH -o ${ORDERER_HOST}:7050 --tls --cafile ${CORE_PEER_TLS_ROOTCERT_FILE}
+    //query -    CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS CORE_PEER_MSPCONFIGPATH=/root/CLI/${ORGCA_HOST}/${PEER_HOST}/msp CORE_PEER_TLS_ROOTCERT_FILE=$CORE_PEER_TLS_ROOTCERT_FILE peer chaincode query -C $CHANNEL_NAME -n $CHAINCODE_NAME -c $QUERY_PARAMS
+    var chaincodeQueryCommand =
+      "CORE_PEER_ADDRESS=" +
+      CORE_PEER_ADDRESS +
+      " CORE_PEER_MSPCONFIGPATH=/root/CLI/${ORGCA_HOST}/"+peer+"/msp" +
+      " CORE_PEER_TLS_ROOTCERT_FILE=" +
+      CORE_PEER_TLS_ROOTCERT_FILE +
+      " peer chaincode query -C " +
+      channel +
+      " -n " +
+      chaincodeName +
+      " -c '" +
+      chainCodeQueryParameters+"'";
+
+    console.log("chaincodeQueryCommand");
+    console.log(chaincodeQueryCommand);
+
+    shell.exec(chaincodeQueryCommand, function (code, stdout, stderr) {
+      console.log("Exit code:", code);
+      console.log("Program output:", stdout);
+      console.log("Program stderr:", stderr);
+      var exec_command_status = {
+        Exit_Code: code,
+        Output: stdout,
+        Error: stderr,
+      };
+      response = {
+        status: "success",
+        data: exec_command_status,
+      };
+      console.log(response);
+      res.json(response);
+    });
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+
+
+app.post("/invokeChaincode", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+  console.log(req.body);
+
+  var chaincodeName = req.body.chaincodeNameInput;
+  var peer = req.body.peerSelection;
+  var channel = req.body.channelSelection;
+  var chainCodeInvokeParameters = req.body.chainCodeInvokeParameters;
+ 
+
+
+  if (app_session.user_name && app_session.password) {
+    var PEER_HOST = peer;
+    var CORE_PEER_ADDRESS = PEER_HOST + ":7051";
+    var CORE_PEER_MSPCONFIGPATH = "/root/CLI/${ORGCA_HOST}/${ADMIN_USER}/msp";
+    var CORE_PEER_TLS_ROOTCERT_FILE =
+      "/root/CLI/${ORGCA_HOST}/" + PEER_HOST + "/msp/tls/ca.crt";
+
+    //instantiate- CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS CORE_PEER_MSPCONFIGPATH=$CORE_PEER_MSPCONFIGPATH CORE_PEER_TLS_ROOTCERT_FILE=$CORE_PEER_TLS_ROOTCERT_FILE peer chaincode instantiate -C $CHANNEL_NAME -n $CHAINCODE_NAME -v $CHAINCODE_VERSION -c $INSTANTIATE_PARAMS -o ${ORDERER_HOST}:7050 --tls --cafile ${CORE_PEER_TLS_ROOTCERT_FILE}
+    //upgrade -  CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS CORE_PEER_MSPCONFIGPATH=$CORE_PEER_MSPCONFIGPATH CORE_PEER_TLS_ROOTCERT_FILE=$CORE_PEER_TLS_ROOTCERT_FILE peer chaincode upgrade -C $CHANNEL_NAME -n $CHAINCODE_NAME -v $CHAINCODE_VERSION -c $INSTANTIATE_PARAMS -p $CHAINCODE_SRC_CODE_PATH -o ${ORDERER_HOST}:7050 --tls --cafile ${CORE_PEER_TLS_ROOTCERT_FILE}
+    //query -    CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS CORE_PEER_MSPCONFIGPATH=/root/CLI/${ORGCA_HOST}/${PEER_HOST}/msp CORE_PEER_TLS_ROOTCERT_FILE=$CORE_PEER_TLS_ROOTCERT_FILE peer chaincode query -C $CHANNEL_NAME -n $CHAINCODE_NAME -c $QUERY_PARAMS
+    //invoke -   CORE_PEER_ADDRESS=$CORE_PEER_ADDRESS CORE_PEER_MSPCONFIGPATH=/root/CLI/${ORGCA_HOST}/${PEER_HOST}/msp CORE_PEER_TLS_ROOTCERT_FILE=$CORE_PEER_TLS_ROOTCERT_FILE peer chaincode invoke -C $CHANNEL_NAME -n $CHAINCODE_NAME -c $INVOKE_PARAMS -o ${ORDERER_HOST}:7050 --tls --cafile ${CORE_PEER_TLS_ROOTCERT_FILE}
+
+    var chaincodeInvokeCommand =
+      "CORE_PEER_ADDRESS=" +
+      CORE_PEER_ADDRESS +
+      " CORE_PEER_MSPCONFIGPATH=/root/CLI/${ORGCA_HOST}/"+peer+"/msp" +
+      " CORE_PEER_TLS_ROOTCERT_FILE=" +
+      CORE_PEER_TLS_ROOTCERT_FILE +
+      " peer chaincode invoke -C " +
+      channel +
+      " -n " +
+      chaincodeName +
+      " -c '" +
+      chainCodeInvokeParameters +
+      "' -o ${ORDERER_HOST}:7050 --tls --cafile " +
+      CORE_PEER_TLS_ROOTCERT_FILE;
+
+    console.log("chaincodeInvokeCommand");
+    console.log(chaincodeInvokeCommand);
+
+    shell.exec(chaincodeInvokeCommand, function (code, stdout, stderr) {
+      console.log("Exit code:", code);
+      console.log("Program output:", stdout);
+      console.log("Program stderr:", stderr);
+      var exec_command_status = {
+        Exit_Code: code,
+        Output: stdout,
+        Error: stderr,
+      };
+      response = {
+        status: "success",
+        data: exec_command_status,
+      };
+      console.log(response);
+      res.json(response);
+    });
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+
+
+
 main();
