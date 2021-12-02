@@ -79,6 +79,7 @@
         console.log(json);
         if (json["status"] === "success") {
           swal.fire({
+            heightAuto: false,
             title: "Invoke Chaincode Status",
             text: json["data"],
             icon: "success",
@@ -87,6 +88,7 @@
           });
         } else {
           swal.fire({
+            heightAuto: false,
             title: "Invoke Chaincode Status",
             text: json["status"],
             icon: "fail",

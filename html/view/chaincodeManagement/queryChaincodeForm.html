@@ -78,14 +78,16 @@
         console.log(json);
         if (json["status"] === "success") {
           swal.fire({
+            heightAuto: false,
             title: "Query Chaincode Status",
-            text: json["data"].Output,
+            text: JSON.parse(["data"].Output),
             icon: "success",
             confirmButtonText:
               '<i class="fa fa-thumbs-up"></i> Chaincode Queried Successfully!',
           });
         } else {
           swal.fire({
+            heightAuto: false,
             title: "Query Chaincode Status",
             text: json["status"],
             icon: "fail",
