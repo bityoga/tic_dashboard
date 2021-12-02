@@ -80,11 +80,33 @@
           swal.fire({
             heightAuto: false,
             title: "Query Chaincode Status",
-            text: JSON.stringify(JSON.parse(json["data"].Output), null, '\t'),
+            html:
+              '<div class="codeBlock" style="max-height:40vh; overflow-y:scroll; text-align:initial"><pre><code id="fileContent">' +
+              JSON.stringify(JSON.parse(json["data"].Output), null, '\t') +
+              "</code></pre></div>",
+            //html: '<pre>' + JSON.stringify(JSON.parse(json["data"].Output), null, '\t') + '<pre>',
             icon: "success",
             confirmButtonText:
               '<i class="fa fa-thumbs-up"></i> Chaincode Queried Successfully!',
           });
+          hljs.highlightAll();
+          // apply HighlightJS
+          var pres = document.querySelectorAll("pre>code");
+          for (var i = 0; i < pres.length; i++) {
+            hljs.highlightBlock(pres[i]);
+          }
+
+          // add HighlightJS-badge (options are optional)
+          var options = {
+            // optional
+            contentSelector: ".codeBlock",
+
+            // CSS class(es) used to render the copy icon.
+            copyIconClass: "fas fa-copy",
+            // CSS class(es) used to render the done icon.
+            checkIconClass: "fas fa-check text-success",
+          };
+          window.highlightJsBadge(options);
         } else {
           swal.fire({
             heightAuto: false,
