@@ -32,7 +32,7 @@ var CERTIFICATE_PATH;
 var CLI_PATH;
 var CREATE_CHAINCODE_SCRIPT;
 
-if (TEST_LOCAL == 1) {
+if (TEST_LOCAL === 1) {
   CHAINCODE_PATH = "../file_explorer/chaincodes";
   CERTIFICATE_PATH = "../file_explorer/certificates";
   CLI_PATH = "../../check_master";
@@ -43,6 +43,10 @@ if (TEST_LOCAL == 1) {
   CLI_PATH = "../../CLI";
   CREATE_CHAINCODE_SCRIPT = "./create_chaincode_stand_alone.sh";
 }
+console.log(CHAINCODE_PATH);
+console.log(CERTIFICATE_PATH);
+console.log(CLI_PATH);
+console.log(CREATE_CHAINCODE_SCRIPT);
 // Create a express object
 const app = express();
 // default file Upload options
