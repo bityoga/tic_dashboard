@@ -53,14 +53,14 @@ table {
 }
 .githubReadMeContainer h2 {
   margin-top: 3rem;
-  background-color: rgb(240, 255, 250);
+  background-color: rgb(255, 255, 240);
+
   padding: 1rem;
 }
 
 .githubReadMeContainer h3 {
   margin-top: 3rem;
-  background-color: rgb(255, 255, 240);
   padding: 1rem;
-
+  background-color: rgb(240, 255, 250);
   /* margin-bottom: 3rem; */
 }
