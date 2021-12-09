@@ -1,0 +1,86 @@
+<!-- <div class="mb-4 col-12 col-sm-12 col-md-12 col-lg-12 col-xl-8 mx-auto"> -->
+<div class="mb-4 col-12 col-sm-12 col-md-7 col-lg-6 col-xl-6 container">
+  <h1 class="my-4 p-3 text-white bg-secondary text-center">
+    <i class="fa fa-tools" aria-hidden="true"></i> Rest Api instructions
+  </h1>
+  <div class="text-center restApiReadMeContentFetchingSpinner">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <div class="card p-4">
+    <div id="restApiInstructionsContainer" class="githubReadMeContainer"></div>
+  </div>
+</div>
+
+<script>
+  function sendAjaxReqToGetRestApiGitHubReadMe() {
+    $("#restApiInstructionsContainer").empty();
+    $(".restApiReadMeContentFetchingSpinner").show();
+    $.ajax({
+      type: "POST",
+      url: "/getRestApiGitHubReadMe",
+      async: true,
+      complete: function (data) {
+        var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        console.log(json);
+
+        if (json["status"] === "success") {
+          const searchRegExp = /localhost/g;
+          const replaceWith = "161.35.153.83";
+          const ipAddressReplacedData = json["data"].replace(
+            searchRegExp,
+            replaceWith
+          );
+
+          // const gitHubCss =
+          //   '<link data-color-theme="light_high_contrast" crossorigin="anonymous" media="all" integrity="sha512-5swg0RJGlhj0UH3SLkJ6e/BYm/DmpyGTaUSCUBhf1HtC4lBV+zM9mxOQ8febH318pxcUzUpp09qi0z7EKfWuDQ==" rel="stylesheet" data-href="https://github.githubassets.com/assets/light_high_contrast-e6cc20d112469618f4507dd22e427a7b.css">';
+          // ipAddressReplacedData = ipAddressReplacedData.replace(
+          //   /light_high_contrast-e6cc20d112469618f4507dd22e427a7b.css/g,
+          //   ""
+          // );
+          $(".restApiReadMeContentFetchingSpinner").hide();
+
+          // let readMeHighlightJsData =
+          //   '<div class="codeBlock" style=" overflow:auto;"><pre><code id="fileContent">' +
+          //   ipAddressReplacedData +
+          //   "</code></pre></div>";
+          // $("#restApiInstructionsContainer").html(readMeHighlightJsData);
+
+          $("#restApiInstructionsContainer").html(ipAddressReplacedData);
+          hljs.highlightAll();
+          // apply HighlightJS
+          var pres = document.querySelectorAll("pre>code");
+          for (var i = 0; i < pres.length; i++) {
+            hljs.highlightBlock(pres[i]);
+          }
+
+          // add HighlightJS-badge (options are optional)
+          var options = {
+            // optional
+            contentSelector: ".codeBlock",
+
+            // CSS class(es) used to render the copy icon.
+            copyIconClass: "fas fa-copy",
+            // CSS class(es) used to render the done icon.
+            checkIconClass: "fas fa-check text-success",
+          };
+          window.highlightJsBadge(options);
+        } else {
+          swal.fire({
+            title: "Rest Api Instructions Retrieval Failed",
+            text: json["status"],
+            icon: "error",
+            confirmButtonText: '<i class="fa fa-thumbs-down"></i> Failed',
+          });
+        }
+      },
+    });
+  }
+</script>
+
+<script>
+  $(document).ready(function () {
+    sendAjaxReqToGetRestApiGitHubReadMe();
+  });
+</script>

@@ -29,3 +29,38 @@ table {
   white-space: pre-wrap !important;
   overflow-wrap: break-word !important;
 }
+
+/* hide gihub page headers */
+.githubReadMeContainer .js-header-wrapper {
+  display: none !important;
+}
+
+.githubReadMeContainer #repository-container-header {
+  display: none !important;
+}
+
+.githubReadMeContainer .footer .position-relative {
+  display: none !important;
+}
+.githubReadMeContainer #repo-content-pjax-container .d-flex {
+  display: none !important;
+}
+
+.githubReadMeContainer h1 {
+  text-align: center;
+  background-color: aliceblue;
+  padding: 1rem;
+}
+.githubReadMeContainer h2 {
+  margin-top: 3rem;
+  background-color: rgb(240, 255, 250);
+  padding: 1rem;
+}
+
+.githubReadMeContainer h3 {
+  margin-top: 3rem;
+  background-color: rgb(255, 255, 240);
+  padding: 1rem;
+
+  /* margin-bottom: 3rem; */
+}

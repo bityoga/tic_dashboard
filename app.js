@@ -4,12 +4,38 @@ const fileUpload = require("express-fileupload");
 const session = require("express-session");
 const formidable = require("express-formidable");
 var bodyParser = require("body-parser");
+const axios = require("axios");
+const https = require("https");
+const cors = require("cors");
 
 const fs = require("fs");
 const path = require("path");
 
 const shell = require("shelljs");
 const { response } = require("express");
+var hljs = require("highlight.js"); // https://highlightjs.org/
+
+// Actual default values
+var md = require("markdown-it")({
+  html: true,
+  linkify: true,
+  typographer: true,
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return (
+          '<pre class="hljs"><code>' +
+          hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
+          "</code></pre>"
+        );
+      } catch (__) {}
+    }
+
+    return (
+      '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + "</code></pre>"
+    );
+  },
+});
 
 const APP_CONFIG_FILE = "app_config.json";
 // Global variable to store the api config from file
@@ -26,12 +52,13 @@ try {
   throw Error("API Start Error - Error while reading API config", e);
 }
 
-const TEST_LOCAL = 0;
+const TEST_LOCAL = 1;
 var CHAINCODE_PATH;
 var CERTIFICATE_PATH;
 var CLI_PATH;
 var CREATE_CHAINCODE_SCRIPT;
-
+const REST_API_README_FILE_URL =
+  "https://raw.githubusercontent.com/bityoga/fabric_as_code_restapi/main/curl_instructions/README.md";
 
 if (TEST_LOCAL === 1) {
   CHAINCODE_PATH = "../file_explorer/chaincodes";
@@ -66,6 +93,12 @@ app.use(
 //app.use(express.static(CHAINCODE_PATH));
 //app.use(express.static(CERTIFICATE_PATH));
 app.use(express.static(CLI_PATH));
+const corsOptions = {
+  origin: "http://localhost:3003",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 
 // Create a router for the express object
 const router = express.Router();
@@ -477,7 +510,6 @@ app.post("/getAllUploadedChainCodeFilesList", async (req, res) => {
   }
 });
 
-
 app.post("/getAllUploadedChainCodeFilesListToInstall", async (req, res) => {
   let response;
 
@@ -635,9 +667,10 @@ const getAllChainCodeFilesListOfArrays = function (dirPath, arrayOfFiles) {
   return arrayOfFiles;
 };
 
-
-
-const getAllChainCodeFilesListOfArraysToInstall = function (dirPath, arrayOfFiles) {
+const getAllChainCodeFilesListOfArraysToInstall = function (
+  dirPath,
+  arrayOfFiles
+) {
   files = fs.readdirSync(dirPath);
 
   arrayOfFiles = arrayOfFiles || [];
@@ -669,18 +702,17 @@ const getAllChainCodeFilesListOfArraysToInstall = function (dirPath, arrayOfFile
         .split(CHAINCODE_PATH + "/")
         .pop()
         .split("/")[0];
-      fileInfoDict = 
-      
-        {"chainCodeName": chaincodeName,
-        "fileName": fileNameWithFullPath,
-        }
-        /* filesize,
+      fileInfoDict = {
+        chainCodeName: chaincodeName,
+        fileName: fileNameWithFullPath,
+      };
+      /* filesize,
         new Date(fileStats.ctime).toLocaleString("no-No"),
         new Date(fileStats.mtime).toLocaleString("no-NO"),
         deleteFileButton,
         fileDownloadButton,
         FileViewButton, */
-      
+
       arrayOfFiles.push(fileInfoDict);
     }
   });
@@ -920,7 +952,6 @@ app.post("/uploadChainCode", async (req, res) => {
   }
 });
 
-
 app.post("/installChaincode", async (req, res) => {
   let response;
 
@@ -933,9 +964,10 @@ app.post("/installChaincode", async (req, res) => {
   /* var channel = req.body.channelSelection; */
   var language = req.body.chainCodeProgrammingLanguage;
   var chaincodeSrcPath = req.body.selectedChainCodeRootSrcFile;
-  chaincodeSrcPath = chaincodeSrcPath.substring(0,chaincodeSrcPath.lastIndexOf('/')+1);
- 
-  
+  chaincodeSrcPath = chaincodeSrcPath.substring(
+    0,
+    chaincodeSrcPath.lastIndexOf("/") + 1
+  );
 
   if (app_session.user_name && app_session.password) {
     var PEER_HOST = peer;
@@ -986,10 +1018,8 @@ app.post("/installChaincode", async (req, res) => {
     };
     console.log(response);
     res.json(response);
-  } 
+  }
 });
-
-
 
 app.post("/instantiateChaincode", async (req, res) => {
   let response;
@@ -1002,8 +1032,6 @@ app.post("/instantiateChaincode", async (req, res) => {
   var peer = req.body.peerSelection;
   var channel = req.body.channelSelection;
   var chaincodeInstantiateParams = req.body.chaincodeInstantiateParams;
-
-
 
   if (app_session.user_name && app_session.password) {
     var PEER_HOST = peer;
@@ -1061,8 +1089,6 @@ app.post("/instantiateChaincode", async (req, res) => {
   }
 });
 
-
-
 app.post("/upgradeChaincode", async (req, res) => {
   let response;
 
@@ -1075,9 +1101,10 @@ app.post("/upgradeChaincode", async (req, res) => {
   var channel = req.body.channelSelection;
   var chaincodeInstantiateParams = req.body.chaincodeInstantiateParams;
   var chaincodeSrcPath = req.body.selectedChainCodeRootSrcFile;
-  chaincodeSrcPath = chaincodeSrcPath.substring(0,chaincodeSrcPath.lastIndexOf('/')+1);
-
-
+  chaincodeSrcPath = chaincodeSrcPath.substring(
+    0,
+    chaincodeSrcPath.lastIndexOf("/") + 1
+  );
 
   if (app_session.user_name && app_session.password) {
     var PEER_HOST = peer;
@@ -1138,8 +1165,6 @@ app.post("/upgradeChaincode", async (req, res) => {
   }
 });
 
-
-
 app.post("/queryChaincode", async (req, res) => {
   let response;
 
@@ -1150,8 +1175,6 @@ app.post("/queryChaincode", async (req, res) => {
   var peer = req.body.peerSelection;
   var channel = req.body.channelSelection;
   var chainCodeQueryParameters = req.body.chainCodeQueryParameters;
- 
-
 
   if (app_session.user_name && app_session.password) {
     var PEER_HOST = peer;
@@ -1166,7 +1189,9 @@ app.post("/queryChaincode", async (req, res) => {
     var chaincodeQueryCommand =
       "CORE_PEER_ADDRESS=" +
       CORE_PEER_ADDRESS +
-      " CORE_PEER_MSPCONFIGPATH=/root/CLI/${ORGCA_HOST}/"+peer+"/msp" +
+      " CORE_PEER_MSPCONFIGPATH=/root/CLI/${ORGCA_HOST}/" +
+      peer +
+      "/msp" +
       " CORE_PEER_TLS_ROOTCERT_FILE=" +
       CORE_PEER_TLS_ROOTCERT_FILE +
       " peer chaincode query -C " +
@@ -1174,7 +1199,8 @@ app.post("/queryChaincode", async (req, res) => {
       " -n " +
       chaincodeName +
       " -c '" +
-      chainCodeQueryParameters+"'";
+      chainCodeQueryParameters +
+      "'";
 
     console.log("chaincodeQueryCommand");
     console.log(chaincodeQueryCommand);
@@ -1205,8 +1231,6 @@ app.post("/queryChaincode", async (req, res) => {
   }
 });
 
-
-
 app.post("/invokeChaincode", async (req, res) => {
   let response;
 
@@ -1217,8 +1241,6 @@ app.post("/invokeChaincode", async (req, res) => {
   var peer = req.body.peerSelection;
   var channel = req.body.channelSelection;
   var chainCodeInvokeParameters = req.body.chainCodeInvokeParameters;
- 
-
 
   if (app_session.user_name && app_session.password) {
     var PEER_HOST = peer;
@@ -1235,7 +1257,9 @@ app.post("/invokeChaincode", async (req, res) => {
     var chaincodeInvokeCommand =
       "CORE_PEER_ADDRESS=" +
       CORE_PEER_ADDRESS +
-      " CORE_PEER_MSPCONFIGPATH=/root/CLI/${ORGCA_HOST}/"+peer+"/msp" +
+      " CORE_PEER_MSPCONFIGPATH=/root/CLI/${ORGCA_HOST}/" +
+      peer +
+      "/msp" +
       " CORE_PEER_TLS_ROOTCERT_FILE=" +
       CORE_PEER_TLS_ROOTCERT_FILE +
       " peer chaincode invoke -C " +
@@ -1276,7 +1300,37 @@ app.post("/invokeChaincode", async (req, res) => {
   }
 });
 
+app.post("/getRestApiGitHubReadMe", async (req, res) => {
+  let response;
 
+  app_session = req.session;
 
+  if (app_session.user_name && app_session.password) {
+    axios
+      .get(REST_API_README_FILE_URL, {
+        // To bypass  "Error: self signed certificate in certificate chain"
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false,
+        }),
+        headers: { "Access-Control-Allow-Origin": "*" },
+      })
+      .then((r) => {
+        console.log(r.data);
+        response = {
+          status: "success",
+          data: md.render(r.data),
+        };
+        console.log(response);
+        res.json(response);
+      });
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
 
 main();
