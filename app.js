@@ -2,21 +2,15 @@
 const express = require("express");
 const fileUpload = require("express-fileupload");
 const session = require("express-session");
-const formidable = require("express-formidable");
-var bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
+const fs = require("fs");
+const shell = require("shelljs");
+const path = require("path");
 const axios = require("axios");
 const https = require("https");
-const cors = require("cors");
-
-const fs = require("fs");
-const path = require("path");
-
-const shell = require("shelljs");
-const { response } = require("express");
-var hljs = require("highlight.js"); // https://highlightjs.org/
-
+const hljs = require("highlight.js"); // https://highlightjs.org/
 // Actual default values
-var md = require("markdown-it")({
+const md = require("markdown-it")({
   html: true,
   linkify: true,
   typographer: true,
@@ -93,12 +87,6 @@ app.use(
 //app.use(express.static(CHAINCODE_PATH));
 //app.use(express.static(CERTIFICATE_PATH));
 app.use(express.static(CLI_PATH));
-const corsOptions = {
-  origin: "http://localhost:3003",
-  credentials: true, //access-control-allow-credentials:true
-  optionSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
 
 // Create a router for the express object
 const router = express.Router();

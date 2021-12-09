@@ -9,10 +9,7 @@
     </div>
   </div>
   <div class="card p-4">
-    <div
-      id="restApiInstructionsContainer"
-      class="githubReadMeContainer codeBlock"
-    ></div>
+    <div id="restApiInstructionsContainer" class="githubReadMeContainer codeBlock"></div>
   </div>
 </div>
 
@@ -35,29 +32,14 @@
             searchRegExp,
             replaceWith
           );
-
-          // const gitHubCss =
-          //   '<link data-color-theme="light_high_contrast" crossorigin="anonymous" media="all" integrity="sha512-5swg0RJGlhj0UH3SLkJ6e/BYm/DmpyGTaUSCUBhf1HtC4lBV+zM9mxOQ8febH318pxcUzUpp09qi0z7EKfWuDQ==" rel="stylesheet" data-href="https://github.githubassets.com/assets/light_high_contrast-e6cc20d112469618f4507dd22e427a7b.css">';
-          // ipAddressReplacedData = ipAddressReplacedData.replace(
-          //   /light_high_contrast-e6cc20d112469618f4507dd22e427a7b.css/g,
-          //   ""
-          // );
           $(".restApiReadMeContentFetchingSpinner").hide();
-
-          // let readMeHighlightJsData =
-          //   '<div class="codeBlock" style=" overflow:auto;"><pre><code id="fileContent">' +
-          //   ipAddressReplacedData +
-          //   "</code></pre></div>";
-          // $("#restApiInstructionsContainer").html(readMeHighlightJsData);
-
           $("#restApiInstructionsContainer").html(ipAddressReplacedData);
-          //hljs.highlightAll();
+
           // apply HighlightJS
           var pres = document.querySelectorAll("pre>code");
           for (var i = 0; i < pres.length; i++) {
             hljs.highlightBlock(pres[i]);
           }
-
           // add HighlightJS-badge (options are optional)
           var options = {
             // optional
