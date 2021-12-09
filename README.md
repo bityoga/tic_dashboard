@@ -1,5 +1,8 @@
 # Articonf TIC DASHBOARD Node App
 
+![Screenshot from 2021-12-09 20-21-11](https://user-images.githubusercontent.com/30879156/145461917-0d1177a0-ecaf-49a6-b75d-e9fc5de5da79.png)
+
+
 # Requirements
 
 1. Bityoga fabric sdk should be up and running
