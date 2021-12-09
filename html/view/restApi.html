@@ -9,7 +9,10 @@
     </div>
   </div>
   <div class="card p-4">
-    <div id="restApiInstructionsContainer" class="githubReadMeContainer"></div>
+    <div
+      id="restApiInstructionsContainer"
+      class="githubReadMeContainer codeBlock"
+    ></div>
   </div>
 </div>
 
@@ -48,7 +51,7 @@
           // $("#restApiInstructionsContainer").html(readMeHighlightJsData);
 
           $("#restApiInstructionsContainer").html(ipAddressReplacedData);
-          hljs.highlightAll();
+          //hljs.highlightAll();
           // apply HighlightJS
           var pres = document.querySelectorAll("pre>code");
           for (var i = 0; i < pres.length; i++) {
@@ -61,9 +64,9 @@
             contentSelector: ".codeBlock",
 
             // CSS class(es) used to render the copy icon.
-            copyIconClass: "fas fa-copy",
+            copyIconClass: "fa fa-copy",
             // CSS class(es) used to render the done icon.
-            checkIconClass: "fas fa-check text-success",
+            checkIconClass: "fa fa-check text-success",
           };
           window.highlightJsBadge(options);
         } else {
