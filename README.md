@@ -1,6 +1,7 @@
 # Articonf TIC DASHBOARD Node App
 
-![Screenshot from 2021-12-09 20-21-11](https://user-images.githubusercontent.com/30879156/145461917-0d1177a0-ecaf-49a6-b75d-e9fc5de5da79.png)
+![Screenshot from 2021-12-10 20-28-57](https://user-images.githubusercontent.com/30879156/145630856-8e9c173e-a8a4-416d-b975-7b6558451ff4.png)
+
 
 
 # Requirements
