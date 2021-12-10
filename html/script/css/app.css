@@ -29,3 +29,77 @@ table {
   white-space: pre-wrap !important;
   overflow-wrap: break-word !important;
 }
+
+/* hide gihub page headers */
+.githubReadMeContainer .js-header-wrapper {
+  display: none !important;
+}
+
+.githubReadMeContainer #repository-container-header {
+  display: none !important;
+}
+
+.githubReadMeContainer .footer .position-relative {
+  display: none !important;
+}
+.githubReadMeContainer #repo-content-pjax-container .d-flex {
+  display: none !important;
+}
+
+.githubReadMeContainer h1 {
+  /* text-align: center; */
+  /* background-color: aliceblue; */
+  background-color: #0a3a64;
+  color: white;
+  padding: 1rem;
+  margin-top: 1.5rem;
+}
+.githubReadMeContainer h2 {
+  margin-top: 3rem;
+  /* background-color: rgb(255, 255, 240); */
+  background-color: rgb(51 51 3);
+  color: white;
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+.githubReadMeContainer h3 {
+  margin-top: 3rem;
+  padding: 1rem;
+  /* background-color: rgb(240, 255, 250); */
+  background-color: rgb(10 53 39);
+  color: white;
+  /* margin-bottom: 3rem; */
+  margin-bottom: 2rem;
+}
+
+.githubReadMeContainer h4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  color: cornflowerblue;
+
+  /* padding: 1rem;
+  background-color: rgb(37 10 53);
+  color: white; */
+}
+
+.githubReadMeContainer h5 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  color: cadetblue;
+  /* padding: 1rem;
+  background-color: rgb(53 27 10);
+  color: white; */
+}
+
+.githubReadMeContainer ul {
+  padding: 2rem;
+  border-radius: 0.5rem;
+
+  background-color: aliceblue;
+}
+.githubReadMeContainer p {
+  padding: 0.6rem;
+  border-radius: 0.4rem;
+
+  /* background-color: #e6f3ff; */
+}
