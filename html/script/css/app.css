@@ -74,18 +74,21 @@ table {
 
 .githubReadMeContainer h4 {
   margin-top: 1rem;
-  padding: 1rem;
-  background-color: rgb(10 53 39);
-  color: white;
   margin-bottom: 1rem;
+  color: cornflowerblue;
+
+  /* padding: 1rem;
+  background-color: rgb(37 10 53);
+  color: white; */
 }
 
 .githubReadMeContainer h5 {
   margin-top: 1rem;
-  padding: 1rem;
-  background-color: rgb(10 53 39);
-  color: white;
   margin-bottom: 1rem;
+  color: cadetblue;
+  /* padding: 1rem;
+  background-color: rgb(53 27 10);
+  color: white; */
 }
 
 .githubReadMeContainer ul {

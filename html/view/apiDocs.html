@@ -64,4 +64,11 @@
     $("#apiDocsContentDiv").load($(this).attr("href"));
     // $(".action-button a").trigger("click");
   });
+  $("#apiDocsContentDiv a").click(function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $("#apiDocsContentDiv").empty();
+    $("#apiDocsContentDiv").load($(this).attr("href"));
+    // $(".action-button a").trigger("click");
+  });
 </script>

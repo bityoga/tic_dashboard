@@ -29,14 +29,8 @@
         console.log(json);
 
         if (json["status"] === "success") {
-          const searchRegExp = /localhost/g;
-          const replaceWith = "161.35.153.83";
-          const ipAddressReplacedData = json["data"].replace(
-            searchRegExp,
-            replaceWith
-          );
           $(".nodeSdkHelperReadMeContentFetchingSpinner").hide();
-          $("#nodeSdkHelperInstructionsContainer").html(ipAddressReplacedData);
+          $("#nodeSdkHelperInstructionsContainer").html(json["data"]);
 
           // apply HighlightJS
           var pres = document.querySelectorAll("pre>code");

@@ -46,7 +46,7 @@ try {
   throw Error("API Start Error - Error while reading API config", e);
 }
 
-const TEST_LOCAL = 1;
+const TEST_LOCAL = 0;
 var CHAINCODE_PATH;
 var CERTIFICATE_PATH;
 var CLI_PATH;
@@ -1312,9 +1312,13 @@ app.post("/getRestApiGitHubReadMe", async (req, res) => {
       })
       .then((r) => {
         console.log(r.data);
+        const searchRegExp = /LOCALHOST_OR_YOUR_MASTER_MACHINE_IP_ADDRESS/g;
+        const replaceWith = appConfigJson["tic_master_machine_ip_address"];
+        const ipAddressReplacedData = r.data.replace(searchRegExp, replaceWith);
+
         response = {
           status: "success",
-          data: md.render(r.data),
+          data: md.render(ipAddressReplacedData),
         };
         console.log(response);
         res.json(response);
@@ -1345,9 +1349,13 @@ app.post("/getNodeSdkTesterReadMe", async (req, res) => {
       })
       .then((r) => {
         console.log(r.data);
+        const searchRegExp = /LOCALHOST_OR_YOUR_MASTER_MACHINE_IP_ADDRESS/g;
+        const replaceWith = appConfigJson["tic_master_machine_ip_address"];
+        const ipAddressReplacedData = r.data.replace(searchRegExp, replaceWith);
+
         response = {
           status: "success",
-          data: md.render(r.data),
+          data: md.render(ipAddressReplacedData),
         };
         console.log(response);
         res.json(response);
@@ -1378,9 +1386,13 @@ app.post("/getNodeSdkHelperReadMe", async (req, res) => {
       })
       .then((r) => {
         console.log(r.data);
+        const searchRegExp = /LOCALHOST_OR_YOUR_MASTER_MACHINE_IP_ADDRESS/g;
+        const replaceWith = appConfigJson["tic_master_machine_ip_address"];
+        const ipAddressReplacedData = r.data.replace(searchRegExp, replaceWith);
+
         response = {
           status: "success",
-          data: md.render(r.data),
+          data: md.render(ipAddressReplacedData),
         };
         console.log(response);
         res.json(response);
@@ -1411,9 +1423,12 @@ app.post("/getRestApiSetUpInstructionsGitHubReadMe", async (req, res) => {
       })
       .then((r) => {
         console.log(r.data);
+        const searchRegExp = /LOCALHOST_OR_YOUR_MASTER_MACHINE_IP_ADDRESS/g;
+        const replaceWith = appConfigJson["tic_master_machine_ip_address"];
+        const ipAddressReplacedData = r.data.replace(searchRegExp, replaceWith);
         response = {
           status: "success",
-          data: md.render(r.data),
+          data: md.render(ipAddressReplacedData),
         };
         console.log(response);
         res.json(response);

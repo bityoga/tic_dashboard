@@ -1,5 +1,6 @@
 {
     "tic_dashboard_port": 3003,
     "tic_dashboard_user_name": "admin",
-    "tic_dashboard_user_password": "adminpw"
+    "tic_dashboard_user_password": "adminpw",
+    "tic_master_machine_ip_address":"LOCALHOST_OR_YOUR_MASTER_MACHINE_IP_ADDRESS"
 }
