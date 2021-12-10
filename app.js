@@ -53,6 +53,14 @@ var CLI_PATH;
 var CREATE_CHAINCODE_SCRIPT;
 const REST_API_README_FILE_URL =
   "https://raw.githubusercontent.com/bityoga/fabric_as_code_restapi/main/curl_instructions/README.md";
+const REST_API_SETUP_README_FILE_URL =
+  "https://raw.githubusercontent.com/bityoga/fabric_as_code_restapi/main/README.md";
+
+const NODE_SDK_TESTER_README_FILE_URL =
+  "https://raw.githubusercontent.com/bityoga/fabric_node_sdk_tester/master/README.md";
+
+const NODE_SDK_HELPER_README_FILE_URL =
+  "https://raw.githubusercontent.com/bityoga/fabric_node_sdk_helper/master/README.md";
 
 if (TEST_LOCAL === 1) {
   CHAINCODE_PATH = "../file_explorer/chaincodes";
@@ -1296,6 +1304,105 @@ app.post("/getRestApiGitHubReadMe", async (req, res) => {
   if (app_session.user_name && app_session.password) {
     axios
       .get(REST_API_README_FILE_URL, {
+        // To bypass  "Error: self signed certificate in certificate chain"
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false,
+        }),
+        headers: { "Access-Control-Allow-Origin": "*" },
+      })
+      .then((r) => {
+        console.log(r.data);
+        response = {
+          status: "success",
+          data: md.render(r.data),
+        };
+        console.log(response);
+        res.json(response);
+      });
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/getNodeSdkTesterReadMe", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  if (app_session.user_name && app_session.password) {
+    axios
+      .get(NODE_SDK_TESTER_README_FILE_URL, {
+        // To bypass  "Error: self signed certificate in certificate chain"
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false,
+        }),
+        headers: { "Access-Control-Allow-Origin": "*" },
+      })
+      .then((r) => {
+        console.log(r.data);
+        response = {
+          status: "success",
+          data: md.render(r.data),
+        };
+        console.log(response);
+        res.json(response);
+      });
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/getNodeSdkHelperReadMe", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  if (app_session.user_name && app_session.password) {
+    axios
+      .get(NODE_SDK_HELPER_README_FILE_URL, {
+        // To bypass  "Error: self signed certificate in certificate chain"
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false,
+        }),
+        headers: { "Access-Control-Allow-Origin": "*" },
+      })
+      .then((r) => {
+        console.log(r.data);
+        response = {
+          status: "success",
+          data: md.render(r.data),
+        };
+        console.log(response);
+        res.json(response);
+      });
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/getRestApiSetUpInstructionsGitHubReadMe", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  if (app_session.user_name && app_session.password) {
+    axios
+      .get(REST_API_SETUP_README_FILE_URL, {
         // To bypass  "Error: self signed certificate in certificate chain"
         httpsAgent: new https.Agent({
           rejectUnauthorized: false,
