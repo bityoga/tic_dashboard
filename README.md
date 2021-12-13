@@ -31,8 +31,8 @@
      mkdir -p ../file_explorer/certificates && 
      mkdir -p ../file_explorer/chaincodes
      ```
-   - ../file_explorer/certificates - This is path of certificates locally. Put some files under this for testing locally. 
-   - ../file_explorer/chaincodes - This is path of certificates locally. Put some files under this for testing locally. Create a drectory for each chaincode and put some files here.
+   - **../file_explorer/certificates -** This is path of certificates locally. Put some files under this for testing locally. 
+   - **../file_explorer/chaincodes -** This is path of certificates locally. Put some files under this for testing locally. Create a drectory for each chaincode and put some files here.
 
 4. ## Start App
    - `cd tic_dashboard/`
