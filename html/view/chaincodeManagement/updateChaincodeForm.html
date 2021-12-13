@@ -133,6 +133,35 @@
           </div>
 
           <div class="mb-3 step3Fields" style="display: none;">
+            <label for="isChaincodeUsingPrivateDataCollections" class="form-label">Using Private Data Collections
+              ?</label>
+            <select name="isChaincodeUsingPrivateDataCollections" id="isChaincodeUsingPrivateDataCollections"
+              class="form-select" aria-label="Select an Upload Method :">
+              <option selected value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+            <small class="form-text text-muted my-1">Upload file (or) Pull from Git</small>
+          </div>
+
+          <div class="mb-3 step3Fields collectionConfigFileSelectorDiv" style="display: none;">
+            <label for="selectedChainCodeCollectionsConfigFile" class="form-label">Select --collections-config File
+              (Optional)</label>
+            <!-- <input class="form-control" list="selectedChainCodeCollectionsConfigFile" id="selectedChainCodeCollectionsConfigFile"
+              name="selectedChainCodeCollectionsConfigFile" placeholder="Type to search..."> -->
+            <select class="form-select breakUrlLink" id="selectedChainCodeCollectionsConfigFile"
+              name="selectedChainCodeCollectionsConfigFile">
+              <!-- <option value="San Francisco">
+              <option value="New York">
+              <option value="Seattle">
+              <option value="Los Angeles">
+              <option value="Chicago"> -->
+            </select>
+            <small id="uploadedChaincodeCollectionsConfigFileListOptionsHelperText"
+              class="form-text text-muted my-1">Specify the --collections-config file for the chaincode if using private
+              data.</small>
+          </div>
+
+          <div class="mb-3 step3Fields" style="display: none;">
 
 
             <button type="submit" id="chainCodeInstantiateButton" class="btn btn-primary mt-2">
@@ -192,6 +221,7 @@
               $(".step1Fields").hide();
               $(".step2Fields").hide();
               $(".step3Fields").show();
+              $(".collectionConfigFileSelectorDiv").hide();
             }
           });
 
@@ -308,8 +338,10 @@
             $("#uploadedChaincodeListOptions").append($("<option class='breakUrlLink'>").attr('value', item).text(item));
           });
           $("#selectedChainCodeRootSrcFile").empty();
+          $("#selectedChainCodeCollectionsConfigFile").empty();
           $.each(uniqueChainCodeFileNameList, function (i, item) {
             $("#selectedChainCodeRootSrcFile").append($("<option class='breakUrlLink'>").attr('value', item).text(item));
+            $("#selectedChainCodeCollectionsConfigFile").append($("<option class='breakUrlLink'>").attr('value', item).text(item));
           });
           $("#uploadedChaincodeListOptions").on("change", function () {
 
@@ -317,14 +349,18 @@
               const filteredChainCodeFileListArray = fileListArray.filter(item => item.chainCodeName === this.value);
               const filteredChainCodeFileList = [...new Set(filteredChainCodeFileListArray.map(item => item.fileName))];
               $("#selectedChainCodeRootSrcFile").empty();
+              $("#selectedChainCodeCollectionsConfigFile").empty();
               $.each(filteredChainCodeFileList, function (i, item) {
                 $("#selectedChainCodeRootSrcFile").append($("<option class='breakUrlLink'>").attr('value', item).text(item));
+                $("#selectedChainCodeCollectionsConfigFile").append($("<option class='breakUrlLink'>").attr('value', item).text(item));
               });
               $("#uploadedChaincodeFileListOptionsHelperText").text('Total Files - ' + String(filteredChainCodeFileList.length));
             } else {
               $("#selectedChainCodeRootSrcFile").empty();
+              $("#selectedChainCodeCollectionsConfigFile").empty();
               $.each(uniqueChainCodeFileNameList, function (i, item) {
                 $("#selectedChainCodeRootSrcFile").append($("<option class='breakUrlLink'>").attr('value', item).text(item));
+                $("#selectedChainCodeCollectionsConfigFile").append($("<option class='breakUrlLink'>").attr('value', item).text(item));
               });
               $("#uniqueChainCodeFileNameList").text('Total Files - ' + String(uniqueChainCodeFileNameList.length));
             }
@@ -342,6 +378,17 @@
       },
     });
   }
+</script>
+
+<script>
+  $("#isChaincodeUsingPrivateDataCollections").on("change", function () {
+    //alert(this.value);
+    if (this.value === "yes") {
+      $(".collectionConfigFileSelectorDiv").show();
+    } else {
+      $(".collectionConfigFileSelectorDiv").hide();
+    }
+  });
 </script>
 
 
