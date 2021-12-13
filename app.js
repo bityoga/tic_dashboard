@@ -203,8 +203,6 @@ async function main() {
   await load_html_template_and_start_app(app_port_number);
 }
 
-
-
 /**
  * it gives a number as byte and convert it to KB, MB and GB (depends on file size) and return the result as string.
  * @param number file size in Byte
@@ -222,42 +220,45 @@ function ConvertSize(number) {
 }
 
 const getAllFilesListofArrays = function (dirPath, arrayOfFiles) {
-  files = fs.readdirSync(dirPath);
-
   arrayOfFiles = arrayOfFiles || [];
+  try {
+    files = fs.readdirSync(dirPath);
 
-  files.forEach(function (file) {
-    if (fs.statSync(dirPath + "/" + file).isDirectory()) {
-      arrayOfFiles = getAllFilesListofArrays(
-        dirPath + "/" + file,
-        arrayOfFiles
-      );
-    } else {
-      fileNameWithFullPath = path.join(__dirname, dirPath, "/", file);
-      fileNameWithRelativePath = path.join(dirPath, "/", file);
-      fileStats = fs.statSync(fileNameWithFullPath);
-      filesize = ConvertSize(fileStats.size);
-      fileDownloadButton =
-        '<a class="btn btn-primary text-break" href="' +
-        fileNameWithRelativePath +
-        '" role="button" download><i class="fa fa-download" aria-hidden="true"></i> Download</a>';
-      FileViewButton =
-        '<button data-link="' +
-        fileNameWithRelativePath +
-        '"onclick="sendAjaxRequestToReadAndShowSelectedDataTableFile(this)" class="btn btn-primary viewFileButton"><i class="fa fa-eye" aria-hidden="true"></i> View File <span style="display:none" class="spinner-border spinner-border-sm allCertificatesFileViewSpinner" role="status" aria-hidden="true"></span></button>';
-      fileinfoArray = [
-        fileNameWithFullPath,
-        filesize,
-        new Date(fileStats.ctime).toLocaleString("no-No"),
-        new Date(fileStats.mtime).toLocaleString("no-NO"),
-        fileDownloadButton,
-        FileViewButton,
-      ];
-      arrayOfFiles.push(fileinfoArray);
-    }
-  });
-
-  return arrayOfFiles;
+    files.forEach(function (file) {
+      if (fs.statSync(dirPath + "/" + file).isDirectory()) {
+        arrayOfFiles = getAllFilesListofArrays(
+          dirPath + "/" + file,
+          arrayOfFiles
+        );
+      } else {
+        fileNameWithFullPath = path.join(__dirname, dirPath, "/", file);
+        fileNameWithRelativePath = path.join(dirPath, "/", file);
+        fileStats = fs.statSync(fileNameWithFullPath);
+        filesize = ConvertSize(fileStats.size);
+        fileDownloadButton =
+          '<a class="btn btn-primary text-break" href="' +
+          fileNameWithRelativePath +
+          '" role="button" download><i class="fa fa-download" aria-hidden="true"></i> Download</a>';
+        FileViewButton =
+          '<button data-link="' +
+          fileNameWithRelativePath +
+          '"onclick="sendAjaxRequestToReadAndShowSelectedDataTableFile(this)" class="btn btn-primary viewFileButton"><i class="fa fa-eye" aria-hidden="true"></i> View File <span style="display:none" class="spinner-border spinner-border-sm allCertificatesFileViewSpinner" role="status" aria-hidden="true"></span></button>';
+        fileinfoArray = [
+          fileNameWithFullPath,
+          filesize,
+          new Date(fileStats.ctime).toLocaleString("no-No"),
+          new Date(fileStats.mtime).toLocaleString("no-NO"),
+          fileDownloadButton,
+          FileViewButton,
+        ];
+        arrayOfFiles.push(fileinfoArray);
+      }
+    });
+  } catch (e) {
+    console.log("Error while fetching files : ", e);
+  } finally {
+    return arrayOfFiles;
+  }
 };
 
 app.post("/getCertificateFileList", async (req, res) => {
@@ -415,105 +416,111 @@ app.post("/createChaincode", async (req, res) => {
 });
 
 const getAllChainCodeFilesListOfArrays = function (dirPath, arrayOfFiles) {
-  files = fs.readdirSync(dirPath);
-
   arrayOfFiles = arrayOfFiles || [];
+  try {
+    files = fs.readdirSync(dirPath);
 
-  files.forEach(function (file) {
-    if (fs.statSync(dirPath + "/" + file).isDirectory()) {
-      arrayOfFiles = getAllChainCodeFilesListOfArrays(
-        dirPath + "/" + file,
-        arrayOfFiles
-      );
-    } else {
-      fileNameWithFullPath = path.join(__dirname, dirPath, "/", file);
-      fileNameWithRelativePath = path.join(dirPath, "/", file);
-      fileStats = fs.statSync(fileNameWithFullPath);
-      filesize = ConvertSize(fileStats.size);
-      fileDownloadButton =
-        '<a class="btn btn-primary text-break" href="' +
-        fileNameWithRelativePath +
-        '" role="button" download><i class="fa fa-download" aria-hidden="true"></i> Download</a>';
-      FileViewButton =
-        '<button data-link="' +
-        fileNameWithRelativePath +
-        '"onclick="sendAjaxRequestToReadAndShowSelectedDataTableFile(this)" class="btn btn-primary viewFileButton"><i class="fa fa-eye" aria-hidden="true"></i> View <span style="display:none" class="spinner-border spinner-border-sm chainCodeFileViewSpinner" role="status" aria-hidden="true"></span></button>';
-      deleteFileButton =
-        '<button data-link="' +
-        fileNameWithFullPath +
-        '"onclick="processRequestToDeleteSelectedChainCodeFile(this)" class="btn btn-primary deleteFileButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete <span style="display:none" class="spinner-border spinner-border-sm chainCodeFileDeleteSpinner" role="status" aria-hidden="true"></span></button>';
-      const chaincodeName = fileNameWithRelativePath
-        .split(CHAINCODE_PATH + "/")
-        .pop()
-        .split("/")[0];
-      fileinfoArray = [
-        chaincodeName,
-        fileNameWithFullPath,
-        filesize,
-        new Date(fileStats.ctime).toLocaleString("no-No"),
-        new Date(fileStats.mtime).toLocaleString("no-NO"),
-        deleteFileButton,
-        fileDownloadButton,
-        FileViewButton,
-      ];
-      arrayOfFiles.push(fileinfoArray);
-    }
-  });
-
-  return arrayOfFiles;
+    files.forEach(function (file) {
+      if (fs.statSync(dirPath + "/" + file).isDirectory()) {
+        arrayOfFiles = getAllChainCodeFilesListOfArrays(
+          dirPath + "/" + file,
+          arrayOfFiles
+        );
+      } else {
+        fileNameWithFullPath = path.join(__dirname, dirPath, "/", file);
+        fileNameWithRelativePath = path.join(dirPath, "/", file);
+        fileStats = fs.statSync(fileNameWithFullPath);
+        filesize = ConvertSize(fileStats.size);
+        fileDownloadButton =
+          '<a class="btn btn-primary text-break" href="' +
+          fileNameWithRelativePath +
+          '" role="button" download><i class="fa fa-download" aria-hidden="true"></i> Download</a>';
+        FileViewButton =
+          '<button data-link="' +
+          fileNameWithRelativePath +
+          '"onclick="sendAjaxRequestToReadAndShowSelectedDataTableFile(this)" class="btn btn-primary viewFileButton"><i class="fa fa-eye" aria-hidden="true"></i> View <span style="display:none" class="spinner-border spinner-border-sm chainCodeFileViewSpinner" role="status" aria-hidden="true"></span></button>';
+        deleteFileButton =
+          '<button data-link="' +
+          fileNameWithFullPath +
+          '"onclick="processRequestToDeleteSelectedChainCodeFile(this)" class="btn btn-primary deleteFileButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete <span style="display:none" class="spinner-border spinner-border-sm chainCodeFileDeleteSpinner" role="status" aria-hidden="true"></span></button>';
+        const chaincodeName = fileNameWithRelativePath
+          .split(CHAINCODE_PATH + "/")
+          .pop()
+          .split("/")[0];
+        fileinfoArray = [
+          chaincodeName,
+          fileNameWithFullPath,
+          filesize,
+          new Date(fileStats.ctime).toLocaleString("no-No"),
+          new Date(fileStats.mtime).toLocaleString("no-NO"),
+          deleteFileButton,
+          fileDownloadButton,
+          FileViewButton,
+        ];
+        arrayOfFiles.push(fileinfoArray);
+      }
+    });
+  } catch (e) {
+    console.log("Error while fetching files : ", e);
+  } finally {
+    return arrayOfFiles;
+  }
 };
 
 const getAllChainCodeFilesListOfArraysToInstall = function (
   dirPath,
   arrayOfFiles
 ) {
-  files = fs.readdirSync(dirPath);
-
   arrayOfFiles = arrayOfFiles || [];
+  try {
+    files = fs.readdirSync(dirPath);
 
-  files.forEach(function (file) {
-    if (fs.statSync(dirPath + "/" + file).isDirectory()) {
-      arrayOfFiles = getAllChainCodeFilesListOfArraysToInstall(
-        dirPath + "/" + file,
-        arrayOfFiles
-      );
-    } else {
-      fileNameWithFullPath = path.join(__dirname, dirPath, "/", file);
-      fileNameWithRelativePath = path.join(dirPath, "/", file);
-      fileStats = fs.statSync(fileNameWithFullPath);
-      filesize = ConvertSize(fileStats.size);
-      fileDownloadButton =
-        '<a class="btn btn-primary text-break" href="' +
-        fileNameWithRelativePath +
-        '" role="button" download><i class="fa fa-download" aria-hidden="true"></i> Download</a>';
-      FileViewButton =
-        '<button data-link="' +
-        fileNameWithRelativePath +
-        '"onclick="sendAjaxRequestToReadAndShowSelectedDataTableFile(this)" class="btn btn-primary viewFileButton"><i class="fa fa-eye" aria-hidden="true"></i> View <span style="display:none" class="spinner-border spinner-border-sm chainCodeFileViewSpinner" role="status" aria-hidden="true"></span></button>';
-      deleteFileButton =
-        '<button data-link="' +
-        fileNameWithFullPath +
-        '"onclick="processRequestToDeleteSelectedChainCodeFile(this)" class="btn btn-primary deleteFileButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete <span style="display:none" class="spinner-border spinner-border-sm chainCodeFileDeleteSpinner" role="status" aria-hidden="true"></span></button>';
-      const chaincodeName = fileNameWithRelativePath
-        .split(CHAINCODE_PATH + "/")
-        .pop()
-        .split("/")[0];
-      fileInfoDict = {
-        chainCodeName: chaincodeName,
-        fileName: fileNameWithFullPath,
-      };
-      /* filesize,
+    files.forEach(function (file) {
+      if (fs.statSync(dirPath + "/" + file).isDirectory()) {
+        arrayOfFiles = getAllChainCodeFilesListOfArraysToInstall(
+          dirPath + "/" + file,
+          arrayOfFiles
+        );
+      } else {
+        fileNameWithFullPath = path.join(__dirname, dirPath, "/", file);
+        fileNameWithRelativePath = path.join(dirPath, "/", file);
+        fileStats = fs.statSync(fileNameWithFullPath);
+        filesize = ConvertSize(fileStats.size);
+        fileDownloadButton =
+          '<a class="btn btn-primary text-break" href="' +
+          fileNameWithRelativePath +
+          '" role="button" download><i class="fa fa-download" aria-hidden="true"></i> Download</a>';
+        FileViewButton =
+          '<button data-link="' +
+          fileNameWithRelativePath +
+          '"onclick="sendAjaxRequestToReadAndShowSelectedDataTableFile(this)" class="btn btn-primary viewFileButton"><i class="fa fa-eye" aria-hidden="true"></i> View <span style="display:none" class="spinner-border spinner-border-sm chainCodeFileViewSpinner" role="status" aria-hidden="true"></span></button>';
+        deleteFileButton =
+          '<button data-link="' +
+          fileNameWithFullPath +
+          '"onclick="processRequestToDeleteSelectedChainCodeFile(this)" class="btn btn-primary deleteFileButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete <span style="display:none" class="spinner-border spinner-border-sm chainCodeFileDeleteSpinner" role="status" aria-hidden="true"></span></button>';
+        const chaincodeName = fileNameWithRelativePath
+          .split(CHAINCODE_PATH + "/")
+          .pop()
+          .split("/")[0];
+        fileInfoDict = {
+          chainCodeName: chaincodeName,
+          fileName: fileNameWithFullPath,
+        };
+        /* filesize,
         new Date(fileStats.ctime).toLocaleString("no-No"),
         new Date(fileStats.mtime).toLocaleString("no-NO"),
         deleteFileButton,
         fileDownloadButton,
         FileViewButton, */
 
-      arrayOfFiles.push(fileInfoDict);
-    }
-  });
-
-  return arrayOfFiles;
+        arrayOfFiles.push(fileInfoDict);
+      }
+    });
+  } catch (e) {
+    console.log("Error while fetching files : ", e);
+  } finally {
+    return arrayOfFiles;
+  }
 };
 
 app.post("/deleteSelectedChainCodeUpload", async (req, res) => {
@@ -857,8 +864,11 @@ app.post("/instantiateChaincode", async (req, res) => {
       chaincodeInstantiateParams +
       "' -o ${ORDERER_HOST}:7050 --tls --cafile " +
       CORE_PEER_TLS_ROOTCERT_FILE;
-    if (isUsingPrivateData==="yes") {
-      chaincode_instantiate_command = chaincode_instantiate_command + " --collections-config " + collectionsConfigFile;
+    if (isUsingPrivateData === "yes") {
+      chaincode_instantiate_command =
+        chaincode_instantiate_command +
+        " --collections-config " +
+        collectionsConfigFile;
     }
     console.log("chaincode_instantiate_command");
     console.log(chaincode_instantiate_command);
@@ -937,8 +947,11 @@ app.post("/upgradeChaincode", async (req, res) => {
       chaincodeSrcPath +
       " -o ${ORDERER_HOST}:7050 --tls --cafile " +
       CORE_PEER_TLS_ROOTCERT_FILE;
-    if (isUsingPrivateData==="yes") {
-      chaincodeUpgradeCommand = chaincodeUpgradeCommand + " --collections-config " + collectionsConfigFile;
+    if (isUsingPrivateData === "yes") {
+      chaincodeUpgradeCommand =
+        chaincodeUpgradeCommand +
+        " --collections-config " +
+        collectionsConfigFile;
     }
     console.log("chaincodeUpgradeCommand");
     console.log(chaincodeUpgradeCommand);
