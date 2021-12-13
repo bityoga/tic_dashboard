@@ -24,5 +24,5 @@ WORKDIR /app
 COPY --from=0 /app .
 COPY . .
 
-EXPOSE 3000
+EXPOSE 3003
 CMD [ "node", "app.js" ]
