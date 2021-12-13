@@ -39,7 +39,7 @@
    - app will be running in **'localhost' at port 3003**
    - **open in browser:** http://localhost:3003/
 
-   ### fabric_as_code deployment
+   ### [fabric_as_code](https://github.com/bityoga/fabric_as_code) deployment
 
    - This is deployed along with the cli service playbook[103.deploy_cli.yml](https://github.com/bityoga/fabric_as_code/blob/master/103.deploy_cli.yml)
    - Deployment happens throuh [CLI.sh](https://github.com/bityoga/fabric_as_code/blob/master/roles/hlf/cli/cli/files/CLI.sh)
