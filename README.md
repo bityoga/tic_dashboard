@@ -15,38 +15,34 @@
 
 1. ## Clone this repository
 
-   - git clone https://github.com/bityoga/tic_dashboard.git
+   - `git clone https://github.com/bityoga/tic_dashboard.git`
 
 2. ## Run npm install
 
    - cd tic_dashboard/
-   - #### Set node version
-     - nvm use node v11.Updated REAdm0.0 (using nvm)
-   - **Execute Command :** npm install
+   - **Set node version :** `nvm use node v11.0.0`  (using nvm)
+   - **Execute Command :** `npm install`
 
-3. ## Update fabric ip address in 'tic_dashboard/fabric_node_sdk_helper/network_profile.json'
+3. ## (Optional Step) Follow this step only if running the app locally  
 
-   - (For other New App Developers) fabric_node_sdk_helper is available in git repository : https://github.com/bityoga/fabric_node_sdk_helper.git
-   - **update the url ip addresses of orderer, peer2, orgca, tlsca (4 places)**.
-   - update it with your prime manager's ip address
+   - In app.js , update `const TEST_LOCAL = 0;` to  `const TEST_LOCAL = 1`;
+   - create a directory "file_explorer" one level outside the tic_dashboard directory 
+     ```sh
+     mkdir -p ../file_explorer/certificates && 
+     mkdir -p ../file_explorer/chaincodes
+     ```
+   - ../file_explorer/certificates - This is path of certificates locally. Put some files under this for testing locally. 
+   - ../file_explorer/chaincodes - This is path of certificates locally. Put some files under this for testing locally. Create a drectory for each chaincode and put some files here.
 
-4. ## Retrieve hyperledger fabric tls certificates of 'orderer' and 'peer2'
-   #### Through shell script - needs ssh permission
-   - cd tic_dashboard/fabric_node_sdk_helper
-   - In 'tic_dashboard/fabric_node_sdk_helper/get_tls_certificates.sh' Replace **IP_ADDRESS="178.62.207.235"** with your fabric prime manager's ip address
-   - **Execute Command :** bash get_tls_certificates.sh
-   #### (OR) Through Manual scp commands - needs ssh permission
-   - Replace ipaddress in the below scp commands with your fabric prime manager's ip address.
-   - scp -r root@178.62.207.235:/root/hlft-store/orderer/tls-msp/tlscacerts/tls-tlsca-7054.pem .tic_dashboard/fabric_node_sdk_helper/hlft-store/orderer/tls-msp/tlscacerts/tls-tlsca-7054.pem
-   - scp -r root@178.62.207.235:/root/hlft-store/peer2/tls-msp/tlscacerts/tls-tlsca-7054.pem .tic_dashboard/fabric_node_sdk_helper/hlft-store/peer2/tls-msp/tlscacerts/tls-tlsca-7054.pem
-   #### (OR) Manually edit the following two files - no need of ssh permission
-   - tic_dashboard/fabric_node_sdk_helper/hlft-store/orderer/tls-msp/tlscacerts/tls-tlsca-7054.pem
-   - tic_dashboard/fabric_node_sdk_helper/hlft-store/peer2/tls-msp/tlscacerts/tls-tlsca-7054.pem
-5. ## Start App
-   - cd tic_dashboard/
-   - **Execute Command :** node app.js
-   - app will be running in 'localhost' at port 3000
-   - open in browser: http://localhost:3000/
+4. ## Start App
+   - `cd tic_dashboard/`
+   - **Execute Command :** `node app.js`
+   - app will be running in **'localhost' at port 3003**
+   - **open in browser:** http://localhost:3003/
+
+   ### fabric_as_code deployment
+   - This is deployed along with the cli service playbook[103.deploy_cli.yml](https://github.com/bityoga/fabric_as_code/blob/master/103.deploy_cli.yml)
+   - Deployment happens throuh [CLI.sh](https://github.com/bityoga/fabric_as_code/blob/master/roles/hlf/cli/cli/files/CLI.sh)
 
 ## Dockerisation
 
@@ -57,7 +53,7 @@ $ git clone https://github.com/bityoga/tic_dashboard.git
 $ cd tic_dashboard
 ```
 
-Do step 3 & 4 as said above
+Do step 3 as said above if running locally
 
 ```sh
 $ docker build --tag tic-dashboard-app .
@@ -66,11 +62,11 @@ $ docker build --tag tic-dashboard-app .
 ### 2a) Run as a docker container
 
 ```sh
-$ docker run -d --name tic-dashboard-app -p 3000:3000 tic-dashboard-app:latest
+$ docker run -d --name tic-dashboard-app -p 3003:3003 tic-dashboard-app:latest
 ```
 
 ### 2b) Run as a docker service with replicas
 
 ```sh
-$ docker service create --name tic-dashboard-service --replicas 1 -p 3000:3000 tic-dashboard-app:latest
+$ docker service create --name tic-dashboard-service --replicas 1 -p 3003:3003 tic-dashboard-app:latest
 ```
