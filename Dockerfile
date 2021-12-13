@@ -8,6 +8,7 @@ COPY package.json package-lock.json ./
 # If you have native dependencies, you'll need extra tools
 # RUN apk add --no-cache make gcc g++ python3
 RUN apk add --no-cache make g++ python3
+RUN apk add unzip
 
 RUN npm ci --prod
 
