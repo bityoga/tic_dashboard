@@ -95,6 +95,7 @@ app.use(
 //app.use(express.static(CHAINCODE_PATH));
 //app.use(express.static(CERTIFICATE_PATH));
 app.use(express.static(CLI_PATH));
+app.use(express.static("./"));
 
 // Create a router for the express object
 const router = express.Router();
