@@ -293,6 +293,7 @@
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
                   //window.location.href = "/";
+                  $("#chainCodeManagementContentDiv").empty();
                   $("#chainCodeManagementContentDiv").load(
                     $("#viewInstalledChainCodeListMenuButton").attr("href")
                   );
