@@ -103,3 +103,13 @@ table {
 
   /* background-color: #e6f3ff; */
 }
+
+div.table-responsive>div.dataTables_wrapper>div.row>div[class^=col-]:first-child {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+div.table-responsive>div.dataTables_wrapper>div.row>div[class^=col-]:last-child {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
