@@ -43,6 +43,27 @@
 </div>
 
 <script>
+  function parseCommandLineOutputOfChainCodeObjectList(string) {
+    var properties = string.split(', ');
+    var obj = {};
+    properties.forEach(function (property) {
+      var tup = property.split(': ');
+      obj[tup[0]] = tup[1];
+    });
+    return obj;
+  }
+  function parseChainCodeListCommandOutput(output) {
+    let parsedResponse = output.split(/\r?\n/);
+    //console.log(parsedResponse);
+    let finalChainCodeDetailsArray = []
+    for (chaincode of parsedResponse) {
+      let parsedChaincodeDetails = parseCommandLineOutputOfChainCodeObjectList(chaincode);
+      if ('Name' in parsedChaincodeDetails) {
+        finalChainCodeDetailsArray.push(Object.values(parsedChaincodeDetails));
+      }
+    }
+    return finalChainCodeDetailsArray;
+  }
   function sendAjaxReqToGetListOfInstalledChaincodes() {
     $("#chainCodeListDataTable").empty();
     $(".chainCodeListTableContentFetchingSpinner").show();
@@ -58,10 +79,10 @@
         console.log(json);
 
         if (json["status"] === "success") {
-
+          const dataTableData = parseChainCodeListCommandOutput(json["data"]["Output"]);
           $("#chainCodeListDataTable").DataTable({
             destroy: true,
-            data: json["data"]["chainCodeList"],
+            data: dataTableData,
             //pageResize: true,
             responsive: true,
             pageLength: 4,
@@ -75,7 +96,7 @@
             initComplete: function (settings, jsonData) {
               $(".chainCodeListTableContentFetchingSpinner").hide();
               $("#chainCodeCount").text(
-                " - " + String(json["data"]["chainCodeList"].length)
+                " - " + String(dataTableData.length)
               );
             },
           });

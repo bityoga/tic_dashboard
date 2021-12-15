@@ -1272,7 +1272,7 @@ app.post("/getInstalledOrInstantiatedChainCodeList", async (req, res) => {
 
   app_session = req.session;
 
-  var chainCodeList = [];
+
   console.log(req.body);
   var peer = req.body.peerSelection;
   var typeSelection = req.body.typeSelection; // installed or instantiated
@@ -1293,9 +1293,7 @@ app.post("/getInstalledOrInstantiatedChainCodeList", async (req, res) => {
     var chainCodeListCommand =
       "CORE_PEER_ADDRESS=" +
       CORE_PEER_ADDRESS +
-      " CORE_PEER_MSPCONFIGPATH=/root/CLI/${ORGCA_HOST}/" +
-      peer +
-      "/msp" +
+      " CORE_PEER_MSPCONFIGPATH=" + CORE_PEER_MSPCONFIGPATH +
       " CORE_PEER_TLS_ROOTCERT_FILE=" +
       CORE_PEER_TLS_ROOTCERT_FILE +
       " peer chaincode list --" + typeSelection + " -C " + channelSelection;
@@ -1311,7 +1309,6 @@ app.post("/getInstalledOrInstantiatedChainCodeList", async (req, res) => {
         Exit_Code: code,
         Output: stdout,
         Error: stderr,
-        chainCodeList: chainCodeList
       };
       response = {
         status: "success",
