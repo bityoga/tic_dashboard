@@ -1,0 +1,71 @@
+<link rel="stylesheet" href="css/floatingActionMenu.css" />
+<div
+  class="d-flex flex-column justify-content-center align-items-center pb-5"
+  style="height: inherit; width: inherit;"
+>
+  <div id="apiDocsContentDiv" style="width: 100%; height: 100%;"></div>
+
+  <!-- floating-action-menu starts here -->
+  <div
+    class="position-absolute position-fixed text-right floating-action-menu"
+    style="bottom: 80px; right: 10px;"
+  >
+    <div class="action-menu my-3">
+      <div class="floating-action text-end">
+        <a
+          class="btn btn-primary m-2"
+          href="smartTicApiManagement/configureTIcSmartApiConfigFile.html"
+          id="restApiDocsMenuButton"
+          >Configure TIC SMART Api &nbsp;<i
+            class="fa fa-tools"
+            aria-hidden="true"
+          ></i
+        ></a>
+      </div>
+      <div class="floating-action text-end">
+        <a class="btn btn-primary m-2" href="apiDocs/restApiSetUpDoc.html"
+          >Rest Api Set Up &nbsp;<i class="fa fa-tools" aria-hidden="true"></i
+        ></a>
+      </div>
+      <div class="floating-action text-end">
+        <a class="btn btn-primary m-2" href="apiDocs/nodeSdkTesterDoc.html"
+          >Node Sdk Tester &nbsp;<i class="fa fa-tools" aria-hidden="true"></i
+        ></a>
+      </div>
+      <div class="floating-action text-end">
+        <a class="btn btn-primary m-2" href="apiDocs/nodeSdkHelperDoc.html"
+          >Node Sdk Helper &nbsp;<i class="fa fa-tools" aria-hidden="true"></i
+        ></a>
+      </div>
+    </div>
+    <div class="d-block action-button text-end mx-2 my-2">
+      <a
+        class="btn-floating btn-primary p-3 rounded-circle"
+        onclick="$(this).closest('div.floating-action-menu').toggleClass('active')"
+      >
+        <i class="fa fa-circle-chevron-up"></i>
+      </a>
+    </div>
+  </div>
+  <!-- floating-action-menu ends here-->
+</div>
+
+<script>
+  $("#apiDocsContentDiv").empty();
+  $(".action-button a").trigger("click");
+  $("#apiDocsContentDiv").load($("#restApiDocsMenuButton").attr("href"));
+  $(".floating-action a").click(function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $("#apiDocsContentDiv").empty();
+    $("#apiDocsContentDiv").load($(this).attr("href"));
+    // $(".action-button a").trigger("click");
+  });
+  $("#apiDocsContentDiv a").click(function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $("#apiDocsContentDiv").empty();
+    $("#apiDocsContentDiv").load($(this).attr("href"));
+    // $(".action-button a").trigger("click");
+  });
+</script>
