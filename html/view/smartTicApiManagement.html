@@ -14,12 +14,9 @@
       <div class="floating-action text-end">
         <a
           class="btn btn-primary m-2"
-          href="smartTicApiManagement/configureTIcSmartApiConfigFile.html"
-          id="restApiDocsMenuButton"
-          >Configure TIC SMART Api &nbsp;<i
-            class="fa fa-tools"
-            aria-hidden="true"
-          ></i
+          href="smartTicApiManagement/createUseCaseForm.html"
+          id="createUseCaseMenuButton"
+          >Create UseCase &nbsp;<i class="fa fa-tools" aria-hidden="true"></i
         ></a>
       </div>
       <div class="floating-action text-end">
@@ -53,7 +50,7 @@
 <script>
   $("#apiDocsContentDiv").empty();
   $(".action-button a").trigger("click");
-  $("#apiDocsContentDiv").load($("#restApiDocsMenuButton").attr("href"));
+  $("#apiDocsContentDiv").load($("#createUseCaseMenuButton").attr("href"));
   $(".floating-action a").click(function (e) {
     e.preventDefault();
     e.stopPropagation();

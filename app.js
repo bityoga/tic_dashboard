@@ -7,6 +7,7 @@ const fs = require("fs");
 const shell = require("shelljs");
 const path = require("path");
 const axios = require("axios");
+const smartApiHelper = require("./smartApiHelper");
 const https = require("https");
 const hljs = require("highlight.js"); // https://highlightjs.org/
 // Actual default values
@@ -22,7 +23,7 @@ const md = require("markdown-it")({
           hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
           "</code></pre>"
         );
-      } catch (__) { }
+      } catch (__) {}
     }
 
     return (
@@ -46,7 +47,7 @@ try {
   throw Error("API Start Error - Error while reading API config", e);
 }
 
-const TEST_LOCAL = 0;
+const TEST_LOCAL = 1;
 var CHAINCODE_PATH;
 var CERTIFICATE_PATH;
 var CLI_PATH;
@@ -1265,13 +1266,10 @@ app.post("/getRestApiSetUpInstructionsGitHubReadMe", async (req, res) => {
   }
 });
 
-
-
 app.post("/getInstalledOrInstantiatedChainCodeList", async (req, res) => {
   let response;
 
   app_session = req.session;
-
 
   console.log(req.body);
   var peer = req.body.peerSelection;
@@ -1293,10 +1291,14 @@ app.post("/getInstalledOrInstantiatedChainCodeList", async (req, res) => {
     var chainCodeListCommand =
       "CORE_PEER_ADDRESS=" +
       CORE_PEER_ADDRESS +
-      " CORE_PEER_MSPCONFIGPATH=" + CORE_PEER_MSPCONFIGPATH +
+      " CORE_PEER_MSPCONFIGPATH=" +
+      CORE_PEER_MSPCONFIGPATH +
       " CORE_PEER_TLS_ROOTCERT_FILE=" +
       CORE_PEER_TLS_ROOTCERT_FILE +
-      " peer chaincode list --" + typeSelection + " -C " + channelSelection;
+      " peer chaincode list --" +
+      typeSelection +
+      " -C " +
+      channelSelection;
 
     console.log("chainCodeListCommand");
     console.log(chainCodeListCommand);
@@ -1317,6 +1319,34 @@ app.post("/getInstalledOrInstantiatedChainCodeList", async (req, res) => {
       console.log(response);
       res.json(response);
     });
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/createUseCase", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  var useCaseNameInput = req.body.useCaseNameInput;
+
+  if (app_session.user_name && app_session.password) {
+    createUseCaseStatus = await createNewUseCaseInSmart(
+      useCaseNameInput,
+      appConfigJson
+    );
+    response = {
+      status: "success",
+      data: createUseCaseStatus,
+    };
+    console.log(response);
+    res.json(response);
   } else {
     response = {
       status: "Failed",
