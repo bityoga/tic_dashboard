@@ -1,0 +1,37 @@
+ {"use_case_info":[{
+    "useCaseName":"mother",
+    "useCaseTables":[{
+      "tableName" : "mother",
+      "mappings" :{
+            "AssetId": "AssetId",
+            "TransactionIsoTimestamp": "TransactionIsoTimestamp",
+            "TransactionMessage": "TransactionMessage",
+            "TransactionUnixTimestamp": "TransactionUnixTimestamp",
+            "UniqueID": "AssetId",
+            "email": "email",
+            "firstName": "firstName",
+            "id": "id",
+            "lastName": "lastName",
+            "nin": "nin",
+            "phoneNumber": "phoneNumber"
+          }
+    },
+    {
+      "tableName" : "mother",
+      "mappings" :{
+            "AssetId": "AssetId",
+            "TransactionIsoTimestamp": "TransactionIsoTimestamp",
+            "TransactionMessage": "TransactionMessage",
+            "TransactionUnixTimestamp": "TransactionUnixTimestamp",
+            "UniqueID": "AssetId",
+            "email": "email",
+            "firstName": "firstName",
+            "id": "id",
+            "lastName": "lastName",
+            "nin": "nin",
+            "phoneNumber": "phoneNumber"
+          }
+    }]
+  }
+]
+ }
