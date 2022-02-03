@@ -1337,7 +1337,7 @@ app.post("/createUseCase", async (req, res) => {
   var useCaseNameInput = req.body.useCaseNameInput;
 
   if (app_session.user_name && app_session.password) {
-    createUseCaseStatus = await createNewUseCaseInSmart(
+    createUseCaseStatus = await smartApiHelper.createNewUseCaseInSmart(
       useCaseNameInput,
       appConfigJson
     );

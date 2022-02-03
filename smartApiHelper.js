@@ -1,3 +1,5 @@
+const axios = require("axios");
+const https = require("https");
 async function getSmartApiAuthenticationToken(appConfigJson) {
   let smartApiAuthorizationToken = null;
   try {
@@ -42,7 +44,9 @@ async function getUseCaseListFromSmartApi(
 ) {
   let useCaseList = null;
   try {
-    const smartAuthenticationToken = await getSmartApiAuthenticationToken();
+    const smartAuthenticationToken = await getSmartApiAuthenticationToken(
+      appConfigJson
+    );
 
     if (smartAuthenticationToken) {
       let jwtToken;
@@ -86,8 +90,11 @@ function checkIfUseCaseExists(useCaseList, useCaseNameToCheck) {
 
 async function createNewUseCaseInSmart(useCaseName, appConfigJson) {
   let createNewUseCaseInSmartApiResponse = null;
+
   try {
-    const smartAuthenticationToken = await getSmartApiAuthenticationToken();
+    const smartAuthenticationToken = await getSmartApiAuthenticationToken(
+      appConfigJson
+    );
     if (smartAuthenticationToken) {
       const existingUseCaseList = await getUseCaseListFromSmartApi(
         smartAuthenticationToken,
@@ -120,20 +127,41 @@ async function createNewUseCaseInSmart(useCaseName, appConfigJson) {
         try {
           const axiosResponse = await axios(config);
           console.log(createNewUseCaseInSmartApiResponse);
-          createNewUseCaseInSmartApiResponse = axiosResponse.status;
+          const useCaseCreateMessage = "UseCase Created Successfully!";
+          createNewUseCaseInSmartApiResponse = {};
+
+          createNewUseCaseInSmartApiResponse["axiosResponseStatus"] =
+            axiosResponse.status;
+          createNewUseCaseInSmartApiResponse[
+            "useCaseCreateMessage"
+          ] = useCaseCreateMessage;
         } catch (error) {
           //console.log(Object.keys(error), error.message);
           console.log("axios error");
-          createNewUseCaseInSmartApiResponse = error.response.status;
+          //createNewUseCaseInSmartApiResponse = error.response.status;
           console.log(error.response.status, error.response.data);
+          createNewUseCaseInSmartApiResponse = {};
+
+          createNewUseCaseInSmartApiResponse["axiosResponseStatus"] =
+            error.response.status;
+          createNewUseCaseInSmartApiResponse[
+            "useCaseCreateMessage"
+          ] = useCaseCreateMessage;
         }
       } else {
-        console.log(
+        const useCaseCreateMessage =
           "Create New Use: Use case '" +
-            useCaseName +
-            "' already exists. So skipping ..."
-        );
+          useCaseName +
+          "' already exists. So skipping ...";
+
         createNewUseCaseInSmartApiResponse = 400;
+
+        createNewUseCaseInSmartApiResponse = {};
+
+        createNewUseCaseInSmartApiResponse["axiosResponseStatus"] = 400;
+        createNewUseCaseInSmartApiResponse[
+          "useCaseCreateMessage"
+        ] = useCaseCreateMessage;
       }
     } else {
       console.log("Smart Rest Api Authentication retrieval failed");
@@ -146,3 +174,6 @@ async function createNewUseCaseInSmart(useCaseName, appConfigJson) {
     return createNewUseCaseInSmartApiResponse;
   }
 }
+
+// add the code below
+module.exports = { createNewUseCaseInSmart };

@@ -80,7 +80,8 @@
             icon: "success",
             heightAuto: false,
             confirmButtonText:
-              '<i class="fa fa-thumbs-up"></i> UseCase Created Successfully!',
+              '<i class="fa fa-thumbs-up"></i> ' +
+              String(json["data"]["useCaseCreateMessage"]),
           });
         } else {
           swal.fire({
