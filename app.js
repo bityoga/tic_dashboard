@@ -1357,4 +1357,36 @@ app.post("/createUseCase", async (req, res) => {
   }
 });
 
+app.post("/getPushedTransactionDataFromSmartApi", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  console.log(req.body);
+  // var peer = req.body.peerSelection;
+  // var typeSelection = req.body.typeSelection; // installed or instantiated
+  // var channelSelection = req.body.channelSelection; // installed or instantiated
+  var useCaseNameInput = req.body.useCaseNameInput;
+  console.log("useCaseNameInput = ", useCaseNameInput);
+  if (app_session.user_name && app_session.password) {
+    createUseCaseStatus = await smartApiHelper.getPushedTransactionListFromSmartApi(
+      useCaseNameInput,
+      appConfigJson
+    );
+    response = {
+      status: "success",
+      data: createUseCaseStatus,
+    };
+    console.log(response);
+    res.json(response);
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
 main();

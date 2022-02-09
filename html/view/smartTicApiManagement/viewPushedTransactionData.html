@@ -44,14 +44,32 @@
         class="mx-auto mb-3 col-12 col-sm-12 col-md-7 col-lg-6 col-xl-4 px-4 mt-3"
       >
         <!-- <label for="typeSelection" class="form-label text-center">Select Type</label> -->
-        <select
+        <!-- <select
           name="channelSelection"
           id="channelSelection"
           class="form-select"
           aria-label="Select a Channel :"
         >
           <option selected value="appchannel">appchannel</option>
-        </select>
+        </select> -->
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            id="useCaseNameInput"
+            name="useCaseNameInput"
+            class="form-control"
+            placeholder="UseCase Name"
+            aria-label="UseCase Name"
+            aria-describedby="button-addon2"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="useCaseNameInputButton"
+          >
+            Fetch
+          </button>
+        </div>
         <!-- <small class="form-text text-muted my-1">(installed/instantiated)</small> -->
       </div>
     </div>
@@ -93,6 +111,26 @@
     }
     return finalChainCodeDetailsArray;
   }
+  function highlightCode() {
+    hljs.highlightAll();
+    // apply HighlightJS
+    var pres = document.querySelectorAll("pre>code");
+    for (var i = 0; i < pres.length; i++) {
+      hljs.highlightBlock(pres[i]);
+    }
+
+    // add HighlightJS-badge (options are optional)
+    var options = {
+      // optional
+      contentSelector: ".codeBlock",
+
+      // CSS class(es) used to render the copy icon.
+      copyIconClass: "fas fa-copy",
+      // CSS class(es) used to render the done icon.
+      checkIconClass: "fas fa-check text-success",
+    };
+    window.highlightJsBadge(options);
+  }
   function sendAjaxReqToGetListOfPushedTransactionData() {
     $("#pushedTransactionListDataTable").empty();
     $(".pushedTransactionListTableContentFetchingSpinner").show();
@@ -110,28 +148,47 @@
         console.log(json);
 
         if (json["status"] === "success") {
-          const dataTableData = parseFetchedTransactionDataOutput(
-            json["data"]["Output"]
-          );
+          // const dataTableData = parseFetchedTransactionDataOutput(
+          //   json["data"]["Output"]
+          // );
           $("#pushedTransactionListDataTable").DataTable({
             destroy: true,
-            data: dataTableData,
+            data: json["data"],
             //pageResize: true,
             responsive: true,
             pageLength: 4,
             bAutoWidth: false,
-            columns: [
-              { title: "Name" },
-              { title: "Version" },
-              { title: "Path" },
-              { title: "Id" },
-            ],
-            initComplete: function (settings, jsonData) {
+            drawCallback: function (settings) {
               $(".pushedTransactionListTableContentFetchingSpinner").hide();
+              console.log(json["data"].length);
               $("#pushedTransactionCount").text(
-                " - " + String(dataTableData.length)
+                " - " + String(json["data"].length)
               );
+              highlightCode();
             },
+            columns: [
+              { title: "id", data: "id" },
+              // { data: "properties" },
+              {
+                title: "properties",
+                data: "properties",
+                render: function (data, type, row) {
+                  var propertiedDataHighlightJs =
+                    '<div class="codeBlock" ><pre><code>' +
+                    JSON.stringify(data) +
+                    "</code></pre></div>";
+                  return propertiedDataHighlightJs;
+                },
+              },
+              { title: "table", data: "table" },
+              { title: "use_case", data: "use_case" },
+            ],
+            // initComplete: function (settings, jsonData) {
+            //   $(".pushedTransactionListTableContentFetchingSpinner").hide();
+            //   $("#pushedTransactionCount").text(
+            //     " - " + String(json["data"].length)
+            //   );
+            // },
           });
         } else {
           swal.fire({
@@ -150,6 +207,15 @@
   $(".form-select").on("change", function () {
     //alert(this.value);
     sendAjaxReqToGetListOfPushedTransactionData();
+  });
+
+  $("#useCaseNameInputButton").click(function () {
+    sendAjaxReqToGetListOfPushedTransactionData();
+  });
+
+  //option A
+  $("form").submit(function (e) {
+    e.preventDefault();
   });
 </script>
 
