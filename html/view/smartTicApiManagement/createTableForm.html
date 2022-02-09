@@ -1,0 +1,233 @@
+<link rel="stylesheet" href="css/editor.dataTables.min.css" />
+<link
+  rel="stylesheet"
+  href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.datatables.net/select/1.3.4/css/select.dataTables.min.css"
+/>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
+<script src="js/dataTables.editor.min.js"></script>
+<div
+  class="d-flex align-items-center justify-content-center pb-5"
+  style="height: inherit;"
+>
+  <div class="col-12 col-sm-12 col-md-7 col-lg-6 col-xl-4 px-4">
+    <div class="card text-center">
+      <div class="card-header p-4 bg-secondary text-white">
+        <h2>
+          <i class="fa fa-plus" aria-hidden="true"></i> Create UseCase Table
+        </h2>
+      </div>
+      <div class="card-body">
+        <form
+          id="createUseCaseTableForm"
+          action="/login"
+          enctype="multipart/form-data"
+          method="POST"
+        >
+          <div class="mb-3">
+            <label for="useCaseNameInput" class="form-label"
+              >UseCase Name</label
+            >
+            <input
+              type="text"
+              required
+              class="form-control my-1"
+              name="useCaseNameInput"
+              id="useCaseNameInput"
+              placeholder="Enter useCase name"
+            />
+            <small class="form-text text-muted my-1"
+              >Example : car-sharing
+            </small>
+          </div>
+
+          <div class="mb-3">
+            <label for="useCaseTableNameInput" class="form-label"
+              >UseCase Table Name</label
+            >
+            <input
+              type="text"
+              required
+              class="form-control my-1"
+              name="useCaseTableNameInput"
+              id="useCaseTableNameInput"
+              placeholder="Enter useCase table name"
+            />
+            <small class="form-text text-muted my-1"
+              >Example : car-sharing
+            </small>
+          </div>
+
+          <div class="mb-3">
+            <label for="useCaseTableNameInput" class="form-label"
+              >UseCase Table Schema</label
+            >
+            <input
+              type="button"
+              class="btn btn-lg btn-block"
+              id="addrow"
+              value="Add Row"
+            />
+            <div class="container">
+              <table id="myTable" class="table order-list">
+                <thead>
+                  <tr>
+                    <td class="col-sm-4">Column Name</td>
+                    <td class="col-sm-4">Column description</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="col-sm-4">
+                      <input
+                        type="text"
+                        name="columnName"
+                        class="form-control"
+                      />
+                    </td>
+                    <td class="col-sm-4">
+                      <input
+                        type="text"
+                        name="columnDescription"
+                        class="form-control"
+                      />
+                    </td>
+                    <td class="col-sm-2"><a class="deleteRow"></a></td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="5" style="text-align: left;">
+                      <!-- <input
+                        type="button"
+                        class="btn btn-lg btn-block"
+                        id="addrow"
+                        value="Add Row"
+                      /> -->
+                    </td>
+                  </tr>
+                  <tr></tr>
+                </tfoot>
+              </table>
+            </div>
+            <small class="form-text text-muted my-1"
+              >Example : car-sharing
+            </small>
+          </div>
+
+          <button type="submit" class="btn btn-primary mt-2">
+            <i class="fa fa-plus" aria-hidden="true"></i> Create UseCase Table
+            <span
+              class="spinner-border spinner-border-sm createUseCaseSpinner"
+              role="status"
+              aria-hidden="true"
+              style="display: none;"
+            ></span>
+          </button>
+        </form>
+      </div>
+      <div class="card-footer text-muted">
+        Create a new useCase
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $("#createUseCaseTableForm").submit(function (e) {
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+    $(".createUseCaseSpinner").show();
+    $("#createUseCaseTableForm input").attr("readonly", true);
+
+    var user_json = {
+      useCaseTableNameInput: document.getElementById("useCaseTableNameInput")
+        .value,
+    };
+
+    console.log(user_json);
+
+    $.ajax({
+      type: "POST",
+      url: "/createUseCase",
+      async: true,
+      dataType: "json",
+      data: user_json,
+      complete: function (data) {
+        $(".createUseCaseSpinner").hide();
+        $("#createUseCaseTableForm input").attr("readonly", false);
+        var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        console.log(json);
+        if (json["status"] === "success") {
+          swal.fire({
+            title: "Create UseCase Status",
+            text: json["status"],
+            icon: "success",
+            heightAuto: false,
+            confirmButtonText:
+              '<i class="fa fa-thumbs-up"></i> ' +
+              String(json["data"]["useCaseCreateMessage"]),
+          });
+        } else {
+          swal.fire({
+            title: "Create UseCase Status",
+            text: json["status"],
+            icon: "error",
+            heightAuto: false,
+            confirmButtonText:
+              '<i class="fa fa-thumbs-down"></i> UseCase Creation Failed',
+          });
+        }
+      },
+    });
+  });
+</script>
+
+<script>
+  $(document).ready(function () {
+    var counter = 0;
+
+    $("#addrow").on("click", function () {
+      var newRow = $("<tr>");
+      var cols = "";
+
+      cols +=
+        '<td><input type="text" class="form-control" name="columnName' +
+        counter +
+        '"/></td>';
+      cols +=
+        '<td><input type="text" class="form-control" name="columnDescription' +
+        counter +
+        '"/></td>';
+
+      cols +=
+        '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
+      newRow.append(cols);
+      $("table.order-list").append(newRow);
+      counter++;
+    });
+
+    $("table.order-list").on("click", ".ibtnDel", function (event) {
+      $(this).closest("tr").remove();
+      counter -= 1;
+    });
+  });
+
+  function calculateRow(row) {
+    var price = +row.find('input[name^="price"]').val();
+  }
+
+  function calculateGrandTotal() {
+    var grandTotal = 0;
+    $("table.order-list")
+      .find('input[name^="price"]')
+      .each(function () {
+        grandTotal += +$(this).val();
+      });
+    $("#grandtotal").text(grandTotal.toFixed(2));
+  }
+</script>
