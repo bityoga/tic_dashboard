@@ -193,7 +193,7 @@ async function getPushedTransactionListFromSmartApi(
         }),
         url:
           appConfigJson[
-          "ARTICONF_SMART_API_BLOCKCHAIN_TRACE_RETRIEVAL_ACCESS_URL"
+            "ARTICONF_SMART_API_BLOCKCHAIN_TRACE_RETRIEVAL_ACCESS_URL"
           ] +
           "/api/use_cases/" +
           useCaseName +
@@ -224,12 +224,14 @@ async function getPushedTransactionListFromSmartApi(
 
 async function getUseCaseTableListFromSmartApi(
   passedAuthenticationToken,
-  useCaseName
+  useCaseName,
+  appConfigJson
 ) {
-  updateAppConfigJsonGlobalVariableWithLatestChangesFromFile();
   let useCaseTableList = null;
   try {
-    const smartAuthenticationToken = await getSmartApiAuthenticationToken();
+    const smartAuthenticationToken = await getSmartApiAuthenticationToken(
+      appConfigJson
+    );
 
     if (smartAuthenticationToken) {
       let jwtToken;
@@ -289,9 +291,10 @@ async function createNewTableInUseCaseInSmart(
     if (smartAuthenticationToken) {
       const existingUseCaseTableList = await getUseCaseTableListFromSmartApi(
         smartAuthenticationToken,
-        useCaseName
+        useCaseName,
+        appConfigJson
       );
-      // console.log(existingUseCaseTableList);
+      console.log(existingUseCaseTableList);
       const useCaseTableExists = checkIfUseCaseTableExists(
         existingUseCaseTableList,
         tableName
@@ -335,10 +338,10 @@ async function createNewTableInUseCaseInSmart(
       } else {
         console.log(
           "Create New Use Case Table: Use case '" +
-          useCaseName +
-          "' Table '" +
-          tableName +
-          "' already exists. So skipping ..."
+            useCaseName +
+            "' Table '" +
+            tableName +
+            "' already exists. So skipping ..."
         );
         createNewUseCaseTableInSmartApiResponse = 400;
       }
@@ -359,4 +362,5 @@ module.exports = {
   createNewUseCaseInSmart,
   getPushedTransactionListFromSmartApi,
   createNewTableInUseCaseInSmart,
+  getUseCaseTableListFromSmartApi,
 };

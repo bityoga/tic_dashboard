@@ -23,7 +23,7 @@ const md = require("markdown-it")({
           hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
           "</code></pre>"
         );
-      } catch (__) { }
+      } catch (__) {}
     }
 
     return (
@@ -47,7 +47,7 @@ try {
   throw Error("API Start Error - Error while reading API config", e);
 }
 
-const TEST_LOCAL = 1;
+const TEST_LOCAL = 0;
 var CHAINCODE_PATH;
 var CERTIFICATE_PATH;
 var CLI_PATH;
@@ -68,11 +68,15 @@ if (TEST_LOCAL === 1) {
   CERTIFICATE_PATH = "../file_explorer/certificates";
   CLI_PATH = "../../check_master";
   CREATE_CHAINCODE_SCRIPT = "./create_chaincode_stand_alone.sh";
+  SMART_AUTOMATED_CHAINCODE_SCHEMA_DETECTION_FILE =
+    "./useCaseChainCodeConfig.json";
 } else {
   CHAINCODE_PATH = "../chaincodes";
   CERTIFICATE_PATH = "../orgca";
   CLI_PATH = "../../CLI";
   CREATE_CHAINCODE_SCRIPT = "./create_chaincode_stand_alone.sh";
+  SMART_AUTOMATED_CHAINCODE_SCHEMA_DETECTION_FILE =
+    "../tic_event_listener/useCaseChainCodeConfig.json";
 }
 console.log(CHAINCODE_PATH);
 console.log(CERTIFICATE_PATH);
@@ -1411,6 +1415,91 @@ app.post("/createUseCaseTable", async (req, res) => {
     };
     console.log(response);
     res.json(response);
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/getUseCaseTableListDataFromSmartApi", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  console.log(req.body);
+  // var peer = req.body.peerSelection;
+  // var typeSelection = req.body.typeSelection; // installed or instantiated
+  // var channelSelection = req.body.channelSelection; // installed or instantiated
+  var useCaseNameInput = req.body.useCaseNameInput;
+  console.log("useCaseNameInput = ", useCaseNameInput);
+  if (app_session.user_name && app_session.password) {
+    getUseCaseTableListStatus = await smartApiHelper.getUseCaseTableListFromSmartApi(
+      null,
+      useCaseNameInput,
+      appConfigJson
+    );
+    response = {
+      status: "success",
+      data: getUseCaseTableListStatus,
+    };
+    console.log(response);
+    res.json(response);
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/getAutomaticallyDetectedSchemaFromTicSmartApi", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  console.log(req.body);
+  // var peer = req.body.peerSelection;
+  // var typeSelection = req.body.typeSelection; // installed or instantiated
+  // var channelSelection = req.body.channelSelection; // installed or instantiated
+  var useCaseNameInput = req.body.useCaseNameInput;
+  console.log("useCaseNameInput = ", useCaseNameInput);
+  if (app_session.user_name && app_session.password) {
+    try {
+      const smartAutomatedSchemaDetectionFilePath = path.resolve(
+        __dirname,
+        ".",
+        SMART_AUTOMATED_CHAINCODE_SCHEMA_DETECTION_FILE
+      );
+      console.log(smartAutomatedSchemaDetectionFilePath);
+      const smartAutomatedSchemaDetectionFileContent = fs.readFileSync(
+        smartAutomatedSchemaDetectionFilePath,
+        "utf8"
+      );
+      smartAutomatedSchemaDetectionFileContentJson = JSON.parse(
+        smartAutomatedSchemaDetectionFileContent
+      );
+      console.log(smartAutomatedSchemaDetectionFileContentJson);
+      response = {
+        status: "success",
+        data: smartAutomatedSchemaDetectionFileContentJson,
+      };
+      console.log(response);
+      res.json(response);
+    } catch (e) {
+      console.log(e);
+      response = {
+        status: "Failed",
+        data: "API Start Error - Error while reading API config" + String(e),
+      };
+      console.log(response);
+      res.json(response);
+    }
   } else {
     response = {
       status: "Failed",
