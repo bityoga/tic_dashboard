@@ -193,7 +193,7 @@ async function getPushedTransactionListFromSmartApi(
         }),
         url:
           appConfigJson[
-            "ARTICONF_SMART_API_BLOCKCHAIN_TRACE_RETRIEVAL_ACCESS_URL"
+          "ARTICONF_SMART_API_BLOCKCHAIN_TRACE_RETRIEVAL_ACCESS_URL"
           ] +
           "/api/use_cases/" +
           useCaseName +
@@ -301,19 +301,7 @@ async function createNewTableInUseCaseInSmart(
         var data = JSON.stringify({
           name: tableName,
           use_case: useCaseName,
-          mappings: {
-            UniqueID: "AssetId",
-            id: "id",
-            firstName: "firstName",
-            lastName: "lastName",
-            email: "email",
-            phoneNumber: "phoneNumber",
-            nin: "nin",
-            TransactionMessage: "TransactionMessage",
-            TransactionUnixTimestamp: "TransactionUnixTimestamp",
-            TransactionIsoTimestamp: "TransactionIsoTimestamp",
-            AssetId: "AssetId",
-          },
+          mappings: tableMappings,
         });
         const staticToken =
           "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJlZ3VsYXJAaXRlYy5hYXUuYXQiLCJjcmVhdGVkX2F0IjoiMjAyMS0xMi0xNSAyMToyODo1Ny45MjE3ODgiLCJ2YWxpZF91bnRpbCI6IjIwMjEtMTItMTYgMjE6Mjg6NTcuOTIxNzg4In0.gp13LARYOduRFHSNk9dKl_9Vtehkg2CXQu_Wiez4ptc";
@@ -331,7 +319,7 @@ async function createNewTableInUseCaseInSmart(
             "Content-Type": "application/json",
             Authorization: "Bearer " + smartAuthenticationToken,
           },
-          data: tableMappings,
+          data: data,
         };
         console.log(config);
         try {
@@ -347,10 +335,10 @@ async function createNewTableInUseCaseInSmart(
       } else {
         console.log(
           "Create New Use Case Table: Use case '" +
-            useCaseName +
-            "' Table '" +
-            tableName +
-            "' already exists. So skipping ..."
+          useCaseName +
+          "' Table '" +
+          tableName +
+          "' already exists. So skipping ..."
         );
         createNewUseCaseTableInSmartApiResponse = 400;
       }

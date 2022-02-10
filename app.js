@@ -23,7 +23,7 @@ const md = require("markdown-it")({
           hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
           "</code></pre>"
         );
-      } catch (__) {}
+      } catch (__) { }
     }
 
     return (
@@ -1371,6 +1371,38 @@ app.post("/getPushedTransactionDataFromSmartApi", async (req, res) => {
   if (app_session.user_name && app_session.password) {
     createUseCaseStatus = await smartApiHelper.getPushedTransactionListFromSmartApi(
       useCaseNameInput,
+      appConfigJson
+    );
+    response = {
+      status: "success",
+      data: createUseCaseStatus,
+    };
+    console.log(response);
+    res.json(response);
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/createUseCaseTable", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  var useCaseNameInput = req.body.useCaseNameInput;
+  var useCaseTableNameInput = req.body.useCaseTableNameInput;
+  var tableMappings = req.body.tableMappings;
+
+  if (app_session.user_name && app_session.password) {
+    createUseCaseStatus = await smartApiHelper.createNewTableInUseCaseInSmart(
+      useCaseNameInput,
+      useCaseTableNameInput,
+      tableMappings,
       appConfigJson
     );
     response = {
