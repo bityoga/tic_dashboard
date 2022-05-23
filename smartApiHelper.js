@@ -24,13 +24,15 @@ async function getSmartApiAuthenticationToken(appConfigJson) {
       data: smartApiAuthenticationCredentials,
     };
 
+    console.log("axiosRequest");
+    console.log(axiosRequest);
     const response = await axios(axiosRequest);
     //console.log(response);
     //console.log(response.data);
 
     smartApiAuthorizationToken = response["data"]["token"];
   } catch (error) {
-    console.error("getHlfExplorerAuthenticationToken() Error :", error);
+    console.error("getSmartApiAuthenticationToken() Error :", error);
   } finally {
     console.log("smartApiAuthorizationToken");
     console.log(smartApiAuthorizationToken);
