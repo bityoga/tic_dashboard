@@ -224,6 +224,53 @@ async function getPushedTransactionListFromSmartApi(
   }
 }
 
+async function getFailedPushedTransactionListFromSmartApi(
+  useCaseName,
+  appConfigJson
+) {
+  let transactionList = null;
+  try {
+    const smartAuthenticationToken = await getSmartApiAuthenticationToken(
+      appConfigJson
+    );
+    if (smartAuthenticationToken) {
+      var axiosRequest = {
+        method: "get",
+        // To bypass  "Error: self signed certificate in certificate chain"
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false,
+        }),
+        url:
+          appConfigJson[
+            "ARTICONF_SMART_API_BLOCKCHAIN_TRACE_RETRIEVAL_ACCESS_URL"
+          ] +
+          "/api/use_cases/" +
+          useCaseName +
+          "/transactions-failed",
+        headers: {
+          Authorization: "Bearer " + smartAuthenticationToken,
+        },
+      };
+      console.log(axiosRequest);
+      try {
+        const response = await axios(axiosRequest);
+        //console.log(response.data);
+        transactionList = response.data;
+      } catch (error) {
+        console.log("axios error");
+        console.log(error.response.status, error.response.data);
+      }
+    } else {
+      console.log("Smart Rest Api Authentication retrieval failed");
+    }
+  } catch (error) {
+    console.error("getPushedTransactionListFromSmartApi() Error : ".error);
+  } finally {
+    console.log(transactionList);
+    return transactionList;
+  }
+}
+
 async function getUseCaseTableListFromSmartApi(
   passedAuthenticationToken,
   useCaseName,
@@ -366,4 +413,5 @@ module.exports = {
   createNewTableInUseCaseInSmart,
   getUseCaseTableListFromSmartApi,
   getUseCaseListFromSmartApi,
+  getFailedPushedTransactionListFromSmartApi,
 };

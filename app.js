@@ -1393,6 +1393,38 @@ app.post("/getPushedTransactionDataFromSmartApi", async (req, res) => {
   }
 });
 
+app.post("/getPushedFailedTransactionDataFromSmartApi", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  console.log(req.body);
+  // var peer = req.body.peerSelection;
+  // var typeSelection = req.body.typeSelection; // installed or instantiated
+  // var channelSelection = req.body.channelSelection; // installed or instantiated
+  var useCaseNameInput = req.body.useCaseNameInput;
+  console.log("useCaseNameInput = ", useCaseNameInput);
+  if (app_session.user_name && app_session.password) {
+    createUseCaseStatus = await smartApiHelper.getFailedPushedTransactionListFromSmartApi(
+      useCaseNameInput,
+      appConfigJson
+    );
+    response = {
+      status: "success",
+      data: createUseCaseStatus,
+    };
+    console.log(response);
+    res.json(response);
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
 app.post("/createUseCaseTable", async (req, res) => {
   let response;
 

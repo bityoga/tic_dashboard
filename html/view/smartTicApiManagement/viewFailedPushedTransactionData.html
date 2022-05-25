@@ -1,11 +1,11 @@
 <div class="container mb-4">
   <h1 class="my-4 p-3 text-white bg-secondary text-center">
-    <i class="fa fa-eye" aria-hidden="true"></i> View Created Use Cases
-    <span id="createdUseCasesCount"></span>
+    <i class="fa fa-eye" aria-hidden="true"></i> Failed Pushes
+    <span id="pushedTransactionCount"></span>
   </h1>
   <form
-    id="viewCreatedUseCaseListDataForm"
-    action="/getUseCaseTableListDataFromSmartApi"
+    id="viewPushedTransactionDataForm"
+    action="/getPushedTransactionDataFromSmartApi"
     enctype="multipart/form-data"
     method="POST"
   >
@@ -74,20 +74,43 @@
       </div>
     </div>
   </form>
-  <div class="text-center useCaseListTableContentFetchingSpinner">
+  <div class="text-center pushedTransactionListTableContentFetchingSpinner">
     <div class="spinner-border" role="status">
       <span class="visually-hidden">Loading...</span>
     </div>
   </div>
-  <div class="table-responsive">
+  <div id="dataTableDivContainer" class="table-responsive">
     <table
-      id="useCasesListDataTable"
+      id="pushedFailedTransactionListDataTable"
       class="table table-striped table-hover dt-responsive display nowrap text-center"
     ></table>
   </div>
 </div>
 
 <script>
+  function parseOutputOfPushedTransactionDataObjectList(string) {
+    var properties = string.split(", ");
+    var obj = {};
+    properties.forEach(function (property) {
+      var tup = property.split(": ");
+      obj[tup[0]] = tup[1];
+    });
+    return obj;
+  }
+  function parseFetchedTransactionDataOutput(output) {
+    let parsedResponse = output.split(/\r?\n/);
+    //console.log(parsedResponse);
+    let finalChainCodeDetailsArray = [];
+    for (chaincode of parsedResponse) {
+      let parsedChaincodeDetails = parseOutputOfPushedTransactionDataObjectList(
+        chaincode
+      );
+      if ("Name" in parsedChaincodeDetails) {
+        finalChainCodeDetailsArray.push(Object.values(parsedChaincodeDetails));
+      }
+    }
+    return finalChainCodeDetailsArray;
+  }
   function highlightCode() {
     hljs.highlightAll();
     // apply HighlightJS
@@ -108,50 +131,69 @@
     };
     window.highlightJsBadge(options);
   }
-  function sendAjaxReqToGetListOfCreatedUseCases() {
-    $("#useCasesListDataTable").empty();
-    $(".useCaseListTableContentFetchingSpinner").show();
+  function sendAjaxReqToGetListOfFailedPushedTransactionData() {
+    $("#pushedFailedTransactionListDataTable").empty();
+    $(".pushedTransactionListTableContentFetchingSpinner").show();
     $.ajax({
       type: "POST",
-      url: "/getUseCasesListDataFromSmartApi",
+      url: "/getPushedFailedTransactionDataFromSmartApi",
       data: new FormData(
-        document.getElementById("viewCreatedUseCaseListDataForm")
+        document.getElementById("viewPushedTransactionDataForm")
       ),
       processData: false,
       contentType: false,
       async: true,
-      // fnRowCallback: function (nRow, aData, iDisplayIndex) {
-      //   $("td:first", nRow).html(iDisplayIndex + 1);
-      //   return nRow;
-      // },
       complete: function (data) {
         var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
         console.log(json);
+        //$("#pushedFailedTransactionListDataTable").DataTable({ destroy: true });
+        $("#dataTableDivContainer").html("");
+        $("#dataTableDivContainer").html(
+          '<table id="pushedFailedTransactionListDataTable" class="table table-striped table-hover dt-responsive display nowrap text-center"></table>'
+        );
+
+        var dataTableColumns = [];
 
         if (json["status"] === "success") {
-          $("#useCasesListDataTable").DataTable({
-            destroy: true,
+          if (json["data"] && json["data"].length > 0) {
+            columnNames = Object.keys(json["data"][0]);
+            for (var i in columnNames) {
+              dataTableColumns.push({
+                data: columnNames[i],
+                title: columnNames[i],
+              });
+            }
+          } else {
+            dataTableColumns.push({ title: "Data", data: "data" });
+          }
+
+          console.log("dataTableColumns");
+          console.log(dataTableColumns);
+          $("#pushedFailedTransactionListDataTable").DataTable({
             data: json["data"],
+            columns: dataTableColumns,
+            scrollX: true,
+            destroy: true,
             //pageResize: true,
             responsive: true,
-            pageLength: 7,
-            bAutoWidth: false,
-            drawCallback: function (settings) {
-              $(".useCaseListTableContentFetchingSpinner").hide();
-              console.log(json["data"].length);
-              $("#createdUseCasesCount").text(
-                " - " + String(json["data"].length)
-              );
-            },
+            pageLength: 4,
+            bAutoWidth: json["data"] && json["data"].length > 0 ? true : false,
 
-            columns: [
-              { title: "UseCaseNumber", data: "UseCaseNumber" },
-              { title: "Created Use Case Names", data: "name" },
-            ],
+            drawCallback: function (settings) {
+              $(".pushedTransactionListTableContentFetchingSpinner").hide();
+              if (json["data"]) {
+                console.log(json["data"].length);
+                $("#pushedTransactionCount").text(
+                  " - " + String(json["data"].length)
+                );
+              } else {
+                $("#pushedTransactionCount").text(" - " + String(0));
+              }
+            },
           });
         } else {
           swal.fire({
-            title: "Use Case List Retrieval",
+            title: "Failed Pushes Retrieval",
             text: json["status"],
             icon: "error",
             confirmButtonText: '<i class="fa fa-thumbs-down"></i> Failed',
@@ -165,11 +207,11 @@
 <script>
   // $(".form-select").on("change", function () {
   //   //alert(this.value);
-  //   sendAjaxReqToGetListOfCreatedUseCases();
+  //   sendAjaxReqToGetListOfFailedPushedTransactionData();
   // });
 
   $("#useCaseNameInputButton").click(function () {
-    sendAjaxReqToGetListOfCreatedUseCases();
+    sendAjaxReqToGetListOfFailedPushedTransactionData();
   });
 
   $("form").submit(function (e) {
@@ -179,6 +221,6 @@
 
 <script>
   $(document).ready(function () {
-    sendAjaxReqToGetListOfCreatedUseCases();
+    sendAjaxReqToGetListOfFailedPushedTransactionData();
   });
 </script>
