@@ -365,4 +365,5 @@ module.exports = {
   getPushedTransactionListFromSmartApi,
   createNewTableInUseCaseInSmart,
   getUseCaseTableListFromSmartApi,
+  getUseCaseListFromSmartApi,
 };

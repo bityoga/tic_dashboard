@@ -1458,6 +1458,41 @@ app.post("/getUseCaseTableListDataFromSmartApi", async (req, res) => {
   }
 });
 
+app.post("/getUseCasesListDataFromSmartApi", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  console.log(req.body);
+  // var peer = req.body.peerSelection;
+  // var typeSelection = req.body.typeSelection; // installed or instantiated
+  // var channelSelection = req.body.channelSelection; // installed or instantiated
+  //var useCaseNameInput = req.body.useCaseNameInput;
+  //console.log("useCaseNameInput = ", useCaseNameInput);
+  if (app_session.user_name && app_session.password) {
+    getUseCaseTableListStatus = await smartApiHelper.getUseCaseListFromSmartApi(
+      null,
+      appConfigJson
+    );
+    getUseCaseTableListStatus.forEach(function (row, index) {
+      row.UseCaseNumber = index + 1;
+    });
+    response = {
+      status: "success",
+      data: getUseCaseTableListStatus,
+    };
+    console.log(response);
+    res.json(response);
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
 app.post("/getAutomaticallyDetectedSchemaFromTicSmartApi", async (req, res) => {
   let response;
 
