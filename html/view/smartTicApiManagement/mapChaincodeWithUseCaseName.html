@@ -163,7 +163,8 @@
           const dataTableData = parseChainCodeListCommandOutput(
             json["data"]["Output"]
           );
-
+          console.log("dataTableData");
+          console.log(dataTableData);
           $("#chainCodeSelectInput").empty();
           $("#chainCodeSelectInput").append(
             $("<option selected class='breakUrlLink'>")
@@ -171,6 +172,7 @@
               .text("Select a Chaincode")
           );
           $.each(dataTableData, function (i, item) {
+            console.log(item, i);
             $("#chainCodeSelectInput").append(
               $("<option class='breakUrlLink'>")
                 .attr("value", item["Name"])
@@ -378,7 +380,7 @@
             .then((result) => {
               /* Read more about isConfirmed, isDenied below */
               if (result.isConfirmed) {
-                sendAjaxReqToGetListOfUploadedChaincodes();
+                sendAjaxReqToGetListOfMappedChaincodesAndUseCases();
               }
             });
         } else {
