@@ -70,6 +70,7 @@ if (TEST_LOCAL === 1) {
   CREATE_CHAINCODE_SCRIPT = "./create_chaincode_stand_alone.sh";
   SMART_AUTOMATED_CHAINCODE_SCHEMA_DETECTION_FILE =
     "./useCaseChainCodeConfig.json";
+  MAPPED_CHAINCODE_USE_CASE_FILE = "./mapUsecaseChaincode.json";
 } else {
   CHAINCODE_PATH = "../chaincodes";
   CERTIFICATE_PATH = "../orgca";
@@ -77,11 +78,14 @@ if (TEST_LOCAL === 1) {
   CREATE_CHAINCODE_SCRIPT = "./create_chaincode_stand_alone.sh";
   SMART_AUTOMATED_CHAINCODE_SCHEMA_DETECTION_FILE =
     "../tic_event_listener/useCaseChainCodeConfig.json";
+  MAPPED_CHAINCODE_USE_CASE_FILE = "./mapUsecaseChaincode.json";
 }
 console.log(CHAINCODE_PATH);
 console.log(CERTIFICATE_PATH);
 console.log(CLI_PATH);
 console.log(CREATE_CHAINCODE_SCRIPT);
+console.log(SMART_AUTOMATED_CHAINCODE_SCHEMA_DETECTION_FILE);
+console.log(MAPPED_CHAINCODE_USE_CASE_FILE);
 // Create a express object
 const app = express();
 // default file Upload options
@@ -1555,6 +1559,230 @@ app.post("/getAutomaticallyDetectedSchemaFromTicSmartApi", async (req, res) => {
       response = {
         status: "success",
         data: smartAutomatedSchemaDetectionFileContentJson,
+      };
+      console.log(response);
+      res.json(response);
+    } catch (e) {
+      console.log(e);
+      response = {
+        status: "Failed",
+        data: "API Start Error - Error while reading API config" + String(e),
+      };
+      console.log(response);
+      res.json(response);
+    }
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/getMappedChainCodeListWithUseCase", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  console.log(req.body);
+
+  if (app_session.user_name && app_session.password) {
+    try {
+      const mappedUseCaseChainCodeFilePath = path.resolve(
+        __dirname,
+        ".",
+        MAPPED_CHAINCODE_USE_CASE_FILE
+      );
+      console.log(mappedUseCaseChainCodeFilePath);
+      const mappedUseCaseChainCodeFileContent = fs.readFileSync(
+        mappedUseCaseChainCodeFilePath,
+        "utf8"
+      );
+      mappedUseCaseChainCodeFileContentJson = JSON.parse(
+        mappedUseCaseChainCodeFileContent
+      );
+      console.log(mappedUseCaseChainCodeFileContentJson);
+
+      var mappedChainCodes = Object.keys(mappedUseCaseChainCodeFileContentJson);
+      var mappedChaincodeDictArray = [];
+      for (var i = 0; i < mappedChainCodes.length; i++) {
+        var mappedChaincodeDict = {};
+        mappedChaincodeDict["ChaincodeName"] = mappedChainCodes[i];
+        mappedChaincodeDict["UseCaseName"] =
+          mappedUseCaseChainCodeFileContentJson[mappedChainCodes[i]];
+        var deleteFileButton =
+          '<button data-link="' +
+          mappedChainCodes[i] +
+          '"onclick="processRequestToDeleteSelectedChainCodeMapping(this)" class="btn btn-primary deleteFileButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete <span style="display:none" class="spinner-border spinner-border-sm chainCodeMapDeleteSpinner" role="status" aria-hidden="true"></span></button>';
+        mappedChaincodeDict["deleteMapping"] = deleteFileButton;
+        mappedChaincodeDictArray.push(mappedChaincodeDict);
+        //Do something
+      }
+
+      response = {
+        status: "success",
+        data: mappedChaincodeDictArray,
+      };
+      console.log(response);
+      res.json(response);
+    } catch (e) {
+      console.log(e);
+      response = {
+        status: "Failed",
+        data: "API Start Error - Error while reading API config" + String(e),
+      };
+      console.log(response);
+      res.json(response);
+    }
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/mapChainCodeWithUseCase", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  console.log(req.body);
+
+  if (app_session.user_name && app_session.password) {
+    try {
+      const mappedUseCaseChainCodeFilePath = path.resolve(
+        __dirname,
+        ".",
+        MAPPED_CHAINCODE_USE_CASE_FILE
+      );
+      console.log(mappedUseCaseChainCodeFilePath);
+      const mappedUseCaseChainCodeFileContent = fs.readFileSync(
+        mappedUseCaseChainCodeFilePath,
+        "utf8"
+      );
+      mappedUseCaseChainCodeFileContentJson = JSON.parse(
+        mappedUseCaseChainCodeFileContent
+      );
+      console.log("mappedUseCaseChainCodeFileContentJson before mapping");
+      console.log(mappedUseCaseChainCodeFileContentJson);
+      if (
+        req.body.chainCodeSelectInput !== "Select a Chaincode" &&
+        req.body.useCaseSelectInput !== "Select a Use Case"
+      ) {
+        mappedUseCaseChainCodeFileContentJson[req.body.chainCodeSelectInput] =
+          req.body.useCaseSelectInput;
+
+        console.log("mappedUseCaseChainCodeFileContentJson after mapping");
+        console.log(mappedUseCaseChainCodeFileContentJson);
+
+        fs.writeFileSync(
+          mappedUseCaseChainCodeFilePath,
+          JSON.stringify(mappedUseCaseChainCodeFileContentJson, null, 2)
+        );
+      }
+
+      var mappedChainCodes = Object.keys(mappedUseCaseChainCodeFileContentJson);
+      var mappedChaincodeDictArray = [];
+      for (var i = 0; i < mappedChainCodes.length; i++) {
+        var mappedChaincodeDict = {};
+        mappedChaincodeDict["ChaincodeName"] = mappedChainCodes[i];
+        mappedChaincodeDict["UseCaseName"] =
+          mappedUseCaseChainCodeFileContentJson[mappedChainCodes[i]];
+
+        var deleteFileButton =
+          '<button data-link="' +
+          mappedChainCodes[i] +
+          '"onclick="processRequestToDeleteSelectedChainCodeMapping(this)" class="btn btn-primary deleteFileButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete <span style="display:none" class="spinner-border spinner-border-sm chainCodeMapDeleteSpinner" role="status" aria-hidden="true"></span></button>';
+        mappedChaincodeDict["deleteMapping"] = deleteFileButton;
+        mappedChaincodeDictArray.push(mappedChaincodeDict);
+        //Do something
+      }
+
+      response = {
+        status: "success",
+        data: mappedChaincodeDictArray,
+      };
+      console.log(response);
+      res.json(response);
+    } catch (e) {
+      console.log(e);
+      response = {
+        status: "Failed",
+        data: "API Start Error - Error while reading API config" + String(e),
+      };
+      console.log(response);
+      res.json(response);
+    }
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/deleteSelectedChainCodeMApping", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  console.log(req.body);
+
+  if (app_session.user_name && app_session.password) {
+    try {
+      const mappedUseCaseChainCodeFilePath = path.resolve(
+        __dirname,
+        ".",
+        MAPPED_CHAINCODE_USE_CASE_FILE
+      );
+      console.log(mappedUseCaseChainCodeFilePath);
+      const mappedUseCaseChainCodeFileContent = fs.readFileSync(
+        mappedUseCaseChainCodeFilePath,
+        "utf8"
+      );
+      mappedUseCaseChainCodeFileContentJson = JSON.parse(
+        mappedUseCaseChainCodeFileContent
+      );
+      console.log("mappedUseCaseChainCodeFileContentJson before UnMapping");
+      console.log(mappedUseCaseChainCodeFileContentJson);
+
+      delete mappedUseCaseChainCodeFileContentJson[req.body.chainCodeName];
+
+      console.log("mappedUseCaseChainCodeFileContentJson after UnMapping");
+      console.log(mappedUseCaseChainCodeFileContentJson);
+
+      fs.writeFileSync(
+        mappedUseCaseChainCodeFilePath,
+        JSON.stringify(mappedUseCaseChainCodeFileContentJson, null, 2)
+      );
+
+      var mappedChainCodes = Object.keys(mappedUseCaseChainCodeFileContentJson);
+      var mappedChaincodeDictArray = [];
+      for (var i = 0; i < mappedChainCodes.length; i++) {
+        var mappedChaincodeDict = {};
+        mappedChaincodeDict["ChaincodeName"] = mappedChainCodes[i];
+        mappedChaincodeDict["UseCaseName"] =
+          mappedUseCaseChainCodeFileContentJson[mappedChainCodes[i]];
+
+        var deleteFileButton =
+          '<button data-link="' +
+          mappedChainCodes[i] +
+          '"onclick="processRequestToDeleteSelectedChainCodeMapping(this)" class="btn btn-primary deleteFileButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete <span style="display:none" class="spinner-border spinner-border-sm chainCodeMapDeleteSpinner" role="status" aria-hidden="true"></span></button>';
+        mappedChaincodeDict["deleteMapping"] = deleteFileButton;
+        mappedChaincodeDictArray.push(mappedChaincodeDict);
+        //Do something
+      }
+
+      response = {
+        status: "success",
+        data: mappedChaincodeDictArray,
       };
       console.log(response);
       res.json(response);

@@ -11,13 +11,13 @@
   >
     <div class="row">
       <div
-        class="mx-auto mb-3 col-12 col-sm-12 col-md-7 col-lg-6 col-xl-4 px-4 mt-3"
+        class="mx-auto mb-3 col-12 col-sm-12 col-md-7 col-lg-6 col-xl-2 px-4 mt-3"
       >
         <!-- <label for="peerSelection" class="form-label text-center">Select Peer</label> -->
         <select
           name="peerSelection"
           id="peerSelection"
-          class="form-select"
+          class="form-select chainCodeListForm-select"
           aria-label="Select a Peer :"
         >
           <option value="peer1">Peer1</option>
@@ -26,13 +26,13 @@
         <!-- <small class="form-text text-muted my-1">Select the peer</small> -->
       </div>
       <div
-        class="mx-auto mb-3 col-12 col-sm-12 col-md-7 col-lg-6 col-xl-4 px-4 mt-3"
+        class="mx-auto mb-3 col-12 col-sm-12 col-md-7 col-lg-6 col-xl-2 px-4 mt-3"
       >
         <!-- <label for="typeSelection" class="form-label text-center">Select Type</label> -->
         <select
           name="typeSelection"
           id="typeSelection"
-          class="form-select"
+          class="form-select chainCodeListForm-select"
           aria-label="Select a Type :"
         >
           <option selected value="installed">Installed</option>
@@ -41,18 +41,69 @@
         <!-- <small class="form-text text-muted my-1">(installed/instantiated)</small> -->
       </div>
       <div
-        class="mx-auto mb-3 col-12 col-sm-12 col-md-7 col-lg-6 col-xl-4 px-4 mt-3"
+        class="mx-auto mb-3 col-12 col-sm-12 col-md-7 col-lg-6 col-xl-2 px-4 mt-3"
       >
-        <!-- <label for="typeSelection" class="form-label text-center">Select Type</label> -->
+        <!-- <label for="chainCodeSelectInput" class="form-label text-center">Select Peer</label> -->
         <select
-          name="channelSelection"
-          id="channelSelection"
+          name="chainCodeSelectInput"
+          id="chainCodeSelectInput"
+          name="chainCodeSelectInput"
           class="form-select"
-          aria-label="Select a Channel :"
+          aria-label="Select a Chaincode :"
         >
-          <option selected value="appchannel">appchannel</option>
+          <option selected value="Select a Chaincode"
+            >Select a Chaincode</option
+          >
         </select>
-        <!-- <small class="form-text text-muted my-1">(installed/instantiated)</small> -->
+        <small class="form-text text-muted my-1"
+          ><div class="text-center chainCodeListFetchingSpinner">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div></small
+        >
+      </div>
+      <div
+        class="mx-auto mb-3 col-12 col-sm-12 col-md-7 col-lg-6 col-xl-2 px-4 mt-3"
+      >
+        <!-- <label for="useCaseSelectInput" class="form-label text-center">Select Type</label> -->
+        <select
+          name="useCaseSelectInput"
+          id="useCaseSelectInput"
+          class="form-select"
+          aria-label="Select a Type :"
+        >
+          <option selected value="Select a Use Case">Select a Use Case</option>
+        </select>
+        <small class="form-text text-muted my-1"
+          ><div class="text-center useCaseListTableContentFetchingSpinner">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div></small
+        >
+      </div>
+      <div
+        class="mx-auto mb-3 col-12 col-sm-12 col-md-7 col-lg-6 col-xl-2 px-4 mt-3 float-end"
+      >
+        <button
+          class="btn btn-outline-secondary mx-auto"
+          type="button"
+          id="mapButton"
+        >
+          <i class="fa fa-angle-double-right" aria-hidden="true"></i> Map
+        </button>
+      </div>
+      <div
+        class="mx-auto mb-3 col-12 col-sm-12 col-md-7 col-lg-6 col-xl-2 px-4 mt-3 float-end"
+      >
+        <button
+          class="btn btn-outline-secondary float-end"
+          type="button"
+          id="refreshButton"
+        >
+          <i class="fa fa-refresh" aria-hidden="true"></i> Refresh
+        </button>
       </div>
     </div>
   </form>
@@ -94,8 +145,7 @@
     return finalChainCodeDetailsArray;
   }
   function sendAjaxReqToGetListOfInstalledChaincodes() {
-    $("#chainCodeListDataTable").empty();
-    $(".chainCodeListTableContentFetchingSpinner").show();
+    $(".chainCodeListFetchingSpinner").show();
     $.ajax({
       type: "POST",
       url: "/getInstalledOrInstantiatedChainCodeList",
@@ -108,27 +158,169 @@
       complete: function (data) {
         var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
         console.log(json);
-
+        $(".chainCodeListFetchingSpinner").hide();
         if (json["status"] === "success") {
           const dataTableData = parseChainCodeListCommandOutput(
             json["data"]["Output"]
           );
+
+          $("#chainCodeSelectInput").empty();
+          $("#chainCodeSelectInput").append(
+            $("<option selected class='breakUrlLink'>")
+              .attr("value", "Select aChaincode")
+              .text("Select aChaincode")
+          );
+          $.each(dataTableData, function (i, item) {
+            $("#chainCodeSelectInput").append(
+              $("<option class='breakUrlLink'>")
+                .attr("value", item["Name"])
+                .text(item["Name"])
+            );
+          });
+        } else {
+          swal.fire({
+            title: "Installed Chaincode List Retrieval",
+            text: json["status"],
+            icon: "error",
+            confirmButtonText: '<i class="fa fa-thumbs-down"></i> Failed',
+          });
+        }
+      },
+    });
+  }
+</script>
+<script>
+  function sendAjaxReqToGetListOfMappedChaincodesAndUseCases() {
+    $("#chainCodeListDataTable").empty();
+    $(".chainCodeListTableContentFetchingSpinner").show();
+    $.ajax({
+      type: "POST",
+      url: "/getMappedChainCodeListWithUseCase",
+      data: new FormData(
+        document.getElementById("filterInstalledChainCodeForm")
+      ),
+      processData: false,
+      contentType: false,
+      async: true,
+      complete: function (data) {
+        var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        console.log(json);
+
+        if (json["status"] === "success") {
+          //const dataTableData = json["data"]["Output"];
+
           $("#chainCodeListDataTable").DataTable({
             destroy: true,
-            data: dataTableData,
+            data: json["data"],
             //pageResize: true,
             responsive: true,
             pageLength: 4,
             bAutoWidth: false,
             columns: [
-              { title: "Name" },
-              { title: "Version" },
-              { title: "Path" },
-              { title: "Id" },
+              { title: "Chaincode Name", data: "ChaincodeName" },
+              { title: "Use Case Name", data: "UseCaseName" },
+              { title: "Delete", data: "deleteMapping" },
             ],
             initComplete: function (settings, jsonData) {
               $(".chainCodeListTableContentFetchingSpinner").hide();
-              $("#chainCodeCount").text(" - " + String(dataTableData.length));
+              $("#chainCodeCount").text(" - " + String(json["data"].length));
+            },
+          });
+        } else {
+          swal.fire({
+            title: "Installed Chaincode List Retrieval",
+            text: json["status"],
+            icon: "error",
+            confirmButtonText: '<i class="fa fa-thumbs-down"></i> Failed',
+          });
+        }
+      },
+    });
+  }
+</script>
+<script>
+  function sendAjaxReqToGetListOfCreatedUseCases() {
+    $(".useCaseListTableContentFetchingSpinner").show();
+    $.ajax({
+      type: "POST",
+      url: "/getUseCasesListDataFromSmartApi",
+      // data: new FormData(
+      //   document.getElementById("viewCreatedUseCaseListDataForm")
+      // ),
+      processData: false,
+      contentType: false,
+      async: true,
+      // fnRowCallback: function (nRow, aData, iDisplayIndex) {
+      //   $("td:first", nRow).html(iDisplayIndex + 1);
+      //   return nRow;
+      // },
+      complete: function (data) {
+        var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        console.log(json);
+
+        if (json["status"] === "success") {
+          $("#useCaseSelectInput").empty();
+          $("#useCaseSelectInput").append(
+            $("<option selected class='breakUrlLink'>")
+              .attr("value", "Select a Use Case")
+              .text("Select a Use Case")
+          );
+          $.each(json["data"], function (i, item) {
+            $("#useCaseSelectInput").append(
+              $("<option class='breakUrlLink'>")
+                .attr("value", item["name"])
+                .text(item["name"])
+            );
+          });
+          $(".useCaseListTableContentFetchingSpinner").hide();
+        } else {
+          swal.fire({
+            title: "Use Case List Retrieval",
+            text: json["status"],
+            icon: "error",
+            confirmButtonText: '<i class="fa fa-thumbs-down"></i> Failed',
+          });
+        }
+      },
+    });
+  }
+</script>
+
+<script>
+  function sendAjaxReqToMapChaincodeNameWithUseCaseName() {
+    $("#chainCodeListDataTable").empty();
+    $(".chainCodeListTableContentFetchingSpinner").show();
+    $.ajax({
+      type: "POST",
+      url: "/mapChainCodeWithUseCase",
+      data: new FormData(
+        document.getElementById("filterInstalledChainCodeForm")
+      ),
+      processData: false,
+      contentType: false,
+      async: true,
+      complete: function (data) {
+        var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        console.log(json);
+
+        if (json["status"] === "success") {
+          //const dataTableData = json["data"]["Output"];
+
+          $("#chainCodeListDataTable").DataTable({
+            destroy: true,
+            data: json["data"],
+            //pageResize: true,
+            responsive: true,
+            pageLength: 4,
+            bAutoWidth: false,
+            columns: [
+              { title: "Chaincode Name", data: "ChaincodeName" },
+              { title: "Use Case Name", data: "UseCaseName" },
+              { title: "Delete", data: "deleteMapping" },
+            ],
+            initComplete: function (settings, jsonData) {
+              $(".chainCodeListTableContentFetchingSpinner").hide();
+              $("#chainCodeCount").text(" - " + String(json["data"].length));
             },
           });
         } else {
@@ -145,14 +337,111 @@
 </script>
 
 <script>
-  $(".form-select").on("change", function () {
+  function deleteSelectedChainCodeMapping(
+    deleteFileButtonObject,
+    chainCodeName
+  ) {
+    // show the loading spinner span tag for selected the button
+    $(deleteFileButtonObject).children(".chainCodeMapDeleteSpinner").show();
+
+    var request_json = {
+      chainCodeName: chainCodeName,
+    };
+
+    $.ajax({
+      type: "POST",
+      url: "/deleteSelectedChainCodeMApping",
+      async: true,
+      dataType: "json",
+      data: request_json,
+      complete: function (data) {
+        // hide the loading spinner span tag for selected the button
+        $(deleteFileButtonObject).children(".chainCodeMapDeleteSpinner").hide();
+        //console.log(JSON.parse(data.responseText));
+        //var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        console.log(json);
+        if (json["status"] === "success") {
+          swal
+            .fire({
+              heightAuto: false,
+              title: "Delete Chaincode File Status",
+              text:
+                json["status"] +
+                '! Chaincode File "' +
+                chainCodeName +
+                '" was deleted successfully !',
+              icon: "success",
+              confirmButtonText:
+                '<i class="fa fa-thumbs-up"></i> Chaincode File Deleted Successfully!',
+            })
+            .then((result) => {
+              /* Read more about isConfirmed, isDenied below */
+              if (result.isConfirmed) {
+                sendAjaxReqToGetListOfUploadedChaincodes();
+              }
+            });
+        } else {
+          swal.fire({
+            heightAuto: false,
+            title: "Delete Chaincode File Status",
+            text: json["status"],
+            icon: "error",
+            confirmButtonText:
+              '<i class="fa fa-thumbs-down"></i> Chaincode File Deletion Failed',
+          });
+        }
+      },
+    });
+  }
+</script>
+<script>
+  function processRequestToDeleteSelectedChainCodeMapping(
+    deleteFileButtonObject
+  ) {
+    var chainCodeName = deleteFileButtonObject.getAttribute("data-link");
+    swal
+      .fire({
+        heightAuto: false,
+        title: "Confirm Delete ?",
+        // width: "min-content",
+        showCloseButton: true,
+        text:
+          "Are you sure want to delete the Mapping '" +
+          chainCodeName +
+          "' ? The Mapping will be deleted. This operation is irreversible !",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonText: '<i class="fa fa-trash"></i> Confirm Delete !',
+        cancelButtonText: '<i class="fa fa-close"></i> Cancel',
+      })
+      .then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          deleteSelectedChainCodeMapping(deleteFileButtonObject, chainCodeName);
+        }
+      });
+  }
+</script>
+
+<script>
+  $(".chainCodeListForm-select").on("change", function () {
     //alert(this.value);
     sendAjaxReqToGetListOfInstalledChaincodes();
+  });
+  $("#refreshButton").click(function () {
+    sendAjaxReqToGetListOfMappedChaincodesAndUseCases();
+  });
+
+  $("#mapButton").click(function () {
+    sendAjaxReqToMapChaincodeNameWithUseCaseName();
   });
 </script>
 
 <script>
   $(document).ready(function () {
     sendAjaxReqToGetListOfInstalledChaincodes();
+    sendAjaxReqToGetListOfMappedChaincodesAndUseCases();
+    sendAjaxReqToGetListOfCreatedUseCases();
   });
 </script>
