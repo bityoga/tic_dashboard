@@ -172,11 +172,11 @@
               .text("Select a Chaincode")
           );
           $.each(dataTableData, function (i, item) {
-            console.log(item, i);
+            //console.log(item, i);
             $("#chainCodeSelectInput").append(
               $("<option class='breakUrlLink'>")
-                .attr("value", item["Name"])
-                .text(item["Name"])
+                .attr("value", item[0])
+                .text(item[0])
             );
           });
         } else {
