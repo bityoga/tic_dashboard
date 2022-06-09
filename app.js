@@ -7,6 +7,7 @@ const fs = require("fs");
 const shell = require("shelljs");
 const path = require("path");
 const axios = require("axios");
+const smartApiHelper = require("./smartApiHelper");
 const https = require("https");
 const hljs = require("highlight.js"); // https://highlightjs.org/
 // Actual default values
@@ -22,7 +23,7 @@ const md = require("markdown-it")({
           hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
           "</code></pre>"
         );
-      } catch (__) { }
+      } catch (__) {}
     }
 
     return (
@@ -67,16 +68,24 @@ if (TEST_LOCAL === 1) {
   CERTIFICATE_PATH = "../file_explorer/certificates";
   CLI_PATH = "../../check_master";
   CREATE_CHAINCODE_SCRIPT = "./create_chaincode_stand_alone.sh";
+  SMART_AUTOMATED_CHAINCODE_SCHEMA_DETECTION_FILE =
+    "./useCaseChainCodeConfig.json";
+  MAPPED_CHAINCODE_USE_CASE_FILE = "./mapUsecaseChaincode.json";
 } else {
   CHAINCODE_PATH = "../chaincodes";
   CERTIFICATE_PATH = "../orgca";
   CLI_PATH = "../../CLI";
   CREATE_CHAINCODE_SCRIPT = "./create_chaincode_stand_alone.sh";
+  SMART_AUTOMATED_CHAINCODE_SCHEMA_DETECTION_FILE =
+    "../tic_event_listener/useCaseChainCodeConfig.json";
+  MAPPED_CHAINCODE_USE_CASE_FILE = "./mapUsecaseChaincode.json";
 }
 console.log(CHAINCODE_PATH);
 console.log(CERTIFICATE_PATH);
 console.log(CLI_PATH);
 console.log(CREATE_CHAINCODE_SCRIPT);
+console.log(SMART_AUTOMATED_CHAINCODE_SCHEMA_DETECTION_FILE);
+console.log(MAPPED_CHAINCODE_USE_CASE_FILE);
 // Create a express object
 const app = express();
 // default file Upload options
@@ -1265,13 +1274,10 @@ app.post("/getRestApiSetUpInstructionsGitHubReadMe", async (req, res) => {
   }
 });
 
-
-
 app.post("/getInstalledOrInstantiatedChainCodeList", async (req, res) => {
   let response;
 
   app_session = req.session;
-
 
   console.log(req.body);
   var peer = req.body.peerSelection;
@@ -1293,10 +1299,14 @@ app.post("/getInstalledOrInstantiatedChainCodeList", async (req, res) => {
     var chainCodeListCommand =
       "CORE_PEER_ADDRESS=" +
       CORE_PEER_ADDRESS +
-      " CORE_PEER_MSPCONFIGPATH=" + CORE_PEER_MSPCONFIGPATH +
+      " CORE_PEER_MSPCONFIGPATH=" +
+      CORE_PEER_MSPCONFIGPATH +
       " CORE_PEER_TLS_ROOTCERT_FILE=" +
       CORE_PEER_TLS_ROOTCERT_FILE +
-      " peer chaincode list --" + typeSelection + " -C " + channelSelection;
+      " peer chaincode list --" +
+      typeSelection +
+      " -C " +
+      channelSelection;
 
     console.log("chainCodeListCommand");
     console.log(chainCodeListCommand);
@@ -1317,6 +1327,474 @@ app.post("/getInstalledOrInstantiatedChainCodeList", async (req, res) => {
       console.log(response);
       res.json(response);
     });
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/createUseCase", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  var useCaseNameInput = req.body.useCaseNameInput;
+
+  if (app_session.user_name && app_session.password) {
+    createUseCaseStatus = await smartApiHelper.createNewUseCaseInSmart(
+      useCaseNameInput,
+      appConfigJson
+    );
+    response = {
+      status: "success",
+      data: createUseCaseStatus,
+    };
+    console.log(response);
+    res.json(response);
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/getPushedTransactionDataFromSmartApi", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  console.log(req.body);
+  // var peer = req.body.peerSelection;
+  // var typeSelection = req.body.typeSelection; // installed or instantiated
+  // var channelSelection = req.body.channelSelection; // installed or instantiated
+  var useCaseNameInput = req.body.useCaseNameInput;
+  console.log("useCaseNameInput = ", useCaseNameInput);
+  if (app_session.user_name && app_session.password) {
+    createUseCaseStatus = await smartApiHelper.getPushedTransactionListFromSmartApi(
+      useCaseNameInput,
+      appConfigJson
+    );
+    response = {
+      status: "success",
+      data: createUseCaseStatus,
+    };
+    console.log(response);
+    res.json(response);
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/getPushedFailedTransactionDataFromSmartApi", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  console.log(req.body);
+  // var peer = req.body.peerSelection;
+  // var typeSelection = req.body.typeSelection; // installed or instantiated
+  // var channelSelection = req.body.channelSelection; // installed or instantiated
+  var useCaseNameInput = req.body.useCaseNameInput;
+  console.log("useCaseNameInput = ", useCaseNameInput);
+  if (app_session.user_name && app_session.password) {
+    createUseCaseStatus = await smartApiHelper.getFailedPushedTransactionListFromSmartApi(
+      useCaseNameInput,
+      appConfigJson
+    );
+    response = {
+      status: "success",
+      data: createUseCaseStatus,
+    };
+    console.log(response);
+    res.json(response);
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/createUseCaseTable", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  var useCaseNameInput = req.body.useCaseNameInput;
+  var useCaseTableNameInput = req.body.useCaseTableNameInput;
+  var tableMappings = req.body.tableMappings;
+
+  if (app_session.user_name && app_session.password) {
+    createUseCaseStatus = await smartApiHelper.createNewTableInUseCaseInSmart(
+      useCaseNameInput,
+      useCaseTableNameInput,
+      tableMappings,
+      appConfigJson
+    );
+    response = {
+      status: "success",
+      data: createUseCaseStatus,
+    };
+    console.log(response);
+    res.json(response);
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/getUseCaseTableListDataFromSmartApi", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  console.log(req.body);
+  // var peer = req.body.peerSelection;
+  // var typeSelection = req.body.typeSelection; // installed or instantiated
+  // var channelSelection = req.body.channelSelection; // installed or instantiated
+  var useCaseNameInput = req.body.useCaseNameInput;
+  console.log("useCaseNameInput = ", useCaseNameInput);
+  if (app_session.user_name && app_session.password) {
+    getUseCaseTableListStatus = await smartApiHelper.getUseCaseTableListFromSmartApi(
+      null,
+      useCaseNameInput,
+      appConfigJson
+    );
+    response = {
+      status: "success",
+      data: getUseCaseTableListStatus,
+    };
+    console.log(response);
+    res.json(response);
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/getUseCasesListDataFromSmartApi", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  console.log(req.body);
+  // var peer = req.body.peerSelection;
+  // var typeSelection = req.body.typeSelection; // installed or instantiated
+  // var channelSelection = req.body.channelSelection; // installed or instantiated
+  //var useCaseNameInput = req.body.useCaseNameInput;
+  //console.log("useCaseNameInput = ", useCaseNameInput);
+  if (app_session.user_name && app_session.password) {
+    getUseCaseTableListStatus = await smartApiHelper.getUseCaseListFromSmartApi(
+      null,
+      appConfigJson
+    );
+    getUseCaseTableListStatus.forEach(function (row, index) {
+      row.UseCaseNumber = index + 1;
+    });
+    response = {
+      status: "success",
+      data: getUseCaseTableListStatus,
+    };
+    console.log(response);
+    res.json(response);
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/getAutomaticallyDetectedSchemaFromTicSmartApi", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  console.log(req.body);
+  // var peer = req.body.peerSelection;
+  // var typeSelection = req.body.typeSelection; // installed or instantiated
+  // var channelSelection = req.body.channelSelection; // installed or instantiated
+  var useCaseNameInput = req.body.useCaseNameInput;
+  console.log("useCaseNameInput = ", useCaseNameInput);
+  if (app_session.user_name && app_session.password) {
+    try {
+      const smartAutomatedSchemaDetectionFilePath = path.resolve(
+        __dirname,
+        ".",
+        SMART_AUTOMATED_CHAINCODE_SCHEMA_DETECTION_FILE
+      );
+      console.log(smartAutomatedSchemaDetectionFilePath);
+      const smartAutomatedSchemaDetectionFileContent = fs.readFileSync(
+        smartAutomatedSchemaDetectionFilePath,
+        "utf8"
+      );
+      smartAutomatedSchemaDetectionFileContentJson = JSON.parse(
+        smartAutomatedSchemaDetectionFileContent
+      );
+      console.log(smartAutomatedSchemaDetectionFileContentJson);
+      response = {
+        status: "success",
+        data: smartAutomatedSchemaDetectionFileContentJson,
+      };
+      console.log(response);
+      res.json(response);
+    } catch (e) {
+      console.log(e);
+      response = {
+        status: "Failed",
+        data: "API Start Error - Error while reading API config" + String(e),
+      };
+      console.log(response);
+      res.json(response);
+    }
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/getMappedChainCodeListWithUseCase", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  console.log(req.body);
+
+  if (app_session.user_name && app_session.password) {
+    try {
+      const mappedUseCaseChainCodeFilePath = path.resolve(
+        __dirname,
+        ".",
+        MAPPED_CHAINCODE_USE_CASE_FILE
+      );
+      console.log(mappedUseCaseChainCodeFilePath);
+      const mappedUseCaseChainCodeFileContent = fs.readFileSync(
+        mappedUseCaseChainCodeFilePath,
+        "utf8"
+      );
+      mappedUseCaseChainCodeFileContentJson = JSON.parse(
+        mappedUseCaseChainCodeFileContent
+      );
+      console.log(mappedUseCaseChainCodeFileContentJson);
+
+      var mappedChainCodes = Object.keys(mappedUseCaseChainCodeFileContentJson);
+      var mappedChaincodeDictArray = [];
+      for (var i = 0; i < mappedChainCodes.length; i++) {
+        var mappedChaincodeDict = {};
+        mappedChaincodeDict["ChaincodeName"] = mappedChainCodes[i];
+        mappedChaincodeDict["UseCaseName"] =
+          mappedUseCaseChainCodeFileContentJson[mappedChainCodes[i]];
+        var deleteFileButton =
+          '<button data-link="' +
+          mappedChainCodes[i] +
+          '"onclick="processRequestToDeleteSelectedChainCodeMapping(this)" class="btn btn-primary deleteFileButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete <span style="display:none" class="spinner-border spinner-border-sm chainCodeMapDeleteSpinner" role="status" aria-hidden="true"></span></button>';
+        mappedChaincodeDict["deleteMapping"] = deleteFileButton;
+        mappedChaincodeDictArray.push(mappedChaincodeDict);
+        //Do something
+      }
+
+      response = {
+        status: "success",
+        data: mappedChaincodeDictArray,
+      };
+      console.log(response);
+      res.json(response);
+    } catch (e) {
+      console.log(e);
+      response = {
+        status: "Failed",
+        data: "API Start Error - Error while reading API config" + String(e),
+      };
+      console.log(response);
+      res.json(response);
+    }
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/mapChainCodeWithUseCase", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  console.log(req.body);
+
+  if (app_session.user_name && app_session.password) {
+    try {
+      const mappedUseCaseChainCodeFilePath = path.resolve(
+        __dirname,
+        ".",
+        MAPPED_CHAINCODE_USE_CASE_FILE
+      );
+      console.log(mappedUseCaseChainCodeFilePath);
+      const mappedUseCaseChainCodeFileContent = fs.readFileSync(
+        mappedUseCaseChainCodeFilePath,
+        "utf8"
+      );
+      mappedUseCaseChainCodeFileContentJson = JSON.parse(
+        mappedUseCaseChainCodeFileContent
+      );
+      console.log("mappedUseCaseChainCodeFileContentJson before mapping");
+      console.log(mappedUseCaseChainCodeFileContentJson);
+      if (
+        req.body.chainCodeSelectInput !== "Select a Chaincode" &&
+        req.body.useCaseSelectInput !== "Select a Use Case"
+      ) {
+        mappedUseCaseChainCodeFileContentJson[req.body.chainCodeSelectInput] =
+          req.body.useCaseSelectInput;
+
+        console.log("mappedUseCaseChainCodeFileContentJson after mapping");
+        console.log(mappedUseCaseChainCodeFileContentJson);
+
+        fs.writeFileSync(
+          mappedUseCaseChainCodeFilePath,
+          JSON.stringify(mappedUseCaseChainCodeFileContentJson, null, 2)
+        );
+      }
+
+      var mappedChainCodes = Object.keys(mappedUseCaseChainCodeFileContentJson);
+      var mappedChaincodeDictArray = [];
+      for (var i = 0; i < mappedChainCodes.length; i++) {
+        var mappedChaincodeDict = {};
+        mappedChaincodeDict["ChaincodeName"] = mappedChainCodes[i];
+        mappedChaincodeDict["UseCaseName"] =
+          mappedUseCaseChainCodeFileContentJson[mappedChainCodes[i]];
+
+        var deleteFileButton =
+          '<button data-link="' +
+          mappedChainCodes[i] +
+          '"onclick="processRequestToDeleteSelectedChainCodeMapping(this)" class="btn btn-primary deleteFileButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete <span style="display:none" class="spinner-border spinner-border-sm chainCodeMapDeleteSpinner" role="status" aria-hidden="true"></span></button>';
+        mappedChaincodeDict["deleteMapping"] = deleteFileButton;
+        mappedChaincodeDictArray.push(mappedChaincodeDict);
+        //Do something
+      }
+
+      response = {
+        status: "success",
+        data: mappedChaincodeDictArray,
+      };
+      console.log(response);
+      res.json(response);
+    } catch (e) {
+      console.log(e);
+      response = {
+        status: "Failed",
+        data: "API Start Error - Error while reading API config" + String(e),
+      };
+      console.log(response);
+      res.json(response);
+    }
+  } else {
+    response = {
+      status: "Failed",
+      data: "Session Expired - Please Login",
+    };
+    console.log(response);
+    res.json(response);
+  }
+});
+
+app.post("/deleteSelectedChainCodeMApping", async (req, res) => {
+  let response;
+
+  app_session = req.session;
+
+  console.log(req.body);
+
+  if (app_session.user_name && app_session.password) {
+    try {
+      const mappedUseCaseChainCodeFilePath = path.resolve(
+        __dirname,
+        ".",
+        MAPPED_CHAINCODE_USE_CASE_FILE
+      );
+      console.log(mappedUseCaseChainCodeFilePath);
+      const mappedUseCaseChainCodeFileContent = fs.readFileSync(
+        mappedUseCaseChainCodeFilePath,
+        "utf8"
+      );
+      mappedUseCaseChainCodeFileContentJson = JSON.parse(
+        mappedUseCaseChainCodeFileContent
+      );
+      console.log("mappedUseCaseChainCodeFileContentJson before UnMapping");
+      console.log(mappedUseCaseChainCodeFileContentJson);
+
+      delete mappedUseCaseChainCodeFileContentJson[req.body.chainCodeName];
+
+      console.log("mappedUseCaseChainCodeFileContentJson after UnMapping");
+      console.log(mappedUseCaseChainCodeFileContentJson);
+
+      fs.writeFileSync(
+        mappedUseCaseChainCodeFilePath,
+        JSON.stringify(mappedUseCaseChainCodeFileContentJson, null, 2)
+      );
+
+      var mappedChainCodes = Object.keys(mappedUseCaseChainCodeFileContentJson);
+      var mappedChaincodeDictArray = [];
+      for (var i = 0; i < mappedChainCodes.length; i++) {
+        var mappedChaincodeDict = {};
+        mappedChaincodeDict["ChaincodeName"] = mappedChainCodes[i];
+        mappedChaincodeDict["UseCaseName"] =
+          mappedUseCaseChainCodeFileContentJson[mappedChainCodes[i]];
+
+        var deleteFileButton =
+          '<button data-link="' +
+          mappedChainCodes[i] +
+          '"onclick="processRequestToDeleteSelectedChainCodeMapping(this)" class="btn btn-primary deleteFileButton"><i class="fa fa-trash" aria-hidden="true"></i> Delete <span style="display:none" class="spinner-border spinner-border-sm chainCodeMapDeleteSpinner" role="status" aria-hidden="true"></span></button>';
+        mappedChaincodeDict["deleteMapping"] = deleteFileButton;
+        mappedChaincodeDictArray.push(mappedChaincodeDict);
+        //Do something
+      }
+
+      response = {
+        status: "success",
+        data: mappedChaincodeDictArray,
+      };
+      console.log(response);
+      res.json(response);
+    } catch (e) {
+      console.log(e);
+      response = {
+        status: "Failed",
+        data: "API Start Error - Error while reading API config" + String(e),
+      };
+      console.log(response);
+      res.json(response);
+    }
   } else {
     response = {
       status: "Failed",

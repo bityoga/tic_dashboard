@@ -1,0 +1,225 @@
+<div class="container mb-4">
+  <h1 class="my-4 p-3 text-white bg-secondary text-center">
+    <i class="fa fa-eye" aria-hidden="true"></i> Pushed Transaction Data
+    <span id="pushedTransactionCount"></span>
+  </h1>
+  <form
+    id="viewPushedTransactionDataForm"
+    action="/getPushedTransactionDataFromSmartApi"
+    enctype="multipart/form-data"
+    method="POST"
+  >
+    <div class="row">
+      <div
+        class="mx-auto mb-3 col-12 col-sm-12 col-md-7 col-lg-6 col-xl-4 px-4 mt-3"
+      >
+        <!-- <label for="peerSelection" class="form-label text-center">Select Peer</label> -->
+        <!-- <select
+          name="peerSelection"
+          id="peerSelection"
+          class="form-select"
+          aria-label="Select a Peer :"
+        >
+          <option value="peer1">Peer1</option>
+          <option selected value="peer2">Peer2</option>
+        </select> -->
+        <!-- <small class="form-text text-muted my-1">Select the peer</small> -->
+      </div>
+      <div
+        class="mx-auto mb-3 col-12 col-sm-12 col-md-7 col-lg-6 col-xl-4 px-4 mt-3"
+      >
+        <!-- <label for="typeSelection" class="form-label text-center">Select Type</label> -->
+        <!-- <select
+          name="typeSelection"
+          id="typeSelection"
+          class="form-select"
+          aria-label="Select a Type :"
+        >
+          <option selected value="installed">Installed</option>
+          <option value="instantiated">Instantiated</option>
+        </select> -->
+        <!-- <small class="form-text text-muted my-1">(installed/instantiated)</small> -->
+      </div>
+      <div
+        class="mx-auto mb-3 col-12 col-sm-12 col-md-7 col-lg-6 col-xl-4 px-4 mt-3"
+      >
+        <!-- <label for="typeSelection" class="form-label text-center">Select Type</label> -->
+        <!-- <select
+          name="channelSelection"
+          id="channelSelection"
+          class="form-select"
+          aria-label="Select a Channel :"
+        >
+          <option selected value="appchannel">appchannel</option>
+        </select> -->
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            id="useCaseNameInput"
+            name="useCaseNameInput"
+            class="form-control"
+            placeholder="UseCase Name"
+            aria-label="UseCase Name"
+            aria-describedby="button-addon2"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="useCaseNameInputButton"
+          >
+            Fetch
+          </button>
+        </div>
+        <!-- <small class="form-text text-muted my-1">(installed/instantiated)</small> -->
+      </div>
+    </div>
+  </form>
+  <div class="text-center pushedTransactionListTableContentFetchingSpinner">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table
+      id="pushedTransactionListDataTable"
+      class="table table-striped table-hover dt-responsive display nowrap text-center"
+    ></table>
+  </div>
+</div>
+
+<script>
+  function parseOutputOfPushedTransactionDataObjectList(string) {
+    var properties = string.split(", ");
+    var obj = {};
+    properties.forEach(function (property) {
+      var tup = property.split(": ");
+      obj[tup[0]] = tup[1];
+    });
+    return obj;
+  }
+  function parseFetchedTransactionDataOutput(output) {
+    let parsedResponse = output.split(/\r?\n/);
+    //console.log(parsedResponse);
+    let finalChainCodeDetailsArray = [];
+    for (chaincode of parsedResponse) {
+      let parsedChaincodeDetails = parseOutputOfPushedTransactionDataObjectList(
+        chaincode
+      );
+      if ("Name" in parsedChaincodeDetails) {
+        finalChainCodeDetailsArray.push(Object.values(parsedChaincodeDetails));
+      }
+    }
+    return finalChainCodeDetailsArray;
+  }
+  function highlightCode() {
+    hljs.highlightAll();
+    // apply HighlightJS
+    var pres = document.querySelectorAll("pre>code");
+    for (var i = 0; i < pres.length; i++) {
+      hljs.highlightBlock(pres[i]);
+    }
+
+    // add HighlightJS-badge (options are optional)
+    var options = {
+      // optional
+      contentSelector: ".codeBlock",
+
+      // CSS class(es) used to render the copy icon.
+      copyIconClass: "fas fa-copy",
+      // CSS class(es) used to render the done icon.
+      checkIconClass: "fas fa-check text-success",
+    };
+    window.highlightJsBadge(options);
+  }
+  function sendAjaxReqToGetListOfPushedTransactionData() {
+    $("#pushedTransactionListDataTable").empty();
+    $(".pushedTransactionListTableContentFetchingSpinner").show();
+    $.ajax({
+      type: "POST",
+      url: "/getPushedTransactionDataFromSmartApi",
+      data: new FormData(
+        document.getElementById("viewPushedTransactionDataForm")
+      ),
+      processData: false,
+      contentType: false,
+      async: true,
+      complete: function (data) {
+        var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        console.log(json);
+
+        if (json["status"] === "success") {
+          // const dataTableData = parseFetchedTransactionDataOutput(
+          //   json["data"]["Output"]
+          // );
+          $("#pushedTransactionListDataTable").DataTable({
+            destroy: true,
+            data: json["data"],
+            //pageResize: true,
+            responsive: true,
+            pageLength: 4,
+            bAutoWidth: false,
+            drawCallback: function (settings) {
+              $(".pushedTransactionListTableContentFetchingSpinner").hide();
+              console.log(json["data"].length);
+              $("#pushedTransactionCount").text(
+                " - " + String(json["data"].length)
+              );
+              highlightCode();
+            },
+            columns: [
+              { title: "id", data: "id" },
+              // { data: "properties" },
+              {
+                title: "properties",
+                data: "properties",
+                render: function (data, type, row) {
+                  var propertiedDataHighlightJs =
+                    '<div class="codeBlock" ><pre><code>' +
+                    JSON.stringify(data) +
+                    "</code></pre></div>";
+                  return propertiedDataHighlightJs;
+                },
+              },
+              { title: "table", data: "table" },
+              { title: "use_case", data: "use_case" },
+            ],
+            // initComplete: function (settings, jsonData) {
+            //   $(".pushedTransactionListTableContentFetchingSpinner").hide();
+            //   $("#pushedTransactionCount").text(
+            //     " - " + String(json["data"].length)
+            //   );
+            // },
+          });
+        } else {
+          swal.fire({
+            title: "Pushed Transaction List Retrieval",
+            text: json["status"],
+            icon: "error",
+            confirmButtonText: '<i class="fa fa-thumbs-down"></i> Failed',
+          });
+        }
+      },
+    });
+  }
+</script>
+
+<script>
+  // $(".form-select").on("change", function () {
+  //   //alert(this.value);
+  //   sendAjaxReqToGetListOfPushedTransactionData();
+  // });
+
+  $("#useCaseNameInputButton").click(function () {
+    sendAjaxReqToGetListOfPushedTransactionData();
+  });
+
+  $("form").submit(function (e) {
+    e.preventDefault();
+  });
+</script>
+
+<script>
+  $(document).ready(function () {
+    sendAjaxReqToGetListOfPushedTransactionData();
+  });
+</script>

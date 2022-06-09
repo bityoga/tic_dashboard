@@ -14,6 +14,10 @@ td {
 table {
   table-layout: fixed;
 }
+table thead th {
+  white-space: pre-wrap !important;
+  overflow-wrap: break-word !important;
+}
 
 .even .sorting_1 {
   background-color: #000 !important;

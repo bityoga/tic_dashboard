@@ -1,0 +1,68 @@
+<!-- <div class="mb-4 col-12 col-sm-12 col-md-12 col-lg-12 col-xl-8 mx-auto"> -->
+<div class="mb-4 col-12 col-sm-12 col-md-11 col-lg-7 col-xl-7 container">
+  <h1 class="my-4 p-3 text-white bg-secondary text-center">
+    <i class="fa fa-tools" aria-hidden="true"></i> Rest Api Set Up instructions
+  </h1>
+  <div class="text-center restApiSetUpReadMeContentFetchingSpinner">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <div class="card p-4">
+    <div
+      id="restApiSetUpInstructionsContainer"
+      class="githubReadMeContainer codeBlock"
+    ></div>
+  </div>
+</div>
+
+<script>
+  function sendAjaxReqToGetRestApiGitHubReadMe() {
+    $("#restApiSetUpInstructionsContainer").empty();
+    $(".restApiSetUpReadMeContentFetchingSpinner").show();
+    $.ajax({
+      type: "POST",
+      url: "/getRestApiSetUpInstructionsGitHubReadMe",
+      async: true,
+      complete: function (data) {
+        var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        console.log(json);
+
+        if (json["status"] === "success") {
+          $(".restApiSetUpReadMeContentFetchingSpinner").hide();
+          $("#restApiSetUpInstructionsContainer").html(json["data"]);
+
+          // apply HighlightJS
+          var pres = document.querySelectorAll("pre>code");
+          for (var i = 0; i < pres.length; i++) {
+            hljs.highlightBlock(pres[i]);
+          }
+          // add HighlightJS-badge (options are optional)
+          var options = {
+            // optional
+            contentSelector: ".codeBlock",
+
+            // CSS class(es) used to render the copy icon.
+            copyIconClass: "fa fa-copy",
+            // CSS class(es) used to render the done icon.
+            checkIconClass: "fa fa-check text-success",
+          };
+          window.highlightJsBadge(options);
+        } else {
+          swal.fire({
+            title: "Rest Api Set Up Instructions Retrieval Failed",
+            text: json["status"],
+            icon: "error",
+            confirmButtonText: '<i class="fa fa-thumbs-down"></i> Failed',
+          });
+        }
+      },
+    });
+  }
+</script>
+
+<script>
+  $(document).ready(function () {
+    sendAjaxReqToGetRestApiGitHubReadMe();
+  });
+</script>

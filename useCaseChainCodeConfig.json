@@ -1,0 +1,128 @@
+{
+  "mother": {
+    "mother": {
+      "name": "mother",
+      "use_case": "mother",
+      "mappings": {
+        "id": "id",
+        "firstName": "firstName",
+        "lastName": "lastName",
+        "email": "email",
+        "phoneNumber": "phoneNumber",
+        "nin": "nin",
+        "TransactionMessage": "TransactionMessage",
+        "TransactionUnixTimestamp": "TransactionUnixTimestamp",
+        "TransactionIsoTimestamp": "TransactionIsoTimestamp",
+        "AssetId": "AssetId"
+      }
+    }
+  },
+  "baby": {
+    "baby": {
+      "name": "baby",
+      "use_case": "baby",
+      "mappings": null
+    }
+  },
+  "articonfBank": {
+    "asset": {
+      "name": "asset",
+      "use_case": "articonfBank",
+      "mappings": {
+        "ID": "ID",
+        "Balance": "Balance",
+        "Type": "Type",
+        "docType": "docType"
+      }
+    }
+  },
+  "car-details": {
+    "car-details": {
+      "name": "car-details",
+      "use_case": "car-details",
+      "mappings": null
+    }
+  },
+  "bank": {
+    "asset": {
+      "name": "asset",
+      "use_case": "bank",
+      "mappings": {
+        "ID": "ID",
+        "Balance": "Balance",
+        "Type": "Type",
+        "docType": "docType"
+      }
+    }
+  },
+  "mogVideoChaincodeTest": {
+    "mogVideoChaincodeTest": {
+      "name": "mogVideoChaincodeTest",
+      "use_case": "mogVideoChaincodeTest",
+      "mappings": {
+        "objecttype": "objecttype",
+        "videoid": "videoid",
+        "codec": "codec",
+        "duration": "duration",
+        "price": "price",
+        "creator": "creator",
+        "creationtimestamp": "creationtimestamp",
+        "geolocation": "geolocation",
+        "rating": "rating",
+        "informativeRating": "informativeRating",
+        "impactRating": "impactRating",
+        "trustinessRating": "trustinessRating",
+        "path": "path",
+        "md5": "md5",
+        "ready": "ready",
+        "lastupdate": "lastupdate",
+        "eventid": "eventid",
+        "tags": "tags",
+        "preview": "preview",
+        "thumbnails": "thumbnails"
+      }
+    }
+  },
+  "anandTestMogChaincode": {
+    "anandTestMogChaincode": {
+      "name": "anandTestMogChaincode",
+      "use_case": "anandTestMogChaincode",
+      "mappings": {
+        "objecttype": "objecttype",
+        "videoid": "videoid",
+        "codec": "codec",
+        "duration": "duration",
+        "price": "price",
+        "creator": "creator",
+        "creationtimestamp": "creationtimestamp",
+        "geolocation": "geolocation",
+        "rating": "rating",
+        "informativeRating": "informativeRating",
+        "impactRating": "impactRating",
+        "trustinessRating": "trustinessRating",
+        "path": "path",
+        "md5": "md5",
+        "ready": "ready",
+        "lastupdate": "lastupdate",
+        "eventid": "eventid",
+        "tags": "tags",
+        "preview": "preview",
+        "thumbnails": "thumbnails"
+      }
+    }
+  },
+  "ohrid": {
+    "ohrid": {
+      "name": "ohrid",
+      "use_case": "ohrid",
+      "mappings": null
+    }
+  },
+  "ohridDemoChainCode": {
+    "ohridDemoChainCode": {
+      "name": "ohridDemoChainCode",
+      "use_case": "ohridDemoChainCode",
+      "mappings": null
+    }
+  }
+}

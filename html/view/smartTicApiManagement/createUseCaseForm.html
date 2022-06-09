@@ -1,0 +1,99 @@
+<div
+  class="d-flex align-items-center justify-content-center pb-5"
+  style="height: inherit;"
+>
+  <div class="col-12 col-sm-12 col-md-7 col-lg-6 col-xl-4 px-4">
+    <div class="card text-center">
+      <div class="card-header p-4 bg-secondary text-white">
+        <h2><i class="fa fa-plus" aria-hidden="true"></i> Create UseCase</h2>
+      </div>
+      <div class="card-body">
+        <form
+          id="createUseCaseForm"
+          action="/login"
+          enctype="multipart/form-data"
+          method="POST"
+        >
+          <div class="mb-3">
+            <label for="useCaseNameInput" class="form-label"
+              >UseCase Name</label
+            >
+            <input
+              type="text"
+              required
+              class="form-control my-1"
+              name="useCaseNameInput"
+              id="useCaseNameInput"
+              placeholder="Enter useCase name"
+            />
+            <small class="form-text text-muted my-1"
+              >Example : car-sharing
+            </small>
+          </div>
+
+          <button type="submit" class="btn btn-primary mt-2">
+            <i class="fa fa-plus" aria-hidden="true"></i> Create UseCase
+            <span
+              class="spinner-border spinner-border-sm createUseCaseSpinner"
+              role="status"
+              aria-hidden="true"
+              style="display: none;"
+            ></span>
+          </button>
+        </form>
+      </div>
+      <div class="card-footer text-muted">
+        Create a new useCase
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $("#createUseCaseForm").submit(function (e) {
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+    $(".createUseCaseSpinner").show();
+    $("#createUseCaseForm input").attr("readonly", true);
+
+    var user_json = {
+      useCaseNameInput: document.getElementById("useCaseNameInput").value,
+    };
+
+    console.log(user_json);
+
+    $.ajax({
+      type: "POST",
+      url: "/createUseCase",
+      async: true,
+      dataType: "json",
+      data: user_json,
+      complete: function (data) {
+        $(".createUseCaseSpinner").hide();
+        $("#createUseCaseForm input").attr("readonly", false);
+        var json = JSON.parse(data.responseText.replace(/\bNaN\b/g, "null"));
+        console.log(json);
+        if (json["status"] === "success") {
+          swal.fire({
+            title: "Create UseCase Status",
+            text: json["status"],
+            icon: "success",
+            heightAuto: false,
+            confirmButtonText:
+              '<i class="fa fa-thumbs-up"></i> ' +
+              String(json["data"]["useCaseCreateMessage"]),
+          });
+        } else {
+          swal.fire({
+            title: "Create UseCase Status",
+            text: json["status"],
+            icon: "error",
+            heightAuto: false,
+            confirmButtonText:
+              '<i class="fa fa-thumbs-down"></i> UseCase Creation Failed',
+          });
+        }
+      },
+    });
+  });
+</script>
